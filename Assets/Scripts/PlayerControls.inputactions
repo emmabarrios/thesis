@@ -1,0 +1,34 @@
+{
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "Mobile",
+            "id": "bdcccb0f-1b31-4c4d-b61c-dd4f7c133fac",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "759a1d06-7062-4cc0-bf5d-83f8cbb41e3e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f7f87d77-c467-4ccf-a378-acfc571d2569",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
