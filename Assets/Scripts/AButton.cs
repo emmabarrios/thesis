@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,23 +7,31 @@ using UnityEngine.EventSystems;
 
 public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
 
-    /* TO DO
-     * - research how the canvas.scaleFactor and background.sizeDelta works and what are they
-     */
-
-    public enum AxisOptions { Both, Horizontal, Vertical }
+    public enum AxisOptions { Both, Horizontal, Vertical, None }
     public float Horizontal { get { return (snapX) ? SnapFloat(input.x, AxisOptions.Horizontal) : input.x; } }
     public float Vertical { get { return (snapY) ? SnapFloat(input.y, AxisOptions.Vertical) : input.y; } }
+    
+    [SerializeField] float lastTimeTap;
+    [SerializeField] float tapThreshold = 0.75f;
+
     [SerializeField] private AxisOptions axisOptions = AxisOptions.Both;
     [SerializeField] private bool snapX = false;
     [SerializeField] private bool snapY = false;
-
     [SerializeField] protected RectTransform background = null;
     [SerializeField] private RectTransform handle = null;
+
     private Canvas canvas;
 
     private Vector2 input = Vector2.zero;
     private Camera cam;
+
+    public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
+    public class OnHandleDragedEventArgs : EventArgs {
+        public float magnitude;
+        public float position;
+    }
+
+    public event EventHandler OnHandleDroped;
 
     private void Start() {
         canvas = GetComponentInParent<Canvas>();
@@ -37,12 +46,26 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        OnDrag(eventData);
+
+        if (axisOptions == AxisOptions.Both) {
+            OnDrag(eventData);
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData) {
         input = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
+        CheckForDoubleTap(eventData);
+        OnHandleDroped?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void CheckForDoubleTap(PointerEventData eventData) {
+        float currentTimeClick = eventData.clickTime;
+
+        if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
+            Debug.Log("Double Tap!");
+        }
+        lastTimeTap = currentTimeClick;
     }
 
     public void OnDrag(PointerEventData eventData) {
@@ -54,8 +77,20 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
         Vector2 position = RectTransformUtility.WorldToScreenPoint(cam, background.position);
         Vector2 radius = background.sizeDelta;
         input = (eventData.position - position) / (radius * canvas.scaleFactor);
-        Debug.Log(eventData.position + " - " + position);
+        FormatInput();
         handle.anchoredPosition = input * radius * 1;
+
+        //Debug.Log(handle.anchoredPosition - background.rect.center);
+        float mag = (handle.anchoredPosition - background.rect.center).magnitude;
+
+        if (axisOptions == AxisOptions.Vertical /*&& (handle.anchoredPosition - background.rect.center).y < 0*/) {
+
+            OnHandleDraged?.Invoke(this, new OnHandleDragedEventArgs {
+                magnitude = mag,
+                position = (handle.anchoredPosition - background.rect.center).y
+            });
+           
+        }
 
     }
 
@@ -85,4 +120,17 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
         }
         return 0;
     }
+
+    private void FormatInput() {
+        if (axisOptions == AxisOptions.Horizontal)
+            input = new Vector2(input.x, 0f);
+        else if (axisOptions == AxisOptions.Vertical)
+            input = new Vector2(0f, input.y);
+        else if (axisOptions == AxisOptions.None) {
+            input = Vector2.zero;
+        }
+    }
+
+
+
 }

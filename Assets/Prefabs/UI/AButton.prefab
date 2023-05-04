@@ -210,8 +210,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebbc2c08d115064da0faabb2e91f44d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastTimeTap: 0
+  tapThreshold: 0.75
+  axisOptions: 0
+  snapX: 0
+  snapY: 0
   background: {fileID: 870137481267956605}
   handle: {fileID: 8518329417734425467}
+  range: {fileID: 0}
 --- !u!1 &5704831906573651371
 GameObject:
   m_ObjectHideFlags: 0

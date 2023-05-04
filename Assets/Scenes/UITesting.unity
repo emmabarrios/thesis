@@ -477,7 +477,20 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5704831906136594268, guid: afcaf66ea91a73741be9bbd7affcdb9d,
+          type: 3}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &321309848
 MonoBehaviour:
@@ -1327,7 +1340,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Tension
+  m_Text: Bow Tension
 --- !u!222 &843473719
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1742,7 +1755,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Speed
+  m_Text: Walking Speed
 --- !u!222 &1130173380
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2675,8 +2688,9 @@ GameObject:
   - component: {fileID: 1923365924}
   - component: {fileID: 1923365923}
   - component: {fileID: 1923365922}
+  - component: {fileID: 1923365925}
   m_Layer: 5
-  m_Name: speed_panel (1)
+  m_Name: tension_panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2767,6 +2781,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1923365920}
   m_CullTransparentMesh: 1
+--- !u!114 &1923365925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923365920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493c250206569b14488ba557e5944ca9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 2068564164}
+  tension: 100
+  abutton: {fileID: 0}
 --- !u!1 &2005079652
 GameObject:
   m_ObjectHideFlags: 0
@@ -3018,6 +3047,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1712856817}
     m_Modifications:
+    - target: {fileID: 817078856242349448, guid: afcaf66ea91a73741be9bbd7affcdb9d,
+        type: 3}
+      propertyPath: snapY
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 817078856242349448, guid: afcaf66ea91a73741be9bbd7affcdb9d,
+        type: 3}
+      propertyPath: axisOptions
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 817078856242349448, guid: afcaf66ea91a73741be9bbd7affcdb9d,
+        type: 3}
+      propertyPath: tapThreshold
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 870137481267956605, guid: afcaf66ea91a73741be9bbd7affcdb9d,
         type: 3}
       propertyPath: m_RootOrder
@@ -3152,6 +3196,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7886719977785256572, guid: afcaf66ea91a73741be9bbd7affcdb9d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8518329417734425467, guid: afcaf66ea91a73741be9bbd7affcdb9d,
         type: 3}

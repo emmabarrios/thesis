@@ -32,6 +32,9 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     [SerializeField] private bool snapX = false;
     [SerializeField] private bool snapY = false;
 
+    [SerializeField] float lastTimeTap;
+    [SerializeField] float tapThreshold = 0.75f;
+
     [SerializeField] protected RectTransform background = null;
     [SerializeField] private RectTransform handle = null;
     private RectTransform baseRect = null;
@@ -147,6 +150,8 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         input = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
         OnHandleDroped?.Invoke(this, EventArgs.Empty);
+
+        CheckForDoubleTapDash(eventData);
     }
 
     protected Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition)
@@ -158,6 +163,26 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             return localPoint - (background.anchorMax * baseRect.sizeDelta) + pivotOffset;
         }
         return Vector2.zero;
+    }
+
+    private void CheckForDoubleTapDash(PointerEventData eventData) {
+
+        Vector2 center = baseRect.rect.center;
+        Vector2 localPoint;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
+
+            float currentTimeClick = eventData.clickTime;
+
+            if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
+                Vector2 distance = localPoint - center;
+                //Debug.Log("Dashed to point: " + distance.normalized);
+                /* TO DO
+                 * - Send a normalized vector of the distance and feed it to a movement input.
+                 */
+            }
+            lastTimeTap = currentTimeClick;
+        }
     }
 }
 
