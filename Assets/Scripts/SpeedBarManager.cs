@@ -13,6 +13,11 @@ public class SpeedBarManager : MonoBehaviour
     public float speed = 100f;
     public Joystick joystick;
 
+    float lerpSpeed;
+    public float lerpSpeedValue;
+
+    float globalMagnitude;
+
     void Start()
     {
         Reset();
@@ -24,13 +29,11 @@ public class SpeedBarManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        lerpSpeed = lerpSpeedValue * Time.deltaTime;
 
-    public void UpdateFill(object sender, Joystick.OnHandleDragedEventArgs e) {
-        float mag = e.magnitude;
-        image.fillAmount = mag / 100f;
-        Color spedBarColor = Color.Lerp(Color.green, Color.red, (mag / 100f));
+        image.fillAmount = Mathf.Lerp(image.fillAmount, globalMagnitude, lerpSpeed);
+        //Color spedBarColor = Color.Lerp(Color.green, Color.red, (globalMagnitude / 100f));
+        Color spedBarColor = Color.Lerp(Color.green, Color.red, (globalMagnitude / 100f));
         image.color = spedBarColor;
 
         if (image.fillAmount > 1) {
@@ -38,14 +41,41 @@ public class SpeedBarManager : MonoBehaviour
         } else if (image.fillAmount < 0) {
             image.fillAmount = 0;
         }
+
+    }
+
+    public void UpdateFill(object sender, Joystick.OnHandleDragedEventArgs e) {
+       
+
+        //float mag = e.magnitude;
+        //image.fillAmount = mag / 100f;
+        //Color spedBarColor = Color.Lerp(Color.green, Color.red, (mag / 100f));
+        //image.color = spedBarColor;
+
+        /**/
+        float mag = e.magnitude / 100f;
+        globalMagnitude = mag;
+
+        //image.fillAmount = Mathf.Lerp(image.fillAmount, mag, lerpSpeed);
+        //Color spedBarColor = Color.Lerp(Color.green, Color.red, (mag / 100f));
+        //image.color = spedBarColor;
+
+
+        //if (image.fillAmount > 1) {
+        //    image.fillAmount = 1;
+        //} else if (image.fillAmount < 0) {
+        //    image.fillAmount = 0;
+        //}
     }
 
     public void Reset(object sender, EventArgs e) {
-        image.fillAmount = 0;
+        //image.fillAmount = 0;
+        globalMagnitude = 0;
     }
 
     public void Reset() {
         image.fillAmount = 0;
+        globalMagnitude = 0;
     }
 
 }

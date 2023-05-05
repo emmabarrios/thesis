@@ -45,11 +45,16 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     private Vector2 input = Vector2.zero;
 
     public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
+
+    public event EventHandler OnHandleDroped;
+    public event EventHandler<OnDashPerformedEventArgs> OnDashPerformed;
+
     public class OnHandleDragedEventArgs : EventArgs {
         public float magnitude;
     }
-
-    public event EventHandler OnHandleDroped;
+    public class OnDashPerformedEventArgs: EventArgs {
+        public Vector2 point;
+    }
 
     protected virtual void Start()
     {
@@ -86,7 +91,6 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         HandleInput(input.magnitude, input.normalized, radius, cam);
         handle.anchoredPosition = input * radius * handleRange;
         float mag = handle.anchoredPosition.magnitude;
-
         OnHandleDraged?.Invoke(this, new OnHandleDragedEventArgs {
             magnitude = mag
         });
@@ -176,10 +180,10 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
             if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
                 Vector2 distance = localPoint - center;
-                //Debug.Log("Dashed to point: " + distance.normalized);
-                /* TO DO
-                 * - Send a normalized vector of the distance and feed it to a movement input.
-                 */
+
+                OnDashPerformed?.Invoke(this, new OnDashPerformedEventArgs {
+                    point = distance
+                });
             }
             lastTimeTap = currentTimeClick;
         }

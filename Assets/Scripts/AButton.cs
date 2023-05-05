@@ -13,6 +13,7 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
     
     [SerializeField] float lastTimeTap;
     [SerializeField] float tapThreshold = 0.75f;
+    public float storedMagnitude = 0f;
 
     [SerializeField] private AxisOptions axisOptions = AxisOptions.Both;
     [SerializeField] private bool snapX = false;
@@ -26,12 +27,24 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
     private Camera cam;
 
     public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
+    public event EventHandler<OnBlockingEventArgs> OnBlocking;
+    public event EventHandler<OnParryEventArgs> OnParry;
+    public event EventHandler<OnTensionReleasedEventArgs> OnTensionReleased;
+    public event EventHandler OnHandleDroped;
+
+    public class OnTensionReleasedEventArgs : EventArgs {
+        public float magnitude;
+    }
     public class OnHandleDragedEventArgs : EventArgs {
         public float magnitude;
         public float position;
     }
-
-    public event EventHandler OnHandleDroped;
+    public class OnBlockingEventArgs: EventArgs {
+        public string a;
+    }
+    public class OnParryEventArgs: EventArgs {
+        public string a;
+    }
 
     private void Start() {
         canvas = GetComponentInParent<Canvas>();
@@ -50,12 +63,25 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
         if (axisOptions == AxisOptions.Both) {
             OnDrag(eventData);
         }
+
+        if (axisOptions == AxisOptions.None) {
+            OnBlocking?.Invoke(this, new OnBlockingEventArgs { a = "Blocking" });
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData) {
         input = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
-        CheckForDoubleTap(eventData);
+
+        if (axisOptions == AxisOptions.None) {
+            OnBlocking?.Invoke(this, new OnBlockingEventArgs { a = "" });
+            CheckForDoubleTap(eventData);
+        }
+
+        if (axisOptions == AxisOptions.Vertical) {
+            OnTensionReleased?.Invoke(this, new OnTensionReleasedEventArgs { magnitude = storedMagnitude });
+        }
+
         OnHandleDroped?.Invoke(this, EventArgs.Empty);
     }
 
@@ -63,7 +89,7 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
         float currentTimeClick = eventData.clickTime;
 
         if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
-            Debug.Log("Double Tap!");
+            OnParry?.Invoke(this, new OnParryEventArgs { a = "Parry!"});
         }
         lastTimeTap = currentTimeClick;
     }
@@ -80,10 +106,11 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
         FormatInput();
         handle.anchoredPosition = input * radius * 1;
 
-        //Debug.Log(handle.anchoredPosition - background.rect.center);
-        float mag = (handle.anchoredPosition - background.rect.center).magnitude;
+        // Bow tension control
+        if (axisOptions == AxisOptions.Vertical) {
 
-        if (axisOptions == AxisOptions.Vertical /*&& (handle.anchoredPosition - background.rect.center).y < 0*/) {
+            float mag = (handle.anchoredPosition - background.rect.center).magnitude;
+            storedMagnitude = mag;
 
             OnHandleDraged?.Invoke(this, new OnHandleDragedEventArgs {
                 magnitude = mag,
@@ -131,6 +158,8 @@ public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointe
         }
     }
 
-
+    public void SetAxisOption(AxisOptions axis) {
+        this.axisOptions = axis;
+    }
 
 }
