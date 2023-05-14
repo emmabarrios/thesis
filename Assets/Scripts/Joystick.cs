@@ -1,0 +1,169 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
+
+
+    public float MoveThreshold { get { return moveThreshold; } set { moveThreshold = Mathf.Abs(value); } }
+
+    public Vector2 Direction { get { return new Vector2(input.x, input.y); } }
+    private Vector2 input = Vector2.zero;
+
+    private RectTransform baseRect = null;
+
+    private Canvas canvas;
+    private Camera cam;
+
+    [SerializeField] private float handleRange = 1;
+    [SerializeField] private float deadZone = 0;
+    [SerializeField] private bool snapX = false;
+    [SerializeField] private bool snapY = false;
+    [SerializeField] float lastTimeTap;
+    [SerializeField] float tapThreshold = 0.75f;
+    [SerializeField] protected RectTransform background = null;
+    [SerializeField] private RectTransform handle = null;
+    [SerializeField] private float moveThreshold = 1;
+    [SerializeField] private float fadeTime = 1f;
+
+    public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
+    public event EventHandler OnHandleDroped;
+    public event EventHandler<OnDashPerformedEventArgs> OnDashPerformed;
+
+    public class OnHandleDragedEventArgs : EventArgs {
+        public float magnitude;
+    }
+    public class OnDashPerformedEventArgs : EventArgs {
+        public Vector2 point;
+    }
+
+    private void Start() {
+        MoveThreshold = moveThreshold;
+
+        HandleRange = handleRange;
+        DeadZone = deadZone;
+        baseRect = GetComponent<RectTransform>();
+        canvas = GetComponentInParent<Canvas>();
+        if (canvas == null)
+            Debug.LogError("The Joystick is not placed inside a canvas");
+
+        Vector2 center = new Vector2(0.5f, 0.5f);
+        background.pivot = center;
+        handle.anchorMin = center;
+        handle.anchorMax = center;
+        handle.pivot = center;
+        handle.anchoredPosition = Vector2.zero;
+
+        background.gameObject.SetActive(false);
+    }
+
+    public float HandleRange {
+        get { return handleRange; }
+        set { handleRange = Mathf.Abs(value); }
+    }
+
+    public float DeadZone {
+        get { return deadZone; }
+        set { deadZone = Mathf.Abs(value); }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
+        background.gameObject.SetActive(true);
+        StartCoroutine(FadeTo(0, fadeTime));
+
+        OnDrag(eventData);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        background.gameObject.SetActive(false);
+
+        input = Vector2.zero;
+        handle.anchoredPosition = Vector2.zero;
+        OnHandleDroped?.Invoke(this, EventArgs.Empty);
+
+        CheckForDoubleTapDash(eventData);
+
+        StartCoroutine(FadeTo(.2f, fadeTime));
+
+    }
+
+    private void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)
+    {
+        if (magnitude > moveThreshold)
+        {
+            Vector2 difference = normalised * (magnitude - moveThreshold) * radius;
+            background.anchoredPosition += difference;
+        }
+
+        if (magnitude > deadZone) {
+            if (magnitude > 1)
+                input = normalised;
+        } else
+            input = Vector2.zero;
+    }
+
+    public void OnDrag(PointerEventData eventData) {
+        cam = null;
+        if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
+            cam = canvas.worldCamera;
+
+        Vector2 position = RectTransformUtility.WorldToScreenPoint(cam, background.position);
+        Vector2 radius = background.sizeDelta / 2;
+        input = (eventData.position - position) / (radius * canvas.scaleFactor);
+        HandleInput(input.magnitude, input.normalized, radius, cam);
+        handle.anchoredPosition = input * radius * handleRange;
+        float mag = handle.anchoredPosition.magnitude;
+        OnHandleDraged?.Invoke(this, new OnHandleDragedEventArgs {
+            magnitude = mag
+        });
+    }
+
+    private void CheckForDoubleTapDash(PointerEventData eventData) {
+
+        Vector2 center = baseRect.rect.center;
+        Vector2 localPoint;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
+
+            float currentTimeClick = eventData.clickTime;
+
+            if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
+                Vector2 distance = localPoint - center;
+
+                OnDashPerformed?.Invoke(this, new OnDashPerformedEventArgs {
+                    point = distance
+                });
+            }
+            lastTimeTap = currentTimeClick;
+        }
+    }
+
+    private Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition) {
+        Vector2 localPoint = Vector2.zero;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, screenPosition, cam, out localPoint)) {
+            Vector2 pivotOffset = baseRect.pivot * baseRect.sizeDelta;
+            return localPoint - (background.anchorMax * baseRect.sizeDelta) + pivotOffset;
+        }
+        return Vector2.zero;
+    }
+
+    IEnumerator FadeTo(float aValue, float aTime) {
+
+        float alpha = this.GetComponent<Image>().color.a;
+
+            for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / aTime) {
+
+                Color newColor = this.GetComponent<Image>().color;
+                newColor.a = Mathf.Lerp(alpha, aValue, t);
+                this.GetComponent<Image>().color = newColor;
+
+                yield return null;
+            }
+    }
+}

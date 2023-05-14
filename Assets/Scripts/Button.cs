@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-public class AButton : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
+public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
 
     public enum AxisOptions { Both, Horizontal, Vertical, None }
     public float Horizontal { get { return (snapX) ? SnapFloat(input.x, AxisOptions.Horizontal) : input.x; } }

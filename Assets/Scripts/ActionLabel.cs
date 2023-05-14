@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 public class ActionLabel : MonoBehaviour
 {
-    public AButton aButton = null;
+    public Button aButton = null;
     public Joystick joystick = null;
     public Text text;
 
@@ -23,11 +23,11 @@ public class ActionLabel : MonoBehaviour
         joystick.OnHandleDroped += ChangeLabelValue;
     }
 
-    public void ChangeLabelValue(object sender, AButton.OnBlockingEventArgs e) {
+    public void ChangeLabelValue(object sender, Button.OnBlockingEventArgs e) {
         text.text = e.a;
     }
     
-    public void ChangeLabelValue(object sender, AButton.OnParryEventArgs e) {
+    public void ChangeLabelValue(object sender, Button.OnParryEventArgs e) {
         text.text = e.a;
     }
     
@@ -39,7 +39,7 @@ public class ActionLabel : MonoBehaviour
         text.text = "";
     }
     
-    public void ChangeLabelValue(object sender, AButton.OnTensionReleasedEventArgs e) {
+    public void ChangeLabelValue(object sender, Button.OnTensionReleasedEventArgs e) {
 
         if (e.magnitude > .5f) {
             text.text = "Arrow Fired:\nMagnitude: " + e.magnitude;

@@ -9,11 +9,11 @@ public class TensionBarManager : MonoBehaviour
 {
     public Image image;
     public float tension = 100f;
-    public AButton abutton;
+    public Button abutton;
 
     void Start() {
         Reset();
-        abutton = GameObject.Find("AButton").GetComponent<AButton>();
+        abutton = GameObject.Find("AButton").GetComponent<Button>();
         abutton.OnHandleDraged += UpdateFill;
         abutton.OnHandleDroped += Reset;
     }
@@ -32,7 +32,7 @@ public class TensionBarManager : MonoBehaviour
         image.fillAmount = 0;
     }
 
-    public void UpdateFill(object sender, AButton.OnHandleDragedEventArgs e) {
+    public void UpdateFill(object sender, Button.OnHandleDragedEventArgs e) {
 
         if (e.position > 0) {
             image.fillAmount = 0;

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class DropDownWidget : MonoBehaviour
 {
-    public AButton aButton = null;
+    public Button aButton = null;
     public Dropdown dropdown = null;
 
     // Start is called before the first frame update
@@ -22,9 +22,9 @@ public class DropDownWidget : MonoBehaviour
 
         int value = dropdown.value;
         if (value == 0) {
-            aButton.SetAxisOption(AButton.AxisOptions.None);
+            aButton.SetAxisOption(Button.AxisOptions.None);
         }else if (value == 1) {
-            aButton.SetAxisOption(AButton.AxisOptions.Vertical);
+            aButton.SetAxisOption(Button.AxisOptions.Vertical);
         }
     }
 }
