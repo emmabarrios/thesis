@@ -63,10 +63,14 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
                     float swipeDirection = normalDirection.x;
 
                     if ((carouselPosition == 0 && swipeDirection > 0)) {
+                        isSwipeInProgress = false;
+                        isMoving = false;
                         return;
                     }
 
                     if ((carouselPosition == pouchCount && swipeDirection < 0)) {
+                        isSwipeInProgress = false;
+                        isMoving = false;
                         return;
                     }
 
@@ -78,8 +82,8 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
                     OnSwipe?.Invoke(this, new OnSwipeEventArgs { index = carouselPosition });
                 }
             }
-            isSwipeInProgress = false;
         }
+        isSwipeInProgress = false;
     }
 
     //private void Slide(float swipeDirection) {

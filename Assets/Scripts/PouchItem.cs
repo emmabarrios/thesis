@@ -63,11 +63,9 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     public void OnPointerUp(PointerEventData eventData) {
 
-
         if (_state == ItemState.Ready) {
             float swipeDistance = eventData.position.y - initialTouchPosition.y;
             if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
-
                 UseItem();
                 return;
             }
@@ -77,7 +75,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         if (longPressCoroutine != null) {
             StopCoroutine(longPressCoroutine);
             longPressCoroutine = null;
-            _state = ItemState.Holstered;
+            //_state = ItemState.Holstered;
         }
 
         _state = ItemState.Holstered;
@@ -130,9 +128,16 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
                 float fillAmount = timer / longPressDuration;
                 fillImage.fillAmount = fillAmount;
             }
-            
-            float swipeDistance = eventData.position.x - initialTouchPosition.x;
-            if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
+
+            //float swipeDistance = eventData.position.x - initialTouchPosition.x;
+            //if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
+
+            //    ResetFillAmount();
+            //    yield break;
+            //}
+
+            Vector2  swipeDistance = new Vector2(eventData.position.x, eventData.position.y) - initialTouchPosition;
+            if (Mathf.Abs(swipeDistance.magnitude) > eventSwipeThreshold) {
 
                 ResetFillAmount();
                 yield break;
