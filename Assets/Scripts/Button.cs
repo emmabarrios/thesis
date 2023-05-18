@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,17 +21,37 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     [SerializeField] private bool snapY = false;
     [SerializeField] protected RectTransform background = null;
     [SerializeField] private RectTransform handle = null;
+    [SerializeField] private bool isActive = false;
+    [SerializeField] private GameObject deactiveButton = null;
+
+    public RectTransform activeAnchor = null;
+    public RectTransform inactiveAnchor = null;
+
+    private Vector2 activeAnchorPosition;
+    private Vector2 inactiveAnchorPosition;
 
     private Canvas canvas;
 
     private Vector2 input = Vector2.zero;
     private Camera cam;
-
+    
     public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
     public event EventHandler<OnBlockingEventArgs> OnBlocking;
     public event EventHandler<OnParryEventArgs> OnParry;
     public event EventHandler<OnTensionReleasedEventArgs> OnTensionReleased;
     public event EventHandler OnHandleDroped;
+
+    [SerializeField] private Vector2 scale;
+
+    public Vector2 Scale {
+        get { return scale; }
+        set { scale = value; }
+    }
+
+    public bool IsActive {
+        get { return isActive; }
+        set { isActive = value; }
+    }
 
     public class OnTensionReleasedEventArgs : EventArgs {
         public float magnitude;
@@ -47,6 +68,7 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     }
 
     private void Start() {
+        Scale = this.GetComponent<RectTransform>().localScale;
         canvas = GetComponentInParent<Canvas>();
         if (canvas == null)
             Debug.LogError("The Joystick is not placed inside a canvas");
@@ -56,14 +78,33 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         handle.anchorMax = center;
         handle.pivot = center;
         handle.anchoredPosition = Vector2.zero;
+
+        activeAnchorPosition = activeAnchor.anchoredPosition;
+        inactiveAnchorPosition = inactiveAnchor.anchoredPosition;
     }
 
     public void OnPointerDown(PointerEventData eventData) {
 
+        // Button swapping 
+        if (!IsActive) {
+            IsActive = true;
+            this.GetComponent<RectTransform>().localScale = deactiveButton.GetComponent<Button>().Scale;
+            deactiveButton.GetComponent<RectTransform>().localScale = Scale;
+
+            Scale = this.GetComponent<RectTransform>().localScale;
+            deactiveButton.GetComponent<Button>().Scale = deactiveButton.GetComponent<RectTransform>().localScale;
+
+            SetAnchorPosition(activeAnchorPosition);
+            deactiveButton.GetComponent<Button>().IsActive = false;
+            deactiveButton.GetComponent<Button>().SetAnchorPosition(inactiveAnchorPosition);
+        }
+
+        // Axis Option Both state
         if (axisOptions == AxisOptions.Both) {
             OnDrag(eventData);
         }
 
+        // Axis Option None state
         if (axisOptions == AxisOptions.None) {
             OnBlocking?.Invoke(this, new OnBlockingEventArgs { a = "Blocking" });
         }
@@ -162,4 +203,7 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         this.axisOptions = axis;
     }
 
+    public void SetAnchorPosition(Vector2 anchor) {
+        this.GetComponent<RectTransform>().anchoredPosition = anchor;
+    }
 }

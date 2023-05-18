@@ -24,7 +24,9 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     [SerializeField] private bool snapY = false;
     [SerializeField] float lastTimeTap;
     [SerializeField] float tapThreshold = 0.75f;
-    [SerializeField] protected RectTransform background = null;
+    [SerializeField] private RectTransform background = null;
+    [SerializeField] private Image image = null;
+    [SerializeField] private Texture2D texture = null;
     [SerializeField] private RectTransform handle = null;
     [SerializeField] private float moveThreshold = 1;
     [SerializeField] private float fadeTime = 1f;
@@ -40,7 +42,11 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         public Vector2 point;
     }
 
+
     private void Start() {
+
+        texture = (Texture2D)image.mainTexture;
+
         MoveThreshold = moveThreshold;
 
         HandleRange = handleRange;
@@ -72,11 +78,22 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
-        background.gameObject.SetActive(true);
-        StartCoroutine(FadeTo(0, fadeTime));
+        //background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
 
-        OnDrag(eventData);
+        //background.gameObject.SetActive(true);
+        //StartCoroutine(FadeTo(0, fadeTime));
+
+        //OnDrag(eventData);
+
+        if (OnArea(eventData)) {
+            background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
+
+            background.gameObject.SetActive(true);
+            StartCoroutine(FadeTo(0, fadeTime));
+
+            OnDrag(eventData);
+        }
+
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -126,22 +143,25 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     private void CheckForDoubleTapDash(PointerEventData eventData) {
 
-        Vector2 center = baseRect.rect.center;
-        Vector2 localPoint;
+        if (OnArea(eventData)) {
+            Vector2 center = baseRect.rect.center;
+            Vector2 localPoint;
 
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
 
-            float currentTimeClick = eventData.clickTime;
+                float currentTimeClick = eventData.clickTime;
 
-            if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
-                Vector2 distance = localPoint - center;
+                if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
+                    Vector2 distance = localPoint - center;
 
-                OnDashPerformed?.Invoke(this, new OnDashPerformedEventArgs {
-                    point = distance
-                });
+                    OnDashPerformed?.Invoke(this, new OnDashPerformedEventArgs {
+                        point = distance
+                    });
+                }
+                lastTimeTap = currentTimeClick;
             }
-            lastTimeTap = currentTimeClick;
         }
+        
     }
 
     private Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition) {
@@ -155,15 +175,38 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     IEnumerator FadeTo(float aValue, float aTime) {
 
-        float alpha = this.GetComponent<Image>().color.a;
+        float alpha = image.color.a;
 
             for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / aTime) {
 
-                Color newColor = this.GetComponent<Image>().color;
+                Color newColor = image.color;
                 newColor.a = Mathf.Lerp(alpha, aValue, t);
-                this.GetComponent<Image>().color = newColor;
+                image.color = newColor;
 
                 yield return null;
             }
+    }
+
+    private bool OnArea(PointerEventData eventData) {
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(image.rectTransform, eventData.position, eventData.pressEventCamera, out Vector2 localPoint)) {
+            // Convert local point to texture coordinates
+            Vector2 uv = new Vector2((localPoint.x + image.rectTransform.pivot.x * image.rectTransform.rect.width) / image.rectTransform.rect.width,
+                                     (localPoint.y + image.rectTransform.pivot.y * image.rectTransform.rect.height) / image.rectTransform.rect.height);
+
+            // Convert texture coordinates to pixel coordinates
+            int x = Mathf.FloorToInt(uv.x * texture.width);
+            int y = Mathf.FloorToInt(uv.y * texture.height);
+
+            // Get the pixel color at the given coordinates
+            Color pixelColor = texture.GetPixel(x, y);
+
+            // Check if the pixel color has alpha greater than 0, indicating that it's part of the visible sprite
+            if (pixelColor.a > 0) {
+
+                return true;
+            }
+        }
+        return false;
     }
 }
