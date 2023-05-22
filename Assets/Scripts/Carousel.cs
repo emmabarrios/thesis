@@ -26,13 +26,6 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     private Coroutine slideCoroutine;
 
-    //[SerializeField] private float interpolationTime = 5f;
-    //[SerializeField] private float lenght = 100f;
-    //private Vector2 fromPosition; 
-    //private Vector2 targetPosition;
-
-    //private Coroutine moveCoroutine;
-
     private void Start() {
         rectTransform = this.GetComponent<RectTransform>();
         pouchCount = this.transform.childCount - 1;
