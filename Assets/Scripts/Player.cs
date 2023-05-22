@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public enum PlayerState { Both, Horizontal, Vertical, None }
+    public enum PlayerState { Normal, Combat}
+    public PlayerState currentState;
 
+    [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float maxMovementSpeed = 10f;
     [SerializeField] private float accelerationTime = 2f;
@@ -21,7 +23,15 @@ public class Player : MonoBehaviour
     public float CurrentSpeed { get { return currentSpeed; } }
     public Joystick joystick = null;
 
+    public SwipeDetector swipeDetector = null;
+
+    [Header("Orbital Settings")]
+    public Transform target; // Reference to the transform for rotation
+
     private void Start() {
+        // Set the initial state to Normal
+        currentState = PlayerState.Normal;
+
         characterController = GetComponent<CharacterController>();
         currentSpeed = 0f;
         isRotating = false;
@@ -30,20 +40,47 @@ public class Player : MonoBehaviour
     private void Update() {
 
         Vector2 inputMovement = joystick.Direction;
-        Debug.Log(inputMovement);
 
-        // Rotate the player on "E" key press
+        // Update logic based on the current state
+
+        if (!isRotating) {
+
+            switch (currentState) {
+                case PlayerState.Normal:
+                    MovePlayerNormal(inputMovement);
+                    break;
+
+                case PlayerState.Combat:
+                    MovePlayerOrbital(inputMovement);
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
+        
+
+        // Rotate 90° in the passed direction.
         if (Input.GetKeyDown(KeyCode.E) && !isRotating) {
-            StartCoroutine(RotatePlayer());
+            StartCoroutine(RotatePlayer(1));
+        } else if (Input.GetKeyDown(KeyCode.Q) && !isRotating) {
+            StartCoroutine(RotatePlayer(-1));
         }
 
-        // Move the player
-        if (!isRotating) {
-            MovePlayer(inputMovement);
+        // Toggle current state
+        if (Input.GetKeyDown(KeyCode.Space)) {
+
+            if (currentState == PlayerState.Combat) {
+                StartCoroutine("ResetRotation");
+            }
+
+            SwitchState();
+           
         }
     }
 
-    private void MovePlayer(Vector2 inputMovement) {
+    private void MovePlayerNormal(Vector2 inputMovement) {
         // Rotate the movement direction from local to world space
         Vector3 movementDirection = new Vector3(inputMovement.x, 0f, inputMovement.y);
         Vector3 worldMovementDirection = transform.TransformDirection((movementDirection));
@@ -65,11 +102,17 @@ public class Player : MonoBehaviour
         characterController.Move(movement);
     }
 
-    private IEnumerator RotatePlayer() {
+    private void MovePlayerOrbital(Vector3 inputMovement) {
+        MovePlayerNormal(inputMovement);
+        RotatePlayer();
+    }
+
+    private IEnumerator RotatePlayer(int dir) {
+
         isRotating = true;
 
         Quaternion startRotation = transform.rotation;
-        Quaternion targetRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0f, 90f, 0f));
+        Quaternion targetRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0f, 90f * dir, 0f));
         float t = 0f;
 
         while (t < 1f) {
@@ -81,4 +124,56 @@ public class Player : MonoBehaviour
         isRotating = false;
     }
 
+    private void SwitchState() {
+        if (currentState == PlayerState.Normal) {
+            currentState = PlayerState.Combat;
+        } else {
+            currentState = PlayerState.Normal;
+        }
+    }
+
+    private void RotatePlayer() {
+        // Calculate the direction from player to target
+        Vector3 directionToTarget = target.position - transform.position;
+
+        // Ignore the vertical component of the direction
+        directionToTarget.y = 0f;
+
+        // Rotate the player towards the target direction
+        if (directionToTarget != Vector3.zero) {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            //transform.rotation = targetRotation;
+
+        }
+    }
+
+    private IEnumerator ResetRotation() {
+        isRotating = true;
+
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = Quaternion.identity; // Initialize with no rotation
+        float smallestAngleDifference = float.MaxValue;
+
+        // Calculate the closest 90° or closest to 0° angle in world space
+        for (int i = 0; i <= 3; i++) {
+            Quaternion rotation = Quaternion.Euler(0f, i * 90f, 0f);
+            float angleDifference = Quaternion.Angle(startRotation, rotation);
+
+            if (angleDifference < smallestAngleDifference) {
+                smallestAngleDifference = angleDifference;
+                targetRotation = rotation;
+            }
+        }
+
+        float t = 0f;
+
+        while (t < 1f) {
+            t += Time.deltaTime * rotationSpeed;
+            transform.rotation = Quaternion.Lerp(startRotation, targetRotation, t);
+            yield return null;
+        }
+
+        isRotating = false;
+    }
 }

@@ -5833,7 +5833,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324944685}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa14ecd5416410e4faf6ed6957432f07, type: 3}
   m_Name: 
@@ -5843,6 +5843,7 @@ MonoBehaviour:
   accelerationTime: 2
   rotationSpeed: 7
   joystick: {fileID: 885755551}
+  target: {fileID: 776908365}
 --- !u!4 &1324944687
 Transform:
   m_ObjectHideFlags: 0
@@ -5884,7 +5885,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324944685}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6bad7cd225c66249b64fc5805056a88, type: 3}
   m_Name: 
