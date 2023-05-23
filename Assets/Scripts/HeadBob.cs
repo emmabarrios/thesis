@@ -8,7 +8,7 @@ public class HeadBob: MonoBehaviour
     [SerializeField] private float bobAmplitude = 0.05f;
 
     //private Player player;
-    [SerializeField] private Orbitate player = null;
+    [SerializeField] private Player player = null;
     private Transform cameraTransform;
     private Vector3 initialCameraPosition;
     private float timer;

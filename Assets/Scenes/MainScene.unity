@@ -496,7 +496,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bobFrequency: 1.5
   bobAmplitude: 0.05
-  player: {fileID: 1324944689}
+  player: {fileID: 1324944686}
 --- !u!1 &116546297
 GameObject:
   m_ObjectHideFlags: 0
@@ -5818,7 +5818,6 @@ GameObject:
   - component: {fileID: 1324944687}
   - component: {fileID: 1324944686}
   - component: {fileID: 1324944688}
-  - component: {fileID: 1324944689}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5838,12 +5837,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa14ecd5416410e4faf6ed6957432f07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  maxMovementSpeed: 6
+  currentState: 0
+  dashDistance: 0.2
+  dashSpeed: 2
+  isDashing: 0
+  movementSpeed: 4
+  maxMovementSpeed: 4
   accelerationTime: 2
-  rotationSpeed: 7
-  joystick: {fileID: 885755551}
+  rotationSpeed: 5
   target: {fileID: 776908365}
+  followRotationSpeed: 20
+  busySpeed: 2
+  isBusy: 0
+  busyTime: 5
+  currentSpeed: 0
+  joystick: {fileID: 885755551}
+  swipeDetector: {fileID: 2083568618}
 --- !u!4 &1324944687
 Transform:
   m_ObjectHideFlags: 0
@@ -5878,24 +5887,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1324944689
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324944685}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6bad7cd225c66249b64fc5805056a88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 5
-  maxMovementSpeed: 6
-  accelerationTime: 2
-  rotationSpeed: 10
-  target: {fileID: 776908365}
-  joystick: {fileID: 885755551}
 --- !u!1 &1337179266
 GameObject:
   m_ObjectHideFlags: 0
@@ -9211,6 +9202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSwipeLength: 5
   swipeDirection: 0
+  isLocked: 0
 --- !u!4 &2083568619
 Transform:
   m_ObjectHideFlags: 0
@@ -9523,7 +9515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

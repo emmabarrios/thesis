@@ -32,12 +32,12 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
     public event EventHandler OnHandleDroped;
-    public event EventHandler<OnDashPerformedEventArgs> OnDashPerformed;
+    public event EventHandler<OnDoubleTapEventArgs> OnDoubleTap;
 
     public class OnHandleDragedEventArgs : EventArgs {
         public float magnitude;
     }
-    public class OnDashPerformedEventArgs : EventArgs {
+    public class OnDoubleTapEventArgs : EventArgs {
         public Vector2 point;
     }
 
@@ -103,7 +103,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         handle.anchoredPosition = Vector2.zero;
         OnHandleDroped?.Invoke(this, EventArgs.Empty);
 
-        CheckForDoubleTapDash(eventData);
+        DoubleTap(eventData);
 
         StartCoroutine(FadeTo(.2f, fadeTime));
 
@@ -140,7 +140,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         });
     }
 
-    private void CheckForDoubleTapDash(PointerEventData eventData) {
+    private void DoubleTap(PointerEventData eventData) {
 
         if (OnArea(eventData)) {
             Vector2 center = baseRect.rect.center;
@@ -153,7 +153,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
                 if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
                     Vector2 distance = localPoint - center;
 
-                    OnDashPerformed?.Invoke(this, new OnDashPerformedEventArgs {
+                    OnDoubleTap?.Invoke(this, new OnDoubleTapEventArgs {
                         point = distance
                     });
                 }
@@ -171,21 +171,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         }
         return Vector2.zero;
     }
-
-    IEnumerator FadeTo(float aValue, float aTime) {
-
-        float alpha = image.color.a;
-
-            for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / aTime) {
-
-                Color newColor = image.color;
-                newColor.a = Mathf.Lerp(alpha, aValue, t);
-                image.color = newColor;
-
-                yield return null;
-            }
-    }
-
+    
     private bool OnArea(PointerEventData eventData) {
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(image.rectTransform, eventData.position, eventData.pressEventCamera, out Vector2 localPoint)) {
@@ -207,5 +193,19 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             }
         }
         return false;
+    }
+
+    IEnumerator FadeTo(float aValue, float aTime) {
+
+        float alpha = image.color.a;
+
+        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / aTime) {
+
+            Color newColor = image.color;
+            newColor.a = Mathf.Lerp(alpha, aValue, t);
+            image.color = newColor;
+
+            yield return null;
+        }
     }
 }

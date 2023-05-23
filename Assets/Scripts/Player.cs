@@ -1,11 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UIElements.Experimental;
 
-public class Player : MonoBehaviour
-{
-    public enum PlayerState { Normal, Combat}
+public class Player : MonoBehaviour {
+    public enum PlayerState { Normal, Combat }
     public PlayerState currentState;
+
+    [Header("Dash Settings")]
+    [SerializeField] float dashDistance;
+    [SerializeField] float dashSpeed;
+    [SerializeField] bool isDashing = false;
 
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 5f;
@@ -13,28 +21,44 @@ public class Player : MonoBehaviour
     [SerializeField] private float accelerationTime = 2f;
     [SerializeField] private float rotationSpeed = 90f;
 
+    [Header("Orbital Settings")]
+    public Transform target;
+    [SerializeField] private float followRotationSpeed = 4f;
+
+    [Header("Busy Settings")]
+    [SerializeField] private float busySpeed = 2f;
+    [SerializeField] private bool isBusy = false;
+    [SerializeField] private float busyTime = 5f;
+
     private CharacterController characterController;
-    private float currentSpeed;
+
+    [Header("Camera bob factor")]
+    [SerializeField] private float currentSpeed;
     private bool isRotating;
 
     private bool isMoving = false;
 
     public bool IsMoving { get { return isMoving; } }
     public float CurrentSpeed { get { return currentSpeed; } }
+
+    [Header("External Components")]
     public Joystick joystick = null;
 
     public SwipeDetector swipeDetector = null;
 
-    [Header("Orbital Settings")]
-    public Transform target; // Reference to the transform for rotation
+    private bool isAttacking = false;
 
     private void Start() {
         // Set the initial state to Normal
-        currentState = PlayerState.Normal;
+        currentState = PlayerState.Combat;
 
         characterController = GetComponent<CharacterController>();
         currentSpeed = 0f;
         isRotating = false;
+
+        // Subscribe to events
+        swipeDetector.SwipeDirectionChanged += ProcessSwipeDetection;
+        joystick.OnDoubleTap += Dash;
     }
 
     private void Update() {
@@ -59,7 +83,7 @@ public class Player : MonoBehaviour
 
             }
         }
-        
+
 
         // Rotate 90° in the passed direction.
         if (Input.GetKeyDown(KeyCode.E) && !isRotating) {
@@ -69,42 +93,62 @@ public class Player : MonoBehaviour
         }
 
         // Toggle current state
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        //if (Input.GetKeyDown(KeyCode.Space)) {
 
-            if (currentState == PlayerState.Combat) {
-                StartCoroutine("ResetRotation");
-            }
+        //    if (currentState == PlayerState.Combat) {
+        //        StartCoroutine("ResetRotation");
+        //    }
 
-            SwitchState();
-           
-        }
+        //    SwitchState();
+
+        //}
     }
 
     private void MovePlayerNormal(Vector2 inputMovement) {
-        // Rotate the movement direction from local to world space
-        Vector3 movementDirection = new Vector3(inputMovement.x, 0f, inputMovement.y);
-        Vector3 worldMovementDirection = transform.TransformDirection((movementDirection));
 
-        if (worldMovementDirection.magnitude>0) {
-            isMoving = true;
-        } else {
-            isMoving= false;
+        if (isAttacking == false) {
+
+            Vector3 joystickDirection = new Vector3(inputMovement.x, 0f, inputMovement.y);
+            Vector3 movementDirection = transform.TransformDirection((joystickDirection));
+
+            if (movementDirection.magnitude > 0) {
+                isMoving = true;
+            } else {
+                isMoving = false;
+            }
+
+
+            // Calculate the target speed based on input direction
+            float targetSpeed = movementDirection.magnitude * maxMovementSpeed;
+
+            // Lerp the current speed towards the target speed for smooth acceleration
+            currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * accelerationTime);
+
+
+            Vector3 movement = new Vector3(0, 0, 0);
+
+            if (!isBusy) {
+                // Apply the movement to the player
+                movement = movementDirection * movementSpeed * Time.deltaTime;
+            } else {
+                // Apply the movement to the player
+                movement = movementDirection * busySpeed * Time.deltaTime;
+            }
+
+            characterController.Move(movement);
         }
-
-        // Calculate the target speed based on input direction
-        float targetSpeed = worldMovementDirection.magnitude * maxMovementSpeed;
-
-        // Lerp the current speed towards the target speed for smooth acceleration
-        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * accelerationTime);
-
-        // Apply the movement to the player
-        Vector3 movement = worldMovementDirection * currentSpeed * Time.deltaTime;
-        characterController.Move(movement);
     }
 
     private void MovePlayerOrbital(Vector3 inputMovement) {
+        //if (isDashing == false) {
+
+        //    MovePlayerNormal(inputMovement);
+        //    RotateToTarget();
+        //}
+
         MovePlayerNormal(inputMovement);
-        RotatePlayer();
+        RotateToTarget();
+
     }
 
     private IEnumerator RotatePlayer(int dir) {
@@ -122,30 +166,6 @@ public class Player : MonoBehaviour
         }
 
         isRotating = false;
-    }
-
-    private void SwitchState() {
-        if (currentState == PlayerState.Normal) {
-            currentState = PlayerState.Combat;
-        } else {
-            currentState = PlayerState.Normal;
-        }
-    }
-
-    private void RotatePlayer() {
-        // Calculate the direction from player to target
-        Vector3 directionToTarget = target.position - transform.position;
-
-        // Ignore the vertical component of the direction
-        directionToTarget.y = 0f;
-
-        // Rotate the player towards the target direction
-        if (directionToTarget != Vector3.zero) {
-            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-            //transform.rotation = targetRotation;
-
-        }
     }
 
     private IEnumerator ResetRotation() {
@@ -175,5 +195,122 @@ public class Player : MonoBehaviour
         }
 
         isRotating = false;
+    }
+
+    private void SwitchState() {
+        if (currentState == PlayerState.Normal) {
+            currentState = PlayerState.Combat;
+        } else {
+            currentState = PlayerState.Normal;
+        }
+    }
+
+    private void RotateToTarget() {
+        // Calculate the direction from player to target
+        Vector3 directionToTarget = target.position - transform.position;
+
+        // Ignore the vertical component of the direction
+        directionToTarget.y = 0f;
+
+        // Rotate the player towards the target direction
+        if (directionToTarget != Vector3.zero) {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * followRotationSpeed);
+            //transform.rotation = targetRotation;
+
+        }
+    }
+
+    private void ProcessSwipeDetection(object sender, SwipeDetector.SwipeDirectionChangedEventArgs e) {
+
+        if (!isRotating) {
+
+            if (e.swipeDirection == SwipeDetector.SwipeDir.Left && currentState == PlayerState.Normal) {
+
+                StartCoroutine(RotatePlayer(1));
+
+            } else if (e.swipeDirection == SwipeDetector.SwipeDir.Right && currentState == PlayerState.Normal) {
+
+                StartCoroutine(RotatePlayer(-1));
+            }
+        }
+
+        //if (e.swipeDirection == SwipeDetector.SwipeDir.Up) {
+
+        //    if (currentState == PlayerState.Combat) {
+        //        StartCoroutine("ResetRotation");
+        //    }
+
+        //    SwitchState();
+        //}
+
+        if (isAttacking == false) {
+
+            if ((e.swipeDirection == SwipeDetector.SwipeDir.Left ||
+                   e.swipeDirection == SwipeDetector.SwipeDir.UpLeft ||
+                   e.swipeDirection == SwipeDetector.SwipeDir.Up ||
+                   e.swipeDirection == SwipeDetector.SwipeDir.UpRight ||
+                   e.swipeDirection == SwipeDetector.SwipeDir.Right ||
+                   e.swipeDirection == SwipeDetector.SwipeDir.DownRight ||
+                   e.swipeDirection == SwipeDetector.SwipeDir.Down ||
+                   e.swipeDirection == SwipeDetector.SwipeDir.DownLeft) &&
+                   currentState == PlayerState.Combat) {
+
+                StartCoroutine(Attack(e.swipeDirection));
+            }
+        }
+
+            //} else if (e.swipeDirection == SwipeDetector.SwipeDir.Down) {
+            //    StartCoroutine(InitiateBusyCounter(5f));
+            //}
+
+    }
+
+    private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
+        StartCoroutine(DashRoutine(e.point));
+    }
+
+    private IEnumerator InitiateBusyCounter(float time) {
+        isBusy = true;
+        yield return new WaitForSeconds(busyTime);
+        isBusy = false;
+    } 
+
+    private IEnumerator Attack(SwipeDetector.SwipeDir direction) {
+        isAttacking = true;
+        Debug.Log("Attacked in direction: " + direction);
+        yield return new WaitForSeconds(3f);
+        isAttacking = false;
+    }
+
+    // Coroutine to move the object
+    private IEnumerator DashRoutine(Vector2 point) {
+        isDashing = true;
+
+        Vector3 pointNormalized = point.normalized;
+        Vector3 direction = new Vector3(pointNormalized.x, 0f, pointNormalized.y);  // Ignore Y-axis
+
+        Vector3 startPosition = characterController.transform.position;
+        Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * dashDistance;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 1f) {
+            // Calculate the current position based on the interpolation between start and target positions
+            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime);
+
+            // Move the character controller towards the current position (ignoring Y-axis)
+            characterController.Move(new Vector3(currentPosition.x - startPosition.x, 0f, currentPosition.z - startPosition.z));
+
+            // Update the elapsed time
+            elapsedTime += Time.deltaTime * dashSpeed;
+
+            yield return null;
+        }
+
+        // Ensure the character controller reaches the exact target position
+        characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
+
+        isDashing = false;
     }
 }

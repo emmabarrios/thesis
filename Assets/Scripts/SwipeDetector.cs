@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -15,9 +16,15 @@ public class SwipeDetector : MonoBehaviour
 
     [SerializeField] private SwipeDir swipeDirection;
 
-    public SwipeDir SwipeDirection { get { return swipeDirection; } }
+    public SwipeDir SwipeDirection { get { return swipeDirection; } set { swipeDirection = value; } }
 
     public bool isLocked = false;
+
+    public event EventHandler<SwipeDirectionChangedEventArgs> SwipeDirectionChanged;
+    public class SwipeDirectionChangedEventArgs: EventArgs {
+        public SwipeDir swipeDirection;
+    }
+
 
     void Update() {
 
@@ -83,12 +90,15 @@ public class SwipeDetector : MonoBehaviour
                 }
 
             if (isLocked == false) {
+
+                SwipeDir _swipeDirection = new SwipeDir();
+
                 if (t.phase == TouchPhase.Ended) {
                     secondPressPos = new Vector2(t.position.x, t.position.y);
                     currentSwipe = new Vector3(secondPressPos.x - firstPressPos.x, secondPressPos.y - firstPressPos.y);
 
                     if (currentSwipe.magnitude < minSwipeLength) {
-                        swipeDirection = SwipeDir.None;
+                        _swipeDirection = SwipeDir.None;
                         return;
                     }
 
@@ -99,23 +109,26 @@ public class SwipeDetector : MonoBehaviour
                     }
 
                     if (swipeAngle > 22.5f && swipeAngle <= 67.5f) {
-                        swipeDirection = SwipeDir.UpRight;
+                        _swipeDirection = SwipeDir.UpRight;
                     } else if (swipeAngle > 67.5f && swipeAngle <= 112.5f) {
-                        swipeDirection = SwipeDir.Up;
+                        _swipeDirection = SwipeDir.Up;
                     } else if (swipeAngle > 112.5f && swipeAngle <= 157.5f) {
-                        swipeDirection = SwipeDir.UpLeft;
+                        _swipeDirection = SwipeDir.UpLeft;
                     } else if (swipeAngle > 157.5f && swipeAngle <= 202.5f) {
-                        swipeDirection = SwipeDir.Left;
+                        _swipeDirection = SwipeDir.Left;
                     } else if (swipeAngle > 202.5f && swipeAngle <= 247.5f) {
-                        swipeDirection = SwipeDir.DownLeft;
+                        _swipeDirection = SwipeDir.DownLeft;
                     } else if (swipeAngle > 247.5f && swipeAngle <= 292.5f) {
-                        swipeDirection = SwipeDir.Down;
+                        _swipeDirection = SwipeDir.Down;
                     } else if (swipeAngle > 292.5f && swipeAngle <= 337.5f) {
-                        swipeDirection = SwipeDir.DownRight;
+                        _swipeDirection = SwipeDir.DownRight;
                     } else {
-                        swipeDirection = SwipeDir.Right;
+                        _swipeDirection = SwipeDir.Right;
                     }
                 }
+
+                //SwipeDirectionChanged?.Invoke(this, new SwipeDirectionChangedEventArgs { swipeDirection = swipeDirection });
+                CheckIfStateChanged(_swipeDirection);
             }
         }
     }
@@ -138,6 +151,14 @@ public class SwipeDetector : MonoBehaviour
         List<RaycastResult> raysastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, raysastResults);
         return raysastResults;
+    }
+
+    private void CheckIfStateChanged(SwipeDir tempDirection) {
+
+        if (SwipeDirection != tempDirection) {
+            SwipeDirection = tempDirection;
+            SwipeDirectionChanged?.Invoke(this, new SwipeDirectionChangedEventArgs { swipeDirection = swipeDirection });
+        }
     }
 }
 

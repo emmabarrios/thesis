@@ -19,7 +19,7 @@ public class ActionLabel : MonoBehaviour
         aButton.OnBlocking += ChangeLabelValue;
         aButton.OnParry += ChangeLabelValue;
         aButton.OnTensionReleased += ChangeLabelValue;
-        joystick.OnDashPerformed += ChangeLabelValue;
+        joystick.OnDoubleTap += ChangeLabelValue;
         joystick.OnHandleDroped += ChangeLabelValue;
     }
 
@@ -31,7 +31,7 @@ public class ActionLabel : MonoBehaviour
         text.text = e.a;
     }
     
-    public void ChangeLabelValue(object sender, Joystick.OnDashPerformedEventArgs e) {
+    public void ChangeLabelValue(object sender, Joystick.OnDoubleTapEventArgs e) {
         text.text = "Dashed to point: \n" + e.point;
     }
     
