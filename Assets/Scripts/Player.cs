@@ -13,6 +13,8 @@ public class Player : MonoBehaviour {
     [Header("Dash Settings")]
     [SerializeField] private float dashDistance;
     [SerializeField] private float dashMovementSpeed;
+    [SerializeField] private float dirMultiplier = 1f;
+    [SerializeField] private float distanceFactor = 100f;
     [SerializeField] private bool isDashing = false;
     [SerializeField] private float followRotationDashSpeed = 4f;
 
@@ -336,11 +338,13 @@ public class Player : MonoBehaviour {
 
         isDashing = true;
 
+        Debug.Log(point);
+
         Vector3 pointNormalized = point.normalized;
         Vector3 direction = new Vector3(pointNormalized.x, 0f, pointNormalized.y); // Ignore Y-axis
 
         Vector3 startPosition = characterController.transform.position;
-        Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * dashDistance;
+        Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * dashDistance * ProcessDirMultiplier(point);
 
         float elapsedTime = 0f;
         float step = 0.02f; // Fixed time step for movement calculation
@@ -446,5 +450,11 @@ public class Player : MonoBehaviour {
         }
     }
 
+    private float ProcessDirMultiplier(Vector2 dir) {
+        if(Mathf.Abs(dir.x) >= distanceFactor) {
+            return dirMultiplier;
+        }
+        return 1f;
+    }
 
 }
