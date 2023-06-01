@@ -21,7 +21,7 @@ public class HeadBob: MonoBehaviour
 
     private void Update() {
         // Check if the player is moving
-        if (player.IsMoving) {
+        if (player.IsWalking) {
             // Update the head bob animation
             UpdateHeadBob();
         } else {

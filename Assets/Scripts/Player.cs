@@ -1,14 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements.Experimental;
 
 public class Player : MonoBehaviour {
     public enum PlayerState { Normal, Combat }
     public PlayerState currentState;
+
+    [Header("Weapon Cooldown")]
+    [SerializeField] private float swipeLeftTimer;
+    [SerializeField] private float swipeRightTimer;
+    [SerializeField] private float swipeUpTimer;
+    [SerializeField] private float swipeDownTimer;
+    private bool isCooling;
+    private float coolDownTimer;
 
     [Header("Dash Settings")]
     [SerializeField] private float dashDistance;
@@ -16,18 +24,23 @@ public class Player : MonoBehaviour {
     [SerializeField] private float dirMultiplier = 1f;
     [SerializeField] private float distanceFactor = 100f;
     [SerializeField] private bool isDashing = false;
+    public bool IsDashing { get { return isDashing; } }
     [SerializeField] private float followRotationDashSpeed = 4f;
 
     [Header("Attack Settings")]
     [SerializeField] private float attackDistance;
     [SerializeField] private float attackMovementSpeed;
     [SerializeField] private bool isAttacking = false;
+    public bool IsAttacking { get { return isAttacking; } }
 
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float maxMovementSpeed = 10f;
     [SerializeField] private float accelerationTime = 2f;
     [SerializeField] private float turnSpeed = 90f;
+    [SerializeField] private bool isWalking;
+    public bool IsWalking { get { return isWalking; } set { isWalking = value; } }
+
 
     [Header("Orbital Settings")]
     public Transform target;
@@ -35,8 +48,16 @@ public class Player : MonoBehaviour {
 
     [Header("Limited Settings")]
     [SerializeField] private float limitedSpeed = 2f;
-    [SerializeField] private bool isLimited = false;
+    [SerializeField] private float timer;
     [SerializeField] private float limitedTime = 5f;
+    [SerializeField] private float damageCoolDown = 2f;
+    [SerializeField] private bool isTiming;
+    [SerializeField] private bool isLimited = false;
+    public bool IsLimited { get { return isLimited; } }
+
+    [Header("Weapon Anchors")]
+    [SerializeField] private Transform pointL;
+    [SerializeField] private Transform pointR;
 
     private CharacterController characterController;
 
@@ -44,9 +65,6 @@ public class Player : MonoBehaviour {
     [SerializeField] private float currentSpeed;
     private bool isRotating;
 
-    private bool isMoving = false;
-
-    public bool IsMoving { get { return isMoving; } }
     public float CurrentSpeed { get { return currentSpeed; } }
 
     [Header("External Components")]
@@ -55,12 +73,31 @@ public class Player : MonoBehaviour {
     public SwipeDetector swipeDetector = null;
 
     public event EventHandler OnDamageTaken;
+    //public event EventHandler OnAttacking;
+
+    public event EventHandler OnDash;
+    public event EventHandler OnBlocking;
+    public event EventHandler<OnAttackEventArgs> OnAttack;
+
+    public class OnAttackEventArgs: EventArgs {
+        public SwipeDetector.SwipeDir swipeDirection;
+    }
 
     public Shake camHolder = null;
+
+    private PlayerAnimator playerAnimator;
+
+    //private SwipeDetector.SwipeDir swipeDir;
 
     private void Start() {
         // Set the initial state to Normal
         currentState = PlayerState.Combat;
+
+        playerAnimator = this.GetComponentInChildren<PlayerAnimator>();
+        playerAnimator.OnUsingItem += EnterBusytate;
+        playerAnimator.OnFinishedUsingItem += ExitBusyState;
+        //playerAnimator.OnFinishedAttack += ExitAttackState;
+        //playerAnimator.OnEnterAttack += EnterAttackState;
 
         characterController = GetComponent<CharacterController>();
         currentSpeed = 0f;
@@ -69,6 +106,12 @@ public class Player : MonoBehaviour {
         // Subscribe to events
         swipeDetector.SwipeDirectionChanged += ProcessSwipeDetection;
         joystick.OnDoubleTap += Dash;
+
+
+        pointL = GameObject.Find("Attach Point L").GetComponent<Transform>();
+        pointR = GameObject.Find("Attach Point R").GetComponent<Transform>();
+
+        
     }
 
     private void Update() {
@@ -115,6 +158,27 @@ public class Player : MonoBehaviour {
         //    SwitchState();
 
         //}
+
+        // Timer 
+        if (isTiming) {
+            timer -= Time.deltaTime;
+            if (timer < 0.1f) {
+                timer = 0;
+                isLimited = false;
+                isTiming = false;
+               
+            }
+        } 
+        
+        // Weapon Cooldown Timer 
+        if (isCooling) {
+            coolDownTimer -= Time.deltaTime;
+            if (coolDownTimer < 0.1f) {
+                coolDownTimer = 0;
+                isAttacking = false;
+                isCooling = false;
+            }
+        }
     }
 
     private void MovePlayerNormal(Vector2 inputMovement) {
@@ -124,12 +188,11 @@ public class Player : MonoBehaviour {
             Vector3 joystickDirection = new Vector3(inputMovement.x, 0f, inputMovement.y);
             Vector3 movementDirection = transform.TransformDirection((joystickDirection));
 
-            if (movementDirection.magnitude > 0) {
-                isMoving = true;
+            if (movementDirection.magnitude > 0.1 && isDashing == false) {
+                IsWalking = true;
             } else {
-                isMoving = false;
+                IsWalking = false;
             }
-
 
             // Calculate the target speed based on input direction
             float targetSpeed = movementDirection.magnitude * maxMovementSpeed;
@@ -139,7 +202,7 @@ public class Player : MonoBehaviour {
 
             Vector3 movement = new Vector3(0, 0, 0);
 
-            if (!isLimited) {
+            if (isLimited == false) {
                 // Apply the movement to the player
                 movement = movementDirection * movementSpeed * Time.deltaTime;
             } else {
@@ -251,51 +314,46 @@ public class Player : MonoBehaviour {
             }
         }
 
-        //if (e.swipeDirection == SwipeDetector.SwipeDir.Up) {
 
-        //    if (currentState == PlayerState.Combat) {
-        //        StartCoroutine("ResetRotation");
-        //    }
-
-        //    SwitchState();
-        //}
-
-        if (isAttacking == false) {
-
-            if ((e.swipeDirection == SwipeDetector.SwipeDir.Left ||
-                   e.swipeDirection == SwipeDetector.SwipeDir.UpLeft ||
-                   e.swipeDirection == SwipeDetector.SwipeDir.Up ||
-                   e.swipeDirection == SwipeDetector.SwipeDir.UpRight ||
-                   e.swipeDirection == SwipeDetector.SwipeDir.Right ||
-                   e.swipeDirection == SwipeDetector.SwipeDir.DownRight ||
-                   e.swipeDirection == SwipeDetector.SwipeDir.Down ||
-                   e.swipeDirection == SwipeDetector.SwipeDir.DownLeft) &&
-                   currentState == PlayerState.Combat) {
-
-                if (isAttacking == false) {
-                    StartCoroutine(AttackCoroutine(Vector3.forward, e.swipeDirection));
-                }
-            }
+        if (isDashing == false && isAttacking == false && isLimited == false) {
+            StartCoroutine(AttackCoroutine(Vector3.forward));
+            OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+            StarWeaponCooldownTimer(e.swipeDirection);
         }
 
-            //} else if (e.swipeDirection == SwipeDetector.SwipeDir.Down) {
-            //    StartCoroutine(InitiateBusyCounter(5f));
-            //}
+        //if (isAttacking == false) {
+
+        //    if ((e.swipeDirection == SwipeDetector.SwipeDir.Left ||
+        //           e.swipeDirection == SwipeDetector.SwipeDir.UpLeft ||
+        //           e.swipeDirection == SwipeDetector.SwipeDir.Up ||
+        //           e.swipeDirection == SwipeDetector.SwipeDir.UpRight ||
+        //           e.swipeDirection == SwipeDetector.SwipeDir.Right ||
+        //           e.swipeDirection == SwipeDetector.SwipeDir.DownRight ||
+        //           e.swipeDirection == SwipeDetector.SwipeDir.Down ||
+        //           e.swipeDirection == SwipeDetector.SwipeDir.DownLeft) &&
+        //           currentState == PlayerState.Combat) {
+
+        //        if (isDashing == false && isAttacking == false && isLimited == false) {
+        //            StartCoroutine(AttackCoroutine(Vector3.forward, e.swipeDirection));
+        //        }
+        //    }
+        //}
 
     }
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
 
         if (isDashing == false && isAttacking == false && isLimited == false) {
+            OnDash?.Invoke(this, EventArgs.Empty);
             StartCoroutine(DashRoutine(e.point));
         }
     }
 
-    private IEnumerator InitiateBusyCounter(float time) {
-        isLimited = true;
-        yield return new WaitForSeconds(limitedTime);
-        isLimited = false;
-    } 
+    //private IEnumerator InitiateBusyCounter(float time) {
+    //    isLimited = true;
+    //    yield return new WaitForSeconds(limitedTime);
+    //    isLimited = false;
+    //} 
 
     private IEnumerator Attack(SwipeDetector.SwipeDir direction) {
 
@@ -337,8 +395,6 @@ public class Player : MonoBehaviour {
     private IEnumerator DashRoutine(Vector2 point) {
 
         isDashing = true;
-
-        Debug.Log(point);
 
         Vector3 pointNormalized = point.normalized;
         Vector3 direction = new Vector3(pointNormalized.x, 0f, pointNormalized.y); // Ignore Y-axis
@@ -401,10 +457,8 @@ public class Player : MonoBehaviour {
     //    isAttacking = false;
     //}
 
-    private IEnumerator AttackCoroutine(Vector3 direction, SwipeDetector.SwipeDir swipeDirection) {
-        isAttacking = true;
-
-        Debug.Log("Attacked in direction: " + swipeDirection);
+    private IEnumerator AttackCoroutine(Vector3 direction, SwipeDetector.SwipeDir e) {
+        //isAttacking = true;
 
         Vector3 startPosition = characterController.transform.position;
         Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * attackDistance;
@@ -428,7 +482,33 @@ public class Player : MonoBehaviour {
         // Ensure the character controller reaches the exact target position
         characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
 
-        isAttacking = false;
+        //isAttacking = false;
+    }
+    
+    private IEnumerator AttackCoroutine(Vector3 direction) {
+       
+        Vector3 startPosition = characterController.transform.position;
+        Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * attackDistance;
+
+        float elapsedTime = 0f;
+        float step = 0.02f; // Fixed time step for movement calculation
+
+        while (elapsedTime < 1f) {
+            // Calculate the current position based on the interpolation between start and target positions
+            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime);
+
+            // Move the character controller towards the current position (ignoring Y-axis)
+            characterController.Move(new Vector3(currentPosition.x - startPosition.x, 0f, currentPosition.z - startPosition.z));
+
+            // Update the elapsed time
+            elapsedTime += step * attackMovementSpeed;
+
+            yield return new WaitForSeconds(step);
+        }
+
+        // Ensure the character controller reaches the exact target position
+        characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
+
     }
 
     private IEnumerator CoolDown(float timer) {
@@ -444,7 +524,9 @@ public class Player : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         if (other.tag == "Damage") {
 
-            StartCoroutine(CoolDown(limitedTime));
+            //StartCoroutine(CoolDown(limitedTime));
+
+            StartLimitedTimerState(damageCoolDown);
 
             OnDamageTaken?.Invoke(this, EventArgs.Empty);
         }
@@ -457,4 +539,76 @@ public class Player : MonoBehaviour {
         return 1f;
     }
 
+    public void ToggleWeapons(bool toggle) {
+        if (toggle) {
+            pointL.GetChild(0).gameObject.SetActive(false);
+            pointR.GetChild(0).gameObject.SetActive(false);
+        } else {
+            pointL.GetChild(0).gameObject.SetActive(true);
+            pointR.GetChild(0).gameObject.SetActive(true);
+        }
+        
+    }
+
+    public void StartLimitedTimerState(float time) {
+        timer = time;
+        isTiming = true;
+        isLimited = true;
+    }
+
+    public void StarWeaponCooldownTimer(SwipeDetector.SwipeDir swipeDir) {
+        
+        isAttacking = true;
+
+        float _time;
+
+        switch (swipeDir) {
+            case SwipeDetector.SwipeDir.Left:
+                _time = swipeLeftTimer;
+                break;
+
+            case SwipeDetector.SwipeDir.Right:
+                _time = swipeRightTimer;
+                break;
+
+            case SwipeDetector.SwipeDir.Up:
+                _time = swipeUpTimer;
+                break;
+
+            case SwipeDetector.SwipeDir.Down:
+                _time = swipeDownTimer;
+                break;
+
+            default:
+                _time = 0;
+                break;
+
+        }
+
+        coolDownTimer = _time;
+
+        isCooling = true;
+    }
+
+    private void EnterBusytate(object sender, EventArgs e) {
+        StartLimitedTimerState(limitedTime);
+        pointL.GetChild(0).gameObject.SetActive(false);
+        pointR.GetChild(0).gameObject.SetActive(false);
+    }
+    
+    private void ExitBusyState(object sender, EventArgs e) {
+        pointL.GetChild(0).gameObject.SetActive(true);
+        pointR.GetChild(0).gameObject.SetActive(true);
+    }
+
+    private void ExitAttackState(object sender, EventArgs e) {
+        isAttacking = false;
+    }
+
+    //private void EnterAttackState(object sender, EventArgs e) {
+    //    if (isDashing == false && isAttacking == false) {
+    //        isAttacking = true;
+    //        StartCoroutine(AttackCoroutine(Vector3.forward));
+    //    }
+    //}
 }
