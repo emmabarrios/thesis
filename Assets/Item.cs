@@ -8,8 +8,11 @@ public class Item : MonoBehaviour
     [SerializeField] private Transform attachPointA;
     [SerializeField] private Transform attachPointB;
     [SerializeField] private Animator animator;
-    //private Vector3 initialScale;
 
+    [Header("Destroy Timer Settings")]
+    [SerializeField] private float timer;
+    [SerializeField] private float destroyTime;
+    [SerializeField] private bool isTiming;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +23,7 @@ public class Item : MonoBehaviour
 
         animator = GetComponentInChildren<Animator>();
 
-        //initialScale = transform.localScale;
+        timer = destroyTime;
 
         AttachToPoint(attachPointA);
     }
@@ -33,27 +36,26 @@ public class Item : MonoBehaviour
 
         this.transform.localPosition = Vector3.zero;
 
-        //Vector3 rootScale = GameObject.Find("Player Visual").GetComponent<Transform>().localScale;
-
-        //transform.localScale = new Vector3(
-        //    initialScale.x / rootScale.x * 10,
-        //    initialScale.y / rootScale.y * 10,
-        //    initialScale.z / rootScale.z * 10
-        //);
-
-        //Debug.Log(rootScale);
     }
 
     private void Update() {
         if (animator != null) {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            //if (stateInfo.IsName("Idle") && stateInfo.normalizedTime >= 0.5f) {
-            //    AttachToPoint(attachPointB);
-            //} 
+
             if (stateInfo.IsName("Idle")) {
-                //transform.position = attachPointB.position;
                 AttachToPoint(attachPointB);
+                isTiming = true;
+            }
+        }
+
+        if (isTiming) {
+            timer -= Time.deltaTime;
+            if (timer < 0.1f) {
+                timer = 0;
+                Destroy(gameObject);
             }
         }
     }
+
+
 }

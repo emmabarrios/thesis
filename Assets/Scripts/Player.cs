@@ -72,11 +72,15 @@ public class Player : MonoBehaviour {
 
     public SwipeDetector swipeDetector = null;
 
+    public Button buttonA = null;
+
     public event EventHandler OnDamageTaken;
     //public event EventHandler OnAttacking;
 
     public event EventHandler OnDash;
     public event EventHandler OnBlocking;
+    public event EventHandler OnReleaseBlock;
+    public event EventHandler OnParry;
     public event EventHandler<OnAttackEventArgs> OnAttack;
 
     public class OnAttackEventArgs: EventArgs {
@@ -87,7 +91,8 @@ public class Player : MonoBehaviour {
 
     private PlayerAnimator playerAnimator;
 
-    //private SwipeDetector.SwipeDir swipeDir;
+    private bool isBlocking = false;
+    public bool IsBlocking { get { return isBlocking; } set { IsBlocking = value; } }
 
     private void Start() {
         // Set the initial state to Normal
@@ -96,6 +101,10 @@ public class Player : MonoBehaviour {
         playerAnimator = this.GetComponentInChildren<PlayerAnimator>();
         playerAnimator.OnUsingItem += EnterBusytate;
         playerAnimator.OnFinishedUsingItem += ExitBusyState;
+        buttonA.OnBlocking += Block;
+        buttonA.OnHandleDroped += ReleaseBlock;
+        buttonA.OnParry += Parry;
+
         //playerAnimator.OnFinishedAttack += ExitAttackState;
         //playerAnimator.OnEnterAttack += EnterAttackState;
 
@@ -112,6 +121,10 @@ public class Player : MonoBehaviour {
         pointR = GameObject.Find("Attach Point R").GetComponent<Transform>();
 
         
+    }
+
+    private void ButtonA_OnBlocking(object sender, Button.OnBlockingEventArgs e) {
+        throw new NotImplementedException();
     }
 
     private void Update() {
@@ -166,7 +179,6 @@ public class Player : MonoBehaviour {
                 timer = 0;
                 isLimited = false;
                 isTiming = false;
-               
             }
         } 
         
@@ -605,10 +617,16 @@ public class Player : MonoBehaviour {
         isAttacking = false;
     }
 
-    //private void EnterAttackState(object sender, EventArgs e) {
-    //    if (isDashing == false && isAttacking == false) {
-    //        isAttacking = true;
-    //        StartCoroutine(AttackCoroutine(Vector3.forward));
-    //    }
-    //}
+    private void Block(object sender, EventArgs e) {
+        OnBlocking?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ReleaseBlock(object sender, EventArgs e) {
+        OnReleaseBlock?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Parry(object sender, EventArgs e) {
+        OnParry?.Invoke(this, EventArgs.Empty);
+        OnReleaseBlock?.Invoke(this, EventArgs.Empty);
+    }
 }

@@ -12,9 +12,11 @@ public class PlayerAnimator : MonoBehaviour {
     private const string IS_ATTACKING_UP = "isAttackingUp";
     private const string IS_DASHING = "isDashing";
     private const string IS_WALKING = "isWalking";
+    private const string IS_BLOCKING = "isBlocking";
+    private const string PARRY = "parry";
 
     [SerializeField] private Player player;
-    [SerializeField] private SwipeDetector swipeDetector;
+    [SerializeField] private Transform handAttachPoint;
 
     public event EventHandler OnUsingItem;
     public event EventHandler OnFinishedUsingItem;
@@ -28,7 +30,9 @@ public class PlayerAnimator : MonoBehaviour {
 
         player.OnAttack += ProcessPlayerAttack;
         player.OnDash += ExecuteDashAnimation;
-        //swipeDetector.SwipeDirectionChanged += ProcessSwipeDetection;
+        player.OnBlocking += ExecuteRiseShieldAnimation;
+        player.OnReleaseBlock += ExecuteLowerShieldAnimation;
+        player.OnParry += ExecuteParryAnimation;
 
     }
 
@@ -46,6 +50,15 @@ public class PlayerAnimator : MonoBehaviour {
         OnFinishedUsingItem?.Invoke(this, EventArgs.Empty);
     }
 
+    public void ExecuteRiseShieldAnimation(object sender, EventArgs e) {
+        animator.SetBool(IS_BLOCKING, true);
+    }
+
+    public void ExecuteLowerShieldAnimation(object sender, EventArgs e) {
+        animator.SetBool(IS_BLOCKING, false);
+
+    }
+
     //public void CallOnEnterAttack() {
     //    OnEnterAttack?.Invoke(this, EventArgs.Empty);
     //}
@@ -58,7 +71,10 @@ public class PlayerAnimator : MonoBehaviour {
     private void ExecuteDashAnimation(object sender, EventArgs e) {
         animator.SetTrigger(IS_DASHING);
     }
-    
+
+    private void ExecuteParryAnimation(object sender, EventArgs e) {
+        animator.SetBool("parry", true);
+    }
 
     private void ProcessPlayerAttack(object sender, Player.OnAttackEventArgs e) {
         //Debug.Log(e.swipeDirection);
@@ -76,5 +92,9 @@ public class PlayerAnimator : MonoBehaviour {
             animator.SetTrigger(IS_ATTACKING_UP);
             //OnEnterAttack?.Invoke(this, EventArgs.Empty);
         }
+    }
+    
+    private void DisableParryState() {
+        animator.SetBool("parry", false);
     }
 }

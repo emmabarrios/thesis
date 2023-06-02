@@ -3225,7 +3225,7 @@ GameObject:
   - component: {fileID: 646709153}
   m_Layer: 5
   m_Name: A Anchor
-  m_TagString: Untagged
+  m_TagString: ButtonA
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4133,7 +4133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 817078856242349448, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: axisOptions
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 817078856242349448, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: activeAnchor
@@ -4271,6 +4271,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5704831906136594268, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
+      propertyPath: m_TagString
+      value: ButtonA
+      objectReference: {fileID: 0}
     - target: {fileID: 7508551065194755121, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4295,6 +4299,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5704831906136594268, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
   m_PrefabInstance: {fileID: 822662139}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &822662142 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 817078856242349448, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
+  m_PrefabInstance: {fileID: 822662139}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822662141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebbc2c08d115064da0faabb2e91f44d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &822662143 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5704831906136594259, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
@@ -6393,6 +6408,7 @@ MonoBehaviour:
   currentSpeed: 0
   joystick: {fileID: 885755551}
   swipeDetector: {fileID: 2083568618}
+  buttonA: {fileID: 822662142}
   camHolder: {fileID: 92373488}
 --- !u!4 &1324944687
 Transform:
@@ -10389,7 +10405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   player: {fileID: 1324944686}
-  swipeDetector: {fileID: 2083568618}
+  handAttachPoint: {fileID: 0}
 --- !u!1001 &4770818140153865597
 PrefabInstance:
   m_ObjectHideFlags: 0

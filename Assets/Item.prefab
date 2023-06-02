@@ -47,6 +47,9 @@ MonoBehaviour:
   attachPointA: {fileID: 0}
   attachPointB: {fileID: 0}
   animator: {fileID: 0}
+  timer: 0
+  destroyTime: 1.5
+  isTiming: 0
 --- !u!1001 &1342077819668382660
 PrefabInstance:
   m_ObjectHideFlags: 0

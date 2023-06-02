@@ -39,8 +39,7 @@ public class SwipeDetector : MonoBehaviour
                 } else {
                     isLocked = false;
                 }
-
-                    firstPressPos = new Vector2(t.position.x, t.position.y);
+                firstPressPos = new Vector2(t.position.x, t.position.y);
                 }
 
             if (isLocked == false) {
@@ -79,7 +78,6 @@ public class SwipeDetector : MonoBehaviour
                     } else {
                         _swipeDirection = SwipeDir.Right;
                     }
-
                     CheckIfStateChanged(_swipeDirection);
                 }
             }
@@ -90,6 +88,7 @@ public class SwipeDetector : MonoBehaviour
         return IsPointerOverUIElement(GetEventSystemRaycastResults());
 
     }
+
     public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults) {
         for (int index = 0; index < eventSystemRaysastResults.Count; index++) {
             RaycastResult curRaysastResult = eventSystemRaysastResults[index];
@@ -98,6 +97,7 @@ public class SwipeDetector : MonoBehaviour
         }
         return false;
     }
+
     static List<RaycastResult> GetEventSystemRaycastResults() {
         PointerEventData eventData = new PointerEventData(EventSystem.current);
         eventData.position = Input.mousePosition;

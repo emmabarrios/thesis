@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 
 public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
 
-    public enum AxisOptions { Both, Horizontal, Vertical, None }
+    public enum AxisOptions { Both, Horizontal, Vertical, None, Shield }
     public float Horizontal { get { return (snapX) ? SnapFloat(input.x, AxisOptions.Horizontal) : input.x; } }
     public float Vertical { get { return (snapY) ? SnapFloat(input.y, AxisOptions.Vertical) : input.y; } }
     
@@ -37,9 +37,14 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     
     public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
     public event EventHandler<OnBlockingEventArgs> OnBlocking;
-    public event EventHandler<OnParryEventArgs> OnParry;
+    //public event EventHandler<OnParryEventArgs> OnParry;
+    public event EventHandler OnParry;
     public event EventHandler<OnTensionReleasedEventArgs> OnTensionReleased;
     public event EventHandler OnHandleDroped;
+
+    Vector2 initialTouchPosition;
+    float eventSwipeThreshold = 160f;
+
 
     [SerializeField] private Vector2 scale;
 
@@ -85,6 +90,8 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
 
     public void OnPointerDown(PointerEventData eventData) {
 
+        initialTouchPosition = eventData.position;
+
         // Button swapping 
         if (!IsActive) {
             IsActive = true;
@@ -105,9 +112,11 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         }
 
         // Axis Option None state
-        if (axisOptions == AxisOptions.None) {
+        if (axisOptions == AxisOptions.Shield) {
             OnBlocking?.Invoke(this, new OnBlockingEventArgs { a = "Blocking" });
         }
+
+        
     }
 
     public void OnPointerUp(PointerEventData eventData) {
@@ -115,12 +124,19 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         handle.anchoredPosition = Vector2.zero;
 
         if (axisOptions == AxisOptions.None) {
-            OnBlocking?.Invoke(this, new OnBlockingEventArgs { a = "" });
             CheckForDoubleTap(eventData);
         }
 
         if (axisOptions == AxisOptions.Vertical) {
             OnTensionReleased?.Invoke(this, new OnTensionReleasedEventArgs { magnitude = storedMagnitude });
+        }
+
+        if (axisOptions == AxisOptions.Shield) {
+
+            float swipeDistance = eventData.position.x - initialTouchPosition.x;
+            if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
+                OnParry?.Invoke(this, new OnParryEventArgs { a = "Parry!" });
+            }
         }
 
         OnHandleDroped?.Invoke(this, EventArgs.Empty);
@@ -130,7 +146,7 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         float currentTimeClick = eventData.clickTime;
 
         if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
-            OnParry?.Invoke(this, new OnParryEventArgs { a = "Parry!"});
+            //OnParry?.Invoke(this, new OnParryEventArgs { a = "Parry!"});
         }
         lastTimeTap = currentTimeClick;
     }
@@ -194,7 +210,7 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
             input = new Vector2(input.x, 0f);
         else if (axisOptions == AxisOptions.Vertical)
             input = new Vector2(0f, input.y);
-        else if (axisOptions == AxisOptions.None) {
+        else if (axisOptions == AxisOptions.None || axisOptions == AxisOptions.Shield) {
             input = Vector2.zero;
         }
     }
