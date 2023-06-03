@@ -13,15 +13,15 @@ public class PlayerAnimator : MonoBehaviour {
     private const string IS_DASHING = "isDashing";
     private const string IS_WALKING = "isWalking";
     private const string IS_BLOCKING = "isBlocking";
-    private const string PARRY = "parry";
 
     [SerializeField] private Player player;
     [SerializeField] private Transform handAttachPoint;
 
     public event EventHandler OnUsingItem;
+    public event EventHandler OnAnimating;
     public event EventHandler OnFinishedUsingItem;
     public event EventHandler OnEnterAttack;
-    public event EventHandler OnFinishedAttack;
+    public event EventHandler OnFinishedAction;
 
     // Start is called before the first frame update
     void Start() {
@@ -63,8 +63,8 @@ public class PlayerAnimator : MonoBehaviour {
     //    OnEnterAttack?.Invoke(this, EventArgs.Empty);
     //}
 
-    public void CallOnFinishedAttack() {
-        OnFinishedAttack?.Invoke(this, EventArgs.Empty);
+    public void CallFinishedAction() {
+        OnFinishedAction?.Invoke(this, EventArgs.Empty);
     }
 
 
@@ -77,7 +77,6 @@ public class PlayerAnimator : MonoBehaviour {
     }
 
     private void ProcessPlayerAttack(object sender, Player.OnAttackEventArgs e) {
-        //Debug.Log(e.swipeDirection);
 
         if (e.swipeDirection == SwipeDetector.SwipeDir.Right) {
             animator.SetTrigger(IS_ATTACKING_RIGHT);
@@ -91,10 +90,17 @@ public class PlayerAnimator : MonoBehaviour {
         } else if (e.swipeDirection == SwipeDetector.SwipeDir.Up) {
             animator.SetTrigger(IS_ATTACKING_UP);
             //OnEnterAttack?.Invoke(this, EventArgs.Empty);
+        } else {
+            CallFinishedAction();
         }
     }
     
     private void DisableParryState() {
         animator.SetBool("parry", false);
     }
+
+    private void OnAnimatorMove() {
+        OnAnimating?.Invoke(this, EventArgs.Empty);
+    }
+
 }

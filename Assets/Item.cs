@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    [SerializeField] private Vector3 offset;
     [SerializeField] private Transform attachPointA;
     [SerializeField] private Transform attachPointB;
     [SerializeField] private Animator animator;
@@ -13,6 +14,7 @@ public class Item : MonoBehaviour
     [SerializeField] private float timer;
     [SerializeField] private float destroyTime;
     [SerializeField] private bool isTiming;
+    private bool isAttached = false;
 
     // Start is called before the first frame update
     void Start()
@@ -39,14 +41,19 @@ public class Item : MonoBehaviour
     }
 
     private void Update() {
-        if (animator != null) {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (isAttached == false) {
+            if (animator != null) {
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-            if (stateInfo.IsName("Idle")) {
-                AttachToPoint(attachPointB);
-                isTiming = true;
+                if (stateInfo.IsName("Idle")) {
+                    isAttached = true;
+                    AttachToPoint(attachPointB);
+                    this.transform.localPosition = transform.localPosition + offset;
+                    isTiming = true;
+                }
             }
         }
+       
 
         if (isTiming) {
             timer -= Time.deltaTime;
@@ -56,6 +63,5 @@ public class Item : MonoBehaviour
             }
         }
     }
-
 
 }

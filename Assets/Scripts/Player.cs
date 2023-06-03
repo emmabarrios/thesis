@@ -10,12 +10,14 @@ public class Player : MonoBehaviour {
     public enum PlayerState { Normal, Combat }
     public PlayerState currentState;
 
+    [SerializeField] Transform playerVisual = null;
+
     [Header("Weapon Cooldown")]
     [SerializeField] private float swipeLeftTimer;
     [SerializeField] private float swipeRightTimer;
     [SerializeField] private float swipeUpTimer;
     [SerializeField] private float swipeDownTimer;
-    private bool isCooling;
+    [SerializeField] private bool isCooling;
     private float coolDownTimer;
 
     [Header("Dash Settings")]
@@ -23,15 +25,15 @@ public class Player : MonoBehaviour {
     [SerializeField] private float dashMovementSpeed;
     [SerializeField] private float dirMultiplier = 1f;
     [SerializeField] private float distanceFactor = 100f;
-    [SerializeField] private bool isDashing = false;
-    public bool IsDashing { get { return isDashing; } }
+    [SerializeField] private bool canDash = false;
+    //public bool IsDashing { get { return canDash; } }
     [SerializeField] private float followRotationDashSpeed = 4f;
 
     [Header("Attack Settings")]
     [SerializeField] private float attackDistance;
     [SerializeField] private float attackMovementSpeed;
-    [SerializeField] private bool isAttacking = false;
-    public bool IsAttacking { get { return isAttacking; } }
+    [SerializeField] private bool canAttack = true;
+    public bool IsAttacking { get { return canAttack; } }
 
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 5f;
@@ -101,11 +103,12 @@ public class Player : MonoBehaviour {
         playerAnimator = this.GetComponentInChildren<PlayerAnimator>();
         playerAnimator.OnUsingItem += EnterBusytate;
         playerAnimator.OnFinishedUsingItem += ExitBusyState;
+        playerAnimator.OnAnimating += InheritMovementFromAnimation;
         buttonA.OnBlocking += Block;
         buttonA.OnHandleDroped += ReleaseBlock;
         buttonA.OnParry += Parry;
 
-        //playerAnimator.OnFinishedAttack += ExitAttackState;
+        playerAnimator.OnFinishedAction += EnableActions;
         //playerAnimator.OnEnterAttack += EnterAttackState;
 
         characterController = GetComponent<CharacterController>();
@@ -141,10 +144,8 @@ public class Player : MonoBehaviour {
                     break;
 
                 case PlayerState.Combat:
-                    if (isDashing == false && isAttacking == false) {
-                        MovePlayerNormal(inputMovement);
-                        RotateToTarget(followRotationSpeed);
-                    }
+                    MovePlayerNormal(inputMovement);
+                    RotateToTarget(followRotationSpeed);
                     break;
 
                 default:
@@ -152,7 +153,6 @@ public class Player : MonoBehaviour {
 
             }
         }
-
 
         // Rotate 90° in the passed direction.
         if (Input.GetKeyDown(KeyCode.E) && !isRotating) {
@@ -183,24 +183,23 @@ public class Player : MonoBehaviour {
         } 
         
         // Weapon Cooldown Timer 
-        if (isCooling) {
-            coolDownTimer -= Time.deltaTime;
-            if (coolDownTimer < 0.1f) {
-                coolDownTimer = 0;
-                isAttacking = false;
-                isCooling = false;
-            }
-        }
+        //if (isCooling) {
+        //    coolDownTimer -= Time.deltaTime;
+        //    if (coolDownTimer < 0.1f) {
+        //        coolDownTimer = 0;
+        //        isCooling = false;
+        //    }
+        //}
     }
 
     private void MovePlayerNormal(Vector2 inputMovement) {
 
-        if (isAttacking == false) {
+        if (canAttack == true) {
 
             Vector3 joystickDirection = new Vector3(inputMovement.x, 0f, inputMovement.y);
             Vector3 movementDirection = transform.TransformDirection((joystickDirection));
 
-            if (movementDirection.magnitude > 0.1 && isDashing == false) {
+            if (movementDirection.magnitude > 0.1) {
                 IsWalking = true;
             } else {
                 IsWalking = false;
@@ -327,10 +326,11 @@ public class Player : MonoBehaviour {
         }
 
 
-        if (isDashing == false && isAttacking == false && isLimited == false) {
-            StartCoroutine(AttackCoroutine(Vector3.forward));
+        if (canAttack == true && isLimited == false) {
+            //StartCoroutine(AttackCoroutine(Vector3.forward));
+            canAttack = false;
             OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
-            StarWeaponCooldownTimer(e.swipeDirection);
+            //StarWeaponCooldownTimer(e.swipeDirection);
         }
 
         //if (isAttacking == false) {
@@ -355,7 +355,8 @@ public class Player : MonoBehaviour {
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
 
-        if (isDashing == false && isAttacking == false && isLimited == false) {
+        if (canDash == true && isCooling == false && isLimited == false) {
+            canDash = false;
             OnDash?.Invoke(this, EventArgs.Empty);
             StartCoroutine(DashRoutine(e.point));
         }
@@ -406,8 +407,6 @@ public class Player : MonoBehaviour {
 
     private IEnumerator DashRoutine(Vector2 point) {
 
-        isDashing = true;
-
         Vector3 pointNormalized = point.normalized;
         Vector3 direction = new Vector3(pointNormalized.x, 0f, pointNormalized.y); // Ignore Y-axis
 
@@ -432,11 +431,9 @@ public class Player : MonoBehaviour {
 
             yield return new WaitForSeconds(step);
         }
-
         // Ensure the character controller reaches the exact target position
         //characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
 
-        isDashing = false;
     }
 
     //private IEnumerator AttackCoroutine(Vector3 direction, SwipeDetector.SwipeDir swipeDirection) {
@@ -570,7 +567,7 @@ public class Player : MonoBehaviour {
 
     public void StarWeaponCooldownTimer(SwipeDetector.SwipeDir swipeDir) {
         
-        isAttacking = true;
+        //isAttacking = true;
 
         float _time;
 
@@ -613,8 +610,9 @@ public class Player : MonoBehaviour {
         pointR.GetChild(0).gameObject.SetActive(true);
     }
 
-    private void ExitAttackState(object sender, EventArgs e) {
-        isAttacking = false;
+    private void EnableActions(object sender, EventArgs e) {
+        canAttack = true;
+        canDash = true;
     }
 
     private void Block(object sender, EventArgs e) {
@@ -628,5 +626,18 @@ public class Player : MonoBehaviour {
     private void Parry(object sender, EventArgs e) {
         OnParry?.Invoke(this, EventArgs.Empty);
         OnReleaseBlock?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void InheritMovementFromAnimation(object sender, EventArgs e) {
+        Animator animator = playerAnimator.GetComponent<Animator>();
+        Vector3 deltaPosition = animator.deltaPosition;
+
+        Vector3 worldDeltaPosition = deltaPosition;
+
+        characterController.Move(worldDeltaPosition);
+
+        //if (canAttack == true) {
+            
+        //}
     }
 }
