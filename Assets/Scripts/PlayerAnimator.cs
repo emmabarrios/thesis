@@ -33,12 +33,12 @@ public class PlayerAnimator : MonoBehaviour {
         player.OnBlocking += ExecuteRiseShieldAnimation;
         player.OnReleaseBlock += ExecuteLowerShieldAnimation;
         player.OnParry += ExecuteParryAnimation;
-
     }
 
     // Update is called once per frame
     void Update() {
         animator.SetBool(IS_WALKING, player.IsWalking);
+        animator.SetFloat("WalkSpeed", Mathf.Clamp(player.CurrentSpeed, 0.1f, 1));
     }
 
 

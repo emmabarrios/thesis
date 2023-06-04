@@ -8,7 +8,6 @@ using UnityEngine.SocialPlatforms;
 public class Shake : MonoBehaviour
 {
     private Quaternion originalRotation;
-    private Camera camera;
     private Transform cameraTransform;
     [SerializeField] private Player player = null;
 
@@ -21,8 +20,9 @@ public class Shake : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        camera = GetComponentInChildren<Camera>();
-        cameraTransform = camera.GetComponent<Transform>();
+        //camera = GetComponentInChildren<Camera>();
+        //cameraTransform = camera.GetComponent<Transform>();
+        cameraTransform = this.GetComponent<Transform>();
         originalRotation = cameraTransform.localRotation;
 
         player.OnDamageTaken += StartCameraShake;

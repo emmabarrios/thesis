@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1342077820700973741}
   - component: {fileID: 1342077820700973740}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   attachPointB: {fileID: 0}
   animator: {fileID: 0}
   timer: 0
-  destroyTime: 2
+  destroyTime: 3
   isTiming: 0
 --- !u!1 &1410325444693340118
 GameObject:
@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 7552459273063923750}
   - component: {fileID: 7226127946026044666}
   - component: {fileID: 4188656312719291208}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Seal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 886214185899798167}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bottle_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1550421841450920784}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bottle_Root_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 7691818658376704684}
   - component: {fileID: 5397139834051457203}
   - component: {fileID: 6024057263739662687}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 7900166284629167114}
   - component: {fileID: 4270304930225133168}
   - component: {fileID: 8326849001794722753}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: potion_bottle_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -358,7 +358,7 @@ GameObject:
   - component: {fileID: 5936705466566368891}
   - component: {fileID: 5718063006912791287}
   - component: {fileID: 1405650733461672414}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
