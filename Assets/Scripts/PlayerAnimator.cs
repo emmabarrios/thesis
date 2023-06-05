@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Player;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerAnimator : MonoBehaviour {
+
     [SerializeField] private Animator animator;
+
     private const string IS_ATTACKING_RIGHT = "isAttackingRight";
     private const string IS_ATTACKING_LEFT = "isAttackingLeft";
     private const string IS_ATTACKING_DOWN = "isAttackingDown";
@@ -13,38 +15,58 @@ public class PlayerAnimator : MonoBehaviour {
     private const string IS_DASHING = "isDashing";
     private const string IS_WALKING = "isWalking";
     private const string IS_BLOCKING = "isBlocking";
+    private const string WALK_SPEED = "WalkSpeed";
+    private const string IS_USING_ITEM = "isUsingItem";
 
-    [SerializeField] private Player player;
-    [SerializeField] private Transform handAttachPoint;
+    [SerializeField] private PlayerController playerController;
 
-    public event EventHandler OnUsingItem;
+    [SerializeField] private float useItemAnimLenght;
+
+    public event EventHandler<OnUsingItemEventArgs> OnUsingItem;
     public event EventHandler OnAnimating;
     public event EventHandler OnFinishedUsingItem;
     public event EventHandler OnEnterAttack;
     public event EventHandler OnFinishedAction;
 
+    public class OnUsingItemEventArgs: EventArgs {
+        public float animLength;
+    }
+
     // Start is called before the first frame update
     void Start() {
-        animator = this.GetComponent<Animator>();
-        player = this.GetComponentInParent<Player>();
+        animator = GetComponent<Animator>();
+        playerController = GetComponentInParent<PlayerController>();
 
-        player.OnAttack += ProcessPlayerAttack;
-        player.OnDash += ExecuteDashAnimation;
-        player.OnBlocking += ExecuteRiseShieldAnimation;
-        player.OnReleaseBlock += ExecuteLowerShieldAnimation;
-        player.OnParry += ExecuteParryAnimation;
+        playerController.OnAttack += ProcessPlayerAttack;
+        playerController.OnDash += ExecuteDashAnimation;
+        playerController.OnBlocking += ExecuteRiseShieldAnimation;
+        playerController.OnReleaseBlock += ExecuteLowerShieldAnimation;
+        playerController.OnParry += ExecuteParryAnimation;
     }
 
     // Update is called once per frame
     void Update() {
-        animator.SetBool(IS_WALKING, player.IsWalking);
-        animator.SetFloat("WalkSpeed", Mathf.Clamp(player.CurrentSpeed, 0.1f, 1));
+        animator.SetBool(IS_WALKING, playerController.IsWalking);
+        animator.SetFloat(WALK_SPEED, Mathf.Clamp(playerController.CurrentSpeed, 0.1f, 1));
+        animator.SetBool(IS_BLOCKING, playerController.IsBlocking);
     }
 
-
-    public void CallOnUsingItem() {
-        OnUsingItem?.Invoke(this, EventArgs.Empty);
+    public void Trigger_UsingItem_AnimState() {
+        animator.SetTrigger(IS_USING_ITEM);
+        OnUsingItem?.Invoke(this, new OnUsingItemEventArgs { animLength = useItemAnimLenght });
     }
+
+    //public void LateUpdate() {
+    //    AnimatorClipInfo[] clipInfoArray = animator.GetCurrentAnimatorClipInfo(0);
+
+    //    for (int i = 0; i < clipInfoArray.Length; i++) {
+    //        if (clipInfoArray[i].clip.name == "Use_Bottle_1") {
+    //            Debug.Log(clipInfoArray[i].clip.name);
+    //            AnimatorClipInfo clipInfo = clipInfoArray[i];
+    //            OnUsingItem?.Invoke(this, new OnUsingItemEventArgs { animLength = clipInfo.clip.length });
+    //        }
+    //    }
+    //}
 
     public void CallOnFinishedUsingItem() {
         OnFinishedUsingItem?.Invoke(this, EventArgs.Empty);
@@ -56,17 +78,11 @@ public class PlayerAnimator : MonoBehaviour {
 
     public void ExecuteLowerShieldAnimation(object sender, EventArgs e) {
         animator.SetBool(IS_BLOCKING, false);
-
     }
-
-    //public void CallOnEnterAttack() {
-    //    OnEnterAttack?.Invoke(this, EventArgs.Empty);
-    //}
 
     public void CallFinishedAction() {
         OnFinishedAction?.Invoke(this, EventArgs.Empty);
     }
-
 
     private void ExecuteDashAnimation(object sender, EventArgs e) {
         animator.SetTrigger(IS_DASHING);
@@ -76,20 +92,16 @@ public class PlayerAnimator : MonoBehaviour {
         animator.SetBool("parry", true);
     }
 
-    private void ProcessPlayerAttack(object sender, Player.OnAttackEventArgs e) {
+    private void ProcessPlayerAttack(object sender, PlayerController.OnAttackEventArgs e) {
 
-        if (e.swipeDirection == SwipeDetector.SwipeDir.Right) {
+        if (e.swipeDirection == GestureInput.SwipeDir.Right) {
             animator.SetTrigger(IS_ATTACKING_RIGHT);
-            //OnEnterAttack?.Invoke(this, EventArgs.Empty);
-        } else if (e.swipeDirection == SwipeDetector.SwipeDir.Left) {
+        } else if (e.swipeDirection == GestureInput.SwipeDir.Left) {
             animator.SetTrigger(IS_ATTACKING_LEFT);
-            //OnEnterAttack?.Invoke(this, EventArgs.Empty);
-        } else if (e.swipeDirection == SwipeDetector.SwipeDir.Down) {
+        } else if (e.swipeDirection == GestureInput.SwipeDir.Down) {
             animator.SetTrigger(IS_ATTACKING_DOWN);
-            //OnEnterAttack?.Invoke(this, EventArgs.Empty);
-        } else if (e.swipeDirection == SwipeDetector.SwipeDir.Up) {
+        } else if (e.swipeDirection == GestureInput.SwipeDir.Up) {
             animator.SetTrigger(IS_ATTACKING_UP);
-            //OnEnterAttack?.Invoke(this, EventArgs.Empty);
         } else {
             CallFinishedAction();
         }

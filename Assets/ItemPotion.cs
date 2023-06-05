@@ -26,14 +26,6 @@ public class ItemPotion : MonoBehaviour
             timer -= Time.deltaTime;
 
             if (timer < 0.1f) {
-                //isTiming = false;
-                //timer = 0;
-                //seal.SetActive(false);
-
-                //Transform parentTransform = GameObject.Find("Player Attach Point").GetComponent<Transform>();
-                //GameObject instantiatedObject = Instantiate(SpawnSeal, parentTransform.position + offset, parentTransform.rotation);
-                //instantiatedObject.transform.rotation = parentTransform.rotation;
-                //instantiatedObject.GetComponent<Rigidbody>().AddForce(parentTransform.transform.forward + impulseDirection * impulseForce, ForceMode.Impulse);
 
                 isTiming = false;
                 timer = 0;

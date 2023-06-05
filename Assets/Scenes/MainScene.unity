@@ -457,7 +457,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 807515000}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &28454047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,7 +675,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 92373486}
-  - component: {fileID: 92373487}
   - component: {fileID: 92373488}
   m_Layer: 0
   m_Name: Camera Holder
@@ -700,21 +699,6 @@ Transform:
   m_Father: {fileID: 1324944687}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &92373487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92373485}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1e61294fbca85c499cbe223c70f8978, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bobFrequency: 1.8
-  bobAmplitude: 0.05
-  player: {fileID: 1324944686}
 --- !u!114 &92373488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,7 +711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ec9ff52bf4a187458433b1cbe135a7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1324944686}
+  playerController: {fileID: 0}
   duration: 0
   rotationSpeed: 5
   magnitude: 10
@@ -743,7 +727,7 @@ GameObject:
   m_Component:
   - component: {fileID: 93649579}
   m_Layer: 3
-  m_Name: Attach Point L
+  m_Name: Anchor Point L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2127,7 +2111,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 456072359}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &168717312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2472,7 +2456,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 151055886}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &309089946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3536,7 +3520,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 1622343600}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &675141692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4439,33 +4423,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5704831906136594268, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
   m_PrefabInstance: {fileID: 822662139}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &822662142 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 817078856242349448, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
-  m_PrefabInstance: {fileID: 822662139}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 822662141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ebbc2c08d115064da0faabb2e91f44d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &822662143 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5704831906136594259, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
   m_PrefabInstance: {fileID: 822662139}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &885755551 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4685811349350116951, guid: f828b7c1152162b4e8992995efede6a0, type: 3}
-  m_PrefabInstance: {fileID: 1938834246}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba0d0e7a039f526499c356a3c5cd6d3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &893683843
 GameObject:
   m_ObjectHideFlags: 0
@@ -4947,7 +4909,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 158585611}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &983545383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5519,7 +5481,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 817202617}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &1128745213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6644,40 +6606,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  playerVisual: {fileID: 2142191166}
-  swipeLeftTimer: 1
-  swipeRightTimer: 1.3
-  swipeUpTimer: 1.5
-  swipeDownTimer: 1
-  isCooling: 0
-  dashDistance: 3.5
-  dashMovementSpeed: 10
-  dirMultiplier: 1
-  distanceFactor: 100
-  canDash: 1
-  followRotationDashSpeed: 2
   target: {fileID: 381421975}
-  followRotationSpeed: 10
-  canAttack: 1
-  movementSpeed: 4
-  maxMovementSpeed: 4
-  accelerationTime: 6
-  deaccelerationTime: 8
+  lookRotationSpeed: 7
+  movementSpeed: 2
+  maxMovementSpeed: 5
+  accelerationTime: 2
+  deaccelerationTime: 4
+  speedLimitMultiplier: 1
   turnSpeed: 90
-  isWalking: 0
-  limitedSpeed: 2
-  timer: 5
-  limitedTime: 2.3
-  damageCoolDown: 0.8
+  dashDistance: 4
+  dashMovementSpeed: 7
+  dirMultiplier: 1
+  lookRotationSpeedMultiplier: 0.1
+  timer: 0
+  time: 5
   isTiming: 0
-  isLimited: 0
-  pointL: {fileID: 0}
-  pointR: {fileID: 0}
-  currentSpeed: 0
-  joystick: {fileID: 885755551}
-  swipeDetector: {fileID: 2083568618}
-  buttonA: {fileID: 822662142}
-  camHolder: {fileID: 92373488}
+  joystick: {fileID: 0}
+  gestureInput: {fileID: 0}
+  buttonA: {fileID: 0}
 --- !u!4 &1324944687
 Transform:
   m_ObjectHideFlags: 0
@@ -6995,7 +6941,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 1818049998}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &1407254288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7119,7 +7065,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1444450645}
   m_Layer: 3
-  m_Name: Attach Point R
+  m_Name: Anchor Point R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7416,7 +7362,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 1908843709}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &1515730557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8299,7 +8245,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 1146910264}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &1681861066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8404,7 +8350,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 918042519}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &1682164514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9243,7 +9189,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 1633403515}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &1799676679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10375,7 +10321,7 @@ GameObject:
   - component: {fileID: 2083568619}
   - component: {fileID: 2083568618}
   m_Layer: 0
-  m_Name: Swipe Detector
+  m_Name: Gesture Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10476,7 +10422,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 1947090787}
   canDraw: 0
-  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &2121226281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10557,8 +10503,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  player: {fileID: 0}
-  handAttachPoint: {fileID: 0}
+  playerController: {fileID: 0}
+  useItemAnimLenght: 0
+--- !u!114 &2142191169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142191165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f196588e9d59edb42b53083a3d370ee9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorPointL: {fileID: 0}
+  anchorPointR: {fileID: 0}
+  animator: {fileID: 0}
+  timer: 0
+  isTiming: 0
 --- !u!1001 &4770818140153865597
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class Shake : MonoBehaviour
 {
     private Quaternion originalRotation;
     private Transform cameraTransform;
-    [SerializeField] private Player player = null;
+    [SerializeField] private PlayerController playerController = null;
 
     [SerializeField] private float duration;
     [SerializeField] private float rotationSpeed;
@@ -17,15 +17,14 @@ public class Shake : MonoBehaviour
     [SerializeField] private int direction = 1;
     [SerializeField] private bool isrotating = false;
 
-    // Start is called before the first frame update
     void Start()
     {
-        //camera = GetComponentInChildren<Camera>();
-        //cameraTransform = camera.GetComponent<Transform>();
-        cameraTransform = this.GetComponent<Transform>();
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        cameraTransform = GetComponent<Transform>();
         originalRotation = cameraTransform.localRotation;
 
-        player.OnDamageTaken += StartCameraShake;
+        // Player Controller Event Subscribers
+        playerController.OnDamageTaken += StartCameraShake;
     }
 
     public void StartCameraShake(object sender, EventArgs e) {
@@ -33,37 +32,6 @@ public class Shake : MonoBehaviour
             StartCoroutine(ShakeCamera(duration, magnitude, direction));
         }
     }
-
-    //private IEnumerator ShakeCamera(float duration, float magnitude, int direction) {
-
-    //    // Reset the camera's rotation to the original rotation
-    //    cameraTransform.localRotation = originalRotation;
-
-    //    isrotating = true;
-
-    //    float elapsedTime = 0f;
-
-    //    // Apply the rotation around the Z-axis
-    //    Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
-    //    cameraTransform.localRotation = rotation;
-
-    //    while (elapsedTime < duration) {
-
-    //        // Apply the rotation around the Z-axis
-    //        cameraTransform.localRotation = Quaternion.Lerp(cameraTransform.localRotation, originalRotation, Time.deltaTime * rotationSpeed);
-
-    //        // Increment the elapsed time
-    //        elapsedTime += Time.deltaTime;
-
-    //        yield return null;
-    //    }
-
-    //    // Reset the camera's rotation to the original rotation
-    //    cameraTransform.localRotation = originalRotation;
-
-    //    isrotating = false;
-
-    //}
 
 
     private IEnumerator ShakeCamera(float duration, float magnitude, int direction) {

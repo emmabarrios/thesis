@@ -8,7 +8,7 @@ public class HeadBob: MonoBehaviour
     [SerializeField] private float bobAmplitude = 0.05f;
 
     //private Player player;
-    [SerializeField] private Player player = null;
+    [SerializeField] private PlayerController playerController = null;
     private Transform cameraTransform;
     private Vector3 initialCameraPosition;
     private float timer;
@@ -21,13 +21,13 @@ public class HeadBob: MonoBehaviour
 
     private void Update() {
         // Check if the player is moving
-        if (player.IsWalking) {
+        //if (player.IsWalking) {
             // Update the head bob animation
-            UpdateHeadBob();
-        } else {
+           // UpdateHeadBob();
+        //} else {
             // Reset the head bob position when the player stops moving
             ResetHeadBob();
-        }
+        //}
     }
 
     private void UpdateHeadBob() {
@@ -40,7 +40,7 @@ public class HeadBob: MonoBehaviour
         cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, targetPosition, Time.deltaTime * 10f);
 
         // Increment the timer
-        timer += Time.deltaTime * player.CurrentSpeed;
+        timer += Time.deltaTime * playerController.CurrentSpeed;
     }
 
     private void ResetHeadBob() {

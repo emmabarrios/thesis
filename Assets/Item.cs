@@ -21,7 +21,7 @@ public class Item : MonoBehaviour
     {
         attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
 
-        attachPointB = GameObject.Find("Attach Point R").GetComponent<Transform>();
+        attachPointB = GameObject.Find("Anchor Point R").GetComponent<Transform>();
 
         animator = GetComponentInChildren<Animator>();
 

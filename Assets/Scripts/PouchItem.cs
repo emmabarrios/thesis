@@ -49,13 +49,13 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     float eventSwipeThreshold = 160f;
 
-    public Player player;
+    public PlayerAnimator playerAnimator;
 
     public void Start() {
         scale = fillImage.GetComponent<RectTransform>().localScale;
         canvas = GetComponentInParent<Canvas>();
         toggle = GameObject.Find("Pouch Toggle").GetComponent<Toggle>();
-        player = GameObject.Find("Player").GetComponent<Player>();
+        playerAnimator = GameObject.Find("Player Visual").GetComponent<PlayerAnimator>();
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -116,10 +116,10 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         // Refactor
 
         toggle.isOn = !toggle.isOn;
-        //Instantiate(objectPrefab, GameObject.Find("Player Attach Point").transform.position, GameObject.Find("Player Attach Point").transform.rotation);
+
         Instantiate(objectPrefab, Vector3.zero, Quaternion.identity);
 
-        GameObject.Find("Player Visual").GetComponent<Animator>().SetTrigger("isUsingItem");
+        playerAnimator.Trigger_UsingItem_AnimState();
 
         Destroy(this.gameObject);
     }
