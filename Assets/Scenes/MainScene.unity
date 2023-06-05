@@ -4849,7 +4849,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &968134289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6651,14 +6651,13 @@ MonoBehaviour:
   swipeDownTimer: 1
   isCooling: 0
   dashDistance: 3.5
-  dashMovementSpeed: 7
+  dashMovementSpeed: 10
   dirMultiplier: 1
   distanceFactor: 100
   canDash: 1
-  step: 0.2
-  followRotationDashSpeed: 3
-  attackDistance: 0.2
-  attackMovementSpeed: 4
+  followRotationDashSpeed: 2
+  target: {fileID: 381421975}
+  followRotationSpeed: 10
   canAttack: 1
   movementSpeed: 4
   maxMovementSpeed: 4
@@ -6666,8 +6665,6 @@ MonoBehaviour:
   deaccelerationTime: 8
   turnSpeed: 90
   isWalking: 0
-  target: {fileID: 381421975}
-  followRotationSpeed: 7
   limitedSpeed: 2
   timer: 5
   limitedTime: 2.3

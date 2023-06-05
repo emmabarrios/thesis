@@ -26,17 +26,17 @@ public class Player : MonoBehaviour {
     [SerializeField] private float dirMultiplier = 1f;
     [SerializeField] private float distanceFactor = 100f;
     [SerializeField] private bool canDash = true;
-    [SerializeField] private float step = 0.2f;
     private Vector2 dashPoint;
     public Vector2 DashPoint { get { return dashPoint; } set { dashPoint = value; } }
-    //public bool IsDashing { get { return canDash; } }
     [SerializeField] private float followRotationDashSpeed = 4f;
 
+    [Header("Orbital Settings")]
+    public Transform target;
+    [SerializeField] private float followRotationSpeed = 4f;
+
     [Header("Attack Settings")]
-    [SerializeField] private float attackDistance;
-    [SerializeField] private float attackMovementSpeed;
     [SerializeField] private bool canAttack = true;
-    public bool IsAttacking { get { return canAttack; } }
+    public bool CanAttack { get { return canAttack; } }
 
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed = 5f;
@@ -50,9 +50,7 @@ public class Player : MonoBehaviour {
     private float last_speed;
 
 
-    [Header("Orbital Settings")]
-    public Transform target;
-    [SerializeField] private float followRotationSpeed = 4f;
+    
 
     [Header("Limited Settings")]
     [SerializeField] private float limitedSpeed = 2f;
@@ -83,8 +81,7 @@ public class Player : MonoBehaviour {
     public Button buttonA = null;
 
     public event EventHandler OnDamageTaken;
-    //public event EventHandler OnAttacking;
-
+    
     public event EventHandler OnDash;
     public event EventHandler OnBlocking;
     public event EventHandler OnReleaseBlock;
@@ -103,84 +100,50 @@ public class Player : MonoBehaviour {
     public bool IsBlocking { get { return isBlocking; } set { IsBlocking = value; } }
 
     private void Start() {
-        // Set the initial state to Normal
         currentState = PlayerState.Combat;
 
         playerAnimator = this.GetComponentInChildren<PlayerAnimator>();
         playerAnimator.OnUsingItem += EnterBusytate;
         playerAnimator.OnFinishedUsingItem += ExitBusyState;
         playerAnimator.OnAnimating += InheritMovementFromAnimation;
+        playerAnimator.OnFinishedAction += EnableActions;
+
         buttonA.OnBlocking += Block;
         buttonA.OnHandleDroped += ReleaseBlock;
         buttonA.OnParry += Parry;
-
-        playerAnimator.OnFinishedAction += EnableActions;
-        //playerAnimator.OnEnterAttack += EnterAttackState;
 
         characterController = GetComponent<CharacterController>();
         currentSpeed = 0f;
         isRotating = false;
 
-        // Subscribe to events
         swipeDetector.SwipeDirectionChanged += ProcessSwipeDetection;
         joystick.OnDoubleTap += Dash;
 
-
         pointL = GameObject.Find("Attach Point L").GetComponent<Transform>();
         pointR = GameObject.Find("Attach Point R").GetComponent<Transform>();
-
-        
-    }
-
-    private void ButtonA_OnBlocking(object sender, Button.OnBlockingEventArgs e) {
-        throw new NotImplementedException();
     }
 
     private void Update() {
 
         Vector2 inputMovement = joystick.Direction;
 
-        // Update logic based on the current state
-
         if (!isRotating) {
 
             switch (currentState) {
                 case PlayerState.Normal:
-                    MovePlayerNormal(inputMovement);
+                    Orbitate(inputMovement);
                     break;
 
                 case PlayerState.Combat:
                     if (canDash == true) {
-                        MovePlayerNormal(inputMovement);
-                        RotateToTarget(followRotationSpeed);
+                        Orbitate(inputMovement);
                     }
-                    //MovePlayerNormal(inputMovement);
-                    //RotateToTarget(followRotationSpeed);
                     break;
 
                 default:
                     break;
-
             }
         }
-
-        // Rotate 90° in the passed direction.
-        if (Input.GetKeyDown(KeyCode.E) && !isRotating) {
-            StartCoroutine(RotatePlayer(1));
-        } else if (Input.GetKeyDown(KeyCode.Q) && !isRotating) {
-            StartCoroutine(RotatePlayer(-1));
-        }
-
-        // Toggle current state
-        //if (Input.GetKeyDown(KeyCode.Space)) {
-
-        //    if (currentState == PlayerState.Combat) {
-        //        StartCoroutine("ResetRotation");
-        //    }
-
-        //    SwitchState();
-
-        //}
 
         // Timer 
         if (isTiming) {
@@ -191,18 +154,9 @@ public class Player : MonoBehaviour {
                 isTiming = false;
             }
         } 
-        
-        // Weapon Cooldown Timer 
-        //if (isCooling) {
-        //    coolDownTimer -= Time.deltaTime;
-        //    if (coolDownTimer < 0.1f) {
-        //        coolDownTimer = 0;
-        //        isCooling = false;
-        //    }
-        //}
     }
 
-    private void MovePlayerNormal(Vector2 inputMovement) {
+    private void Orbitate(Vector2 inputMovement) {
 
         if (canAttack == true) {
 
@@ -211,20 +165,19 @@ public class Player : MonoBehaviour {
 
             Vector3 movement = new Vector3(0, 0, 0);
 
-            // Calculate the target speed based on input direction
             float targetSpeed = movementDirection.magnitude * maxMovementSpeed;
 
-            if (movementDirection.magnitude>0) {
+            if (movementDirection.magnitude > 0) {
                 isWalking = true;
             } else {
                 isWalking = false;
             }
 
             if (targetSpeed > 0) {
-                // Lerp the current speed towards the target speed for smooth acceleration
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * accelerationTime);
                 movement = movementDirection.normalized * currentSpeed * Time.deltaTime;
                 last_movement = movement;
+                RotateToTarget(followRotationSpeed, Time.deltaTime);
             } else {
 
                 if (currentSpeed > 1) {
@@ -233,13 +186,14 @@ public class Player : MonoBehaviour {
                     currentSpeed = 0;
                 }
                 movement = last_movement.normalized * currentSpeed * Time.deltaTime;
+                RotateToTarget(followRotationSpeed, Time.deltaTime);
             }
             
             characterController.Move(movement);
         }
     }
 
-    private IEnumerator RotatePlayer(int dir) {
+    private IEnumerator RotateDegrees(int dir) {
 
         isRotating = true;
 
@@ -256,7 +210,7 @@ public class Player : MonoBehaviour {
         isRotating = false;
     }
 
-    private IEnumerator ResetRotation() {
+    private IEnumerator ResetRotationDegrees() {
         isRotating = true;
 
         Quaternion startRotation = transform.rotation;
@@ -285,6 +239,28 @@ public class Player : MonoBehaviour {
         isRotating = false;
     }
 
+    private IEnumerator DashRoutine(Vector2 point) {
+        float duration = dashDistance / dashMovementSpeed; // Duration in seconds
+
+        Vector3 startPosition = characterController.transform.position;
+        Vector3 targetPosition = startPosition + (characterController.transform.forward * point.y + characterController.transform.right * point.x).normalized * dashDistance;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration) {
+            float t = elapsedTime / duration;
+            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, t);
+
+            characterController.Move(currentPosition - characterController.transform.position);
+
+            RotateToTarget(followRotationDashSpeed, elapsedTime);
+
+            elapsedTime += Time.fixedDeltaTime;
+
+            yield return null;
+        }
+    }
+
     private void SwitchState() {
         if (currentState == PlayerState.Normal) {
             currentState = PlayerState.Combat;
@@ -293,25 +269,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private void RotateToTarget(float followRotationSpeed) {
-        // Calculate the direction from player to target
-        Vector3 directionToTarget = target.position - transform.position;
-
-        // Ignore the vertical component of the direction
-        directionToTarget.y = 0f;
-
-        // Rotate the player towards the target direction
-        if (directionToTarget != Vector3.zero) {
-           
-            //transform.rotation = targetRotation;
-        }
-
-        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * followRotationSpeed);
-
-    }
-
-    private void _RotateToTarget(float followRotationSpeed) {
+    private void RotateToTarget(float followRotationSpeed, float timeDelta) {
         // Calculate the direction from player to target
         Vector3 directionToTarget = target.position - transform.position;
 
@@ -320,7 +278,9 @@ public class Player : MonoBehaviour {
 
         // Rotate the player towards the target direction
         Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.fixedDeltaTime * followRotationSpeed);
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
+
     }
 
     private void ProcessSwipeDetection(object sender, SwipeDetector.SwipeDirectionChangedEventArgs e) {
@@ -329,11 +289,11 @@ public class Player : MonoBehaviour {
 
             if (e.swipeDirection == SwipeDetector.SwipeDir.Left && currentState == PlayerState.Normal) {
 
-                StartCoroutine(RotatePlayer(1));
+                StartCoroutine(RotateDegrees(1));
 
             } else if (e.swipeDirection == SwipeDetector.SwipeDir.Right && currentState == PlayerState.Normal) {
 
-                StartCoroutine(RotatePlayer(-1));
+                StartCoroutine(RotateDegrees(-1));
             }
         }
 
@@ -376,219 +336,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    //private IEnumerator InitiateBusyCounter(float time) {
-    //    isLimited = true;
-    //    yield return new WaitForSeconds(limitedTime);
-    //    isLimited = false;
-    //} 
-
-    private IEnumerator Attack(SwipeDetector.SwipeDir direction) {
-
-        yield return new WaitForSeconds(3f);
-
-    }
-
-    // Coroutine to move the object
-    //private IEnumerator DashRoutine(Vector2 point) {
-    //    isDashing = true;
-
-    //    Vector3 pointNormalized = point.normalized;
-    //    Vector3 direction = new Vector3(pointNormalized.x, 0f, pointNormalized.y);  // Ignore Y-axis
-
-    //    Vector3 startPosition = characterController.transform.position;
-    //    Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * dashDistance;
-
-    //    float elapsedTime = 0f;
-
-    //    while (elapsedTime < 1f) {
-    //        // Calculate the current position based on the interpolation between start and target positions
-    //        Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime);
-
-    //        // Move the character controller towards the current position (ignoring Y-axis)
-    //        characterController.Move(new Vector3(currentPosition.x - startPosition.x, 0f, currentPosition.z - startPosition.z));
-
-    //        // Update the elapsed time
-    //        elapsedTime += Time.deltaTime * dashMovementSpeed;
-
-    //        yield return null;
-    //    }
-
-    //    // Ensure the character controller reaches the exact target position
-    //    characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
-
-    //    isDashing = false;
-    //}
-
-    private IEnumerator DashRoutine(Vector2 point) {
-        float duration = dashDistance / dashMovementSpeed; // Duration in seconds
-
-        Vector3 startPosition = characterController.transform.position;
-        Vector3 targetPosition = startPosition + (characterController.transform.forward * point.y + characterController.transform.right * point.x).normalized * dashDistance;
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < duration) {
-            float t = elapsedTime / duration;
-            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, t);
-
-            characterController.Move(currentPosition - characterController.transform.position);
-
-            _RotateToTarget(followRotationDashSpeed);
-
-            elapsedTime += Time.deltaTime;
-
-            yield return null;
-        }
-
-        // Snap the player to the target position to ensure accurate alignment
-        //characterController.Move(targetPosition - characterController.transform.position);
-        canDash = true;
-    }
-
-    // Last DashRoutine correctly working but without considering the time.deltatime
-    //private IEnumerator DashRoutine(Vector2 point) {
-
-    //    Vector3 pointNormalized = point.normalized;
-    //    Vector3 direction = new Vector3(pointNormalized.x, 0f, pointNormalized.y); // Ignore Y-axis
-
-    //    Vector3 startPosition = characterController.transform.position;
-    //    Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * dashDistance * ProcessDirMultiplier(point);
-
-    //    float elapsedTime = 0f;
-    //    float step = 0.02f; // Fixed time step for movement calculation
-
-    //    while (elapsedTime < 1f) {
-
-    //        // Calculate the current position based on the interpolation between start and target positions
-    //        Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime);
-
-    //        // Move the character controller towards the current position (ignoring Y-axis)
-    //        characterController.Move(new Vector3(currentPosition.x - startPosition.x, 0f, currentPosition.z - startPosition.z));
-
-    //        // Update the elapsed time
-    //        //elapsedTime += step * dashMovementSpeed;
-    //        elapsedTime += step * dashMovementSpeed * Time.deltaTime;
-
-    //        _RotateToTarget(followRotationDashSpeed);
-
-    //        yield return new WaitForSeconds(step);
-    //    }
-
-    //}
-
-    //private IEnumerator AttackCoroutine(Vector3 direction, SwipeDetector.SwipeDir swipeDirection) {
-
-    //    isAttacking = true;
-
-    //    Debug.Log("Attacked in direction: " + swipeDirection);
-
-    //    Vector3 startPosition = characterController.transform.position;
-    //    Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * attackDistance;
-
-    //    float elapsedTime = 0f;
-
-    //    while (elapsedTime < 1f) {
-    //        // Calculate the current position based on the interpolation between start and target positions
-    //        Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime);
-
-    //        // Move the character controller towards the current position (ignoring Y-axis)
-    //        characterController.Move(new Vector3(currentPosition.x - startPosition.x, 0f, currentPosition.z - startPosition.z));
-
-    //        // Update the elapsed time
-    //        elapsedTime += Time.deltaTime * attackMovementSpeed;
-
-    //        yield return null;
-    //    }
-
-    //    // Ensure the character controller reaches the exact target position
-    //    characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
-
-    //    isAttacking = false;
-    //}
-
-    private IEnumerator AttackCoroutine(Vector3 direction, SwipeDetector.SwipeDir e) {
-        //isAttacking = true;
-
-        Vector3 startPosition = characterController.transform.position;
-        Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * attackDistance;
-
-        float elapsedTime = 0f;
-        float step = 0.02f; // Fixed time step for movement calculation
-
-        while (elapsedTime < 1f) {
-            // Calculate the current position based on the interpolation between start and target positions
-            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime);
-
-            // Move the character controller towards the current position (ignoring Y-axis)
-            characterController.Move(new Vector3(currentPosition.x - startPosition.x, 0f, currentPosition.z - startPosition.z));
-
-            // Update the elapsed time
-            elapsedTime += step * attackMovementSpeed;
-
-            yield return new WaitForSeconds(step);
-        }
-
-        // Ensure the character controller reaches the exact target position
-        characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
-
-        //isAttacking = false;
-    }
-    
-    private IEnumerator AttackCoroutine(Vector3 direction) {
-       
-        Vector3 startPosition = characterController.transform.position;
-        Vector3 targetPosition = startPosition + (characterController.transform.forward * direction.z + characterController.transform.right * direction.x).normalized * attackDistance;
-
-        float elapsedTime = 0f;
-        float step = 0.02f; // Fixed time step for movement calculation
-
-        while (elapsedTime < 1f) {
-            // Calculate the current position based on the interpolation between start and target positions
-            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime);
-
-            // Move the character controller towards the current position (ignoring Y-axis)
-            characterController.Move(new Vector3(currentPosition.x - startPosition.x, 0f, currentPosition.z - startPosition.z));
-
-            // Update the elapsed time
-            elapsedTime += step * attackMovementSpeed;
-
-            yield return new WaitForSeconds(step);
-        }
-
-        // Ensure the character controller reaches the exact target position
-        characterController.Move(new Vector3(targetPosition.x - startPosition.x, 0f, targetPosition.z - startPosition.z));
-
-    }
-
-    private IEnumerator CoolDown(float timer) {
-        if (isLimited == false) {
-            isLimited = true; // Reset the boolean value
-        }
-
-        yield return new WaitForSeconds(timer);
-
-        isLimited = false; // Set the boolean value
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        if (other.tag == "Damage") {
-
-            //StartCoroutine(CoolDown(limitedTime));
-
-            StartLimitedTimerState(damageCoolDown);
-
-            OnDamageTaken?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    private float ProcessDirMultiplier(Vector2 dir) {
-        if(Mathf.Abs(dir.x) >= distanceFactor) {
-            return dirMultiplier;
-        }
-        return 1f;
-    }
-
-    public void ToggleWeapons(bool toggle) {
+    public void ToggleWeaponsVisuals(bool toggle) {
         if (toggle) {
             pointL.GetChild(0).gameObject.SetActive(false);
             pointR.GetChild(0).gameObject.SetActive(false);
@@ -599,48 +347,7 @@ public class Player : MonoBehaviour {
         
     }
 
-    public void StartLimitedTimerState(float time) {
-        timer = time;
-        isTiming = true;
-        isLimited = true;
-    }
-
-    public void StarWeaponCooldownTimer(SwipeDetector.SwipeDir swipeDir) {
-        
-        //isAttacking = true;
-
-        float _time;
-
-        switch (swipeDir) {
-            case SwipeDetector.SwipeDir.Left:
-                _time = swipeLeftTimer;
-                break;
-
-            case SwipeDetector.SwipeDir.Right:
-                _time = swipeRightTimer;
-                break;
-
-            case SwipeDetector.SwipeDir.Up:
-                _time = swipeUpTimer;
-                break;
-
-            case SwipeDetector.SwipeDir.Down:
-                _time = swipeDownTimer;
-                break;
-
-            default:
-                _time = 0;
-                break;
-
-        }
-
-        coolDownTimer = _time;
-
-        isCooling = true;
-    }
-
     private void EnterBusytate(object sender, EventArgs e) {
-        StartLimitedTimerState(limitedTime);
         pointL.GetChild(0).gameObject.SetActive(false);
         pointR.GetChild(0).gameObject.SetActive(false);
     }
@@ -675,9 +382,5 @@ public class Player : MonoBehaviour {
         Vector3 worldDeltaPosition = deltaPosition;
 
         characterController.Move(worldDeltaPosition);
-
-        //if (canAttack == true) {
-            
-        //}
     }
 }
