@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
@@ -43,7 +42,7 @@ public class PlayerController : MonoBehaviour {
     [Header("Boolean parameters")]
     private bool canAttack = true;
     private bool canDash = true;
-    private bool isBlocking = false;
+    [SerializeField] private bool isBlocking = false;
     private bool isRotating;
     private bool isWalking;
     private bool isLimited = false;
@@ -80,6 +79,12 @@ public class PlayerController : MonoBehaviour {
         public GestureInput.SwipeDir swipeDirection;
     }
 
+    // HitBoxes
+    [Header("Hit Area")]
+    [SerializeField] private HitArea hitArea;
+
+    private PlayerVisuals playerVisuals;
+
     private void Start() {
 
         currentState = PlayerState.Combat;
@@ -109,6 +114,12 @@ public class PlayerController : MonoBehaviour {
         // Initial Values
         currentSpeed = 0f;
         isRotating = false;
+
+        // Hit Boxes
+        playerVisuals = GetComponentInChildren<PlayerVisuals>();
+        hitArea = GetComponentInChildren<HitArea>();
+
+        playerVisuals.OnWeaponHit += WeaponHitDetected_OnWeaponHit;
 
     }
 
@@ -357,12 +368,14 @@ public class PlayerController : MonoBehaviour {
 
     private void Block(object sender, EventArgs e) {
         if (isBlocking == false) {
+            hitArea.ActivateBlockArea();
             isBlocking = true;
         }
     }
 
     private void ReleaseBlock(object sender, EventArgs e) {
         if (isBlocking == true) {
+            hitArea.DeactivateBlockArea();
             isBlocking = false;
         }
     }
@@ -394,6 +407,19 @@ public class PlayerController : MonoBehaviour {
         IsLimited = true;
         speedLimitMultiplier = .5f;
         timer = time;
+    }
+
+    public void WeaponHitDetected_OnWeaponHit(object sender, EventArgs e) {
+        hitArea.ActivateHitArea(player.PlayerWeapon.damage, player.PlayerWeapon.hitWindow);
+    }
+
+    private void OnTriggerEnter(Collider other) {
+
+        HitArea otherHitArea = other.GetComponent<HitArea>();
+
+        if (otherHitArea != null && isBlocking == true) {
+            playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
+        }
     }
 
 }

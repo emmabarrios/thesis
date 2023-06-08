@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Player : Character, IDamageable 
@@ -15,8 +13,7 @@ public class Player : Character, IDamageable
     [SerializeField] private float staminaRecoveryFactor = 1f;
     [SerializeField] private float staminaCostFactor = 5f;
 
-    private PlayerVisuals playerVisuals;
-    [SerializeField] private HitArea hitArea;
+    
     private PlayerController playerController;
     private Weapon playerWeapon;
     public Weapon PlayerWeapon { get { return playerWeapon; } set { playerWeapon = value; } }
@@ -49,10 +46,7 @@ public class Player : Character, IDamageable
     private void Start() {
         health = maxHealth;
         playerController = GetComponent<PlayerController>();
-        playerVisuals = GetComponentInChildren<PlayerVisuals>();
-        hitArea = GetComponentInChildren<HitArea>();
-
-        playerVisuals.OnWeaponHit += WeaponHitDetected_OnWeaponHit;
+        
 
         //weapon = GameObject.Find("Player Weapon Anchor Point R").GetComponentInChildren<Weapon>();
     }
@@ -118,8 +112,6 @@ public class Player : Character, IDamageable
         }
     }
 
-    public void WeaponHitDetected_OnWeaponHit(object sender, EventArgs e) {
-        hitArea.ActivateHitArea(playerWeapon.damage, playerWeapon.hitWindow);
-    }
+    
 
 }
