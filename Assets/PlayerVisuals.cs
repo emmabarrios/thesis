@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,12 +15,16 @@ public class PlayerVisuals : MonoBehaviour
     [SerializeField] private float timer;
     [SerializeField] private bool isTiming = false;
 
+    public event EventHandler OnWeaponHit;
+
     private void Start() {
         animator = GetComponentInParent<PlayerAnimator>();
+
         animator.OnUsingItem += RunStatusTimer_OnUsingItem;
 
-        anchorPointL = GameObject.Find("Anchor Point L").GetComponent<Transform>();
-        anchorPointR = GameObject.Find("Anchor Point R").GetComponent<Transform>();
+
+        anchorPointL = GameObject.Find("Player Weapon Anchor Point R").GetComponent<Transform>();
+        anchorPointR = GameObject.Find("Player Weapon Anchor Point R").GetComponent<Transform>();
     }
 
     private void Update() {
@@ -49,4 +54,9 @@ public class PlayerVisuals : MonoBehaviour
         isTiming = true;
         timer = e.animLength;
     }
+
+    public void InvokeOnWeaponHit() {
+        OnWeaponHit?.Invoke(this,  EventArgs.Empty);
+    }
+
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Player : Character, IDamageable 
@@ -14,9 +15,11 @@ public class Player : Character, IDamageable
     [SerializeField] private float staminaRecoveryFactor = 1f;
     [SerializeField] private float staminaCostFactor = 5f;
 
+    private PlayerVisuals playerVisuals;
+    [SerializeField] private HitArea hitArea;
     private PlayerController playerController;
-    private Weapon weapon;
-    public Weapon PlayerWeapon { get { return weapon; } }
+    private Weapon playerWeapon;
+    public Weapon PlayerWeapon { get { return playerWeapon; } set { playerWeapon = value; } }
 
     [SerializeField] private float timer;
     [SerializeField] private float itemUseDelay = 5f;
@@ -25,6 +28,7 @@ public class Player : Character, IDamageable
     public float Health { get { return health; } set {  health = value; } }
     public float Stamina { get { return stamina; } set {  stamina = value; } }
 
+    public event EventHandler<OnWeaponHitDetectedEventArgs> OnWeaponHitDetected;
     public event EventHandler<OnHealthValueChanged_EventArgs> OnHealthValueChanged;
     public event EventHandler<OnStaminaValueChanged_EventArgs>  OnStaminaValueChanged;
     public event EventHandler OnDamageTaken;
@@ -34,11 +38,23 @@ public class Player : Character, IDamageable
     public class OnStaminaValueChanged_EventArgs {
         public float value;
     }
+    public class OnWeaponHitDetectedEventArgs: EventArgs {
+        public float damage;
+    }
+
+    private void Awake() {
+        PlayerWeapon = GameObject.Find("Player Weapon Anchor Point R").GetComponentInChildren<Weapon>();
+    }
 
     private void Start() {
         health = maxHealth;
         playerController = GetComponent<PlayerController>();
-        weapon = GameObject.Find("Anchor Point R").GetComponentInChildren<Weapon>();
+        playerVisuals = GetComponentInChildren<PlayerVisuals>();
+        hitArea = GetComponentInChildren<HitArea>();
+
+        playerVisuals.OnWeaponHit += WeaponHitDetected_OnWeaponHit;
+
+        //weapon = GameObject.Find("Player Weapon Anchor Point R").GetComponentInChildren<Weapon>();
     }
 
     public void Update() {
@@ -64,8 +80,6 @@ public class Player : Character, IDamageable
         OnDamageTaken?.Invoke(this, EventArgs.Empty);
         OnHealthValueChanged?.Invoke(this, new OnHealthValueChanged_EventArgs { value = health });
     }
-
-
 
     public void FillHealth(float value) {
         StartCoroutine(FillHealthVisual(value, healthRecoveryDelay));
@@ -102,6 +116,10 @@ public class Player : Character, IDamageable
             OnHealthValueChanged?.Invoke(this, new OnHealthValueChanged_EventArgs { value = currentValue });
             yield return null;
         }
+    }
+
+    public void WeaponHitDetected_OnWeaponHit(object sender, EventArgs e) {
+        hitArea.ActivateHitArea(playerWeapon.damage, playerWeapon.hitWindow);
     }
 
 }

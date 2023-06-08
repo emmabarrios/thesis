@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour {
     public PlayerState currentState;
 
     [SerializeField] private Player player;
-    private PlayerVisuals playerVisuals;
     private CharacterController characterController;
     private PlayerAnimator playerAnimator;
 
@@ -88,7 +87,6 @@ public class PlayerController : MonoBehaviour {
         player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
-        playerVisuals = GetComponentInChildren<PlayerVisuals>();
 
         // Input
         buttonA = GameObject.Find("A Button").GetComponent<Button>();
@@ -328,7 +326,7 @@ public class PlayerController : MonoBehaviour {
                             break;
                     }
                     if (tempTimer != 0) {
-                        player.PlayerWeapon.OpenWeaponDamageWindow(tempTimer);
+                        //player.PlayerWeapon.OpenWeaponDamageWindow(tempTimer);
                         StartCoroutine(StartBusyTimer(tempTimer));
                     }
                 }

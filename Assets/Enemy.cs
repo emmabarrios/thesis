@@ -1,10 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : Character, IDamageable 
 {
@@ -18,8 +14,10 @@ public class Enemy : Character, IDamageable
     [SerializeField] private bool isTiming;
     [SerializeField] private float attackWindow;
 
-    [SerializeField] private Weapon weapon;
-    public Weapon EnemyWeapon { get { return weapon; } }
+    private Weapon enemyWeapon;
+    public Weapon EnemyWeapon { get { return enemyWeapon; } set { enemyWeapon = value; } }
+
+    public HitArea hitArea;
 
     [SerializeField] private Image image = null;
     [SerializeField] private Text text = null;
@@ -36,14 +34,18 @@ public class Enemy : Character, IDamageable
     [SerializeField] private bool isDefeated = false;
     [SerializeField] private bool isHit = false;
 
+    private void Awake() {
+        EnemyWeapon = GameObject.Find("Enemy Weapon Anchor Point R").GetComponentInChildren<Weapon>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        hitArea = GetComponentInChildren<HitArea>();
         controller = GetComponent<CharacterController>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
         animator = GetComponent<Animator>();
         isTiming = true;
-        weapon = this.GetComponentInChildren<Weapon>();
         text.text = enemyName;
         health = maxHealth;
         currentHealth = health;
@@ -93,12 +95,10 @@ public class Enemy : Character, IDamageable
     }
 
     private void Attack() {
-        weapon.OpenWeaponDamageWindow(attackWindow);
         StartCoroutine(AttackState(attackStateTime));
     }
 
     public void TakeDamage(float damage) {
-        //animator.SetTrigger("hit");
         animator.Play("Skeleton@Damage01");
         health -= damage;
         isHit = true;
@@ -109,7 +109,6 @@ public class Enemy : Character, IDamageable
         if (health <= 0) {
             text.text = "";
             controller.enabled = false;
-            //transform.localPosition = new Vector3(transform.position.x, 0f, transform.position.z);
         } 
 
         StartCoroutine(Recover(1f));
@@ -142,5 +141,8 @@ public class Enemy : Character, IDamageable
         controller.Move(worldDeltaPosition);
     }
 
+    public void OnWeaponHit() {
+        hitArea.ActivateHitArea(enemyWeapon.damage, enemyWeapon.hitWindow);
+    }
 
 }
