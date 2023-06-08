@@ -84,14 +84,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0.9841059
-        functionName: AttachToAnchor
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 7484cd39eed55ca4e8f57b75f75ef71f, type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

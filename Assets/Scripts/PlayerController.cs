@@ -1,21 +1,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour {
 
     public enum PlayerState { Normal, Combat }
     public PlayerState currentState;
 
-    private Player player;
+    [SerializeField] private Player player;
     private PlayerVisuals playerVisuals;
     private CharacterController characterController;
     private PlayerAnimator playerAnimator;
 
+    [Header("Busy Settings")]
+    [SerializeField] private bool isBusy = false;
+    [SerializeField] private float leftSwipeTimer;
+    [SerializeField] private float rightSwipeTimer;
+    [SerializeField] private float upSwipeTimer;
+    [SerializeField] private float downSwipeTimer;
+    
     [Header("Orbital Settings")]
     [SerializeField] private Transform target = null;
     [SerializeField] private float lookRotationSpeed = 4f;
@@ -46,8 +50,9 @@ public class PlayerController : MonoBehaviour {
     private bool isLimited = false;
 
     public bool IsLimited { get { return isLimited; } set { isLimited = value; } }
+    public bool IsBusy { get { return isBusy; } set { isBusy = value; } }
     public bool IsWalking { get { return isWalking; } set { isWalking = value; } }
-    public bool CanAttack { get { return canAttack; } }
+    public bool CanAttack { get { return canAttack; } set { canAttack = value; } }
     public bool CanDash { get { return canDash;} set { canDash = value; } }
     public bool IsBlocking { get { return isBlocking; } set { IsBlocking = value; } }
     public bool IsRotating { get { return isRotating; } set { isRotating = value; } }
@@ -121,7 +126,7 @@ public class PlayerController : MonoBehaviour {
                     break;
 
                 case PlayerState.Combat:
-                    if (canDash == true) {
+                    if (isBusy == false) {
                         Orbitate(inputMovement);
                     }
                     break;
@@ -141,43 +146,40 @@ public class PlayerController : MonoBehaviour {
                 isTiming = false;
             }
         } 
+
     }
 
     private void Orbitate(Vector2 inputMovement) {
 
-        if (canAttack == true) {
+        Vector3 joystickDirection = new Vector3(inputMovement.x, 0f, inputMovement.y);
+        Vector3 movementDirection = transform.TransformDirection((joystickDirection));
 
-            Vector3 joystickDirection = new Vector3(inputMovement.x, 0f, inputMovement.y);
-            Vector3 movementDirection = transform.TransformDirection((joystickDirection));
+        Vector3 movement = new Vector3(0, 0, 0);
 
-            Vector3 movement = new Vector3(0, 0, 0);
+        float targetSpeed = movementDirection.magnitude * maxMovementSpeed;
 
-            float targetSpeed = movementDirection.magnitude * maxMovementSpeed;
-
-            if (movementDirection.magnitude > 0) {
-                isWalking = true;
-            } else {
-                isWalking = false;
-            }
-
-            if (targetSpeed > 0) {
-                currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * accelerationTime);
-                movement = movementDirection.normalized * currentSpeed * speedLimitMultiplier * Time.deltaTime;
-                last_movement = movement;
-                RotateToTarget(lookRotationSpeed, Time.deltaTime);
-            } else {
-
-                if (currentSpeed > 1) {
-                    currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * deaccelerationTime);
-                } else {
-                    currentSpeed = 0;
-                }
-                movement = last_movement.normalized * currentSpeed * speedLimitMultiplier * Time.deltaTime;
-                RotateToTarget(lookRotationSpeed, Time.deltaTime);
-            }
-            
-            characterController.Move(movement);
+        if (movementDirection.magnitude > 0) {
+            isWalking = true;
+        } else {
+            isWalking = false;
         }
+
+        if (targetSpeed > 0) {
+            currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * accelerationTime);
+            movement = movementDirection.normalized * currentSpeed * speedLimitMultiplier * Time.deltaTime;
+            last_movement = movement;
+            RotateToTarget(lookRotationSpeed, Time.deltaTime);
+        } else {
+
+            if (currentSpeed > 1) {
+                currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * deaccelerationTime);
+            } else {
+                currentSpeed = 0;
+            }
+            movement = last_movement.normalized * currentSpeed * speedLimitMultiplier * Time.deltaTime;
+            RotateToTarget(lookRotationSpeed, Time.deltaTime);
+        }
+        characterController.Move(movement);
     }
 
     private IEnumerator RotateDegrees(int dir) {
@@ -227,6 +229,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private IEnumerator DashRoutine(Vector2 point) {
+
         float duration = dashDistance / dashMovementSpeed; // Duration in seconds
 
         Vector3 startPosition = characterController.transform.position;
@@ -240,12 +243,17 @@ public class PlayerController : MonoBehaviour {
 
             characterController.Move(currentPosition - characterController.transform.position);
 
-            RotateToTarget(lookRotationSpeed * lookRotationSpeedMultiplier, elapsedTime);
+            RotateToTarget(lookRotationSpeed * lookRotationSpeedMultiplier , t);
 
             elapsedTime += Time.fixedDeltaTime;
 
             yield return null;
         }
+
+        isBusy = false;
+
+        //CanDash = true;
+        //CanAttack = true;
     }
 
     private void SwitchState(PlayerController.PlayerState state) {
@@ -275,21 +283,71 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
+        //if (currentState == PlayerState.Combat) {
+        //    if (canAttack == true && isLimited == false) {
+        //        canAttack = false;
+        //        canDash = false;
+        //        OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+        //    }
+        //} 
+        
         if (currentState == PlayerState.Combat) {
-            if (canAttack == true && isLimited == false) {
-                canAttack = false;
-                canDash = false;
-                OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+
+            if (isBusy == false && player.Stamina > 0) {
+
+                if (e.swipeDirection != GestureInput.SwipeDir.None &&
+                    e.swipeDirection != GestureInput.SwipeDir.UpLeft &&
+                    e.swipeDirection != GestureInput.SwipeDir.UpRight &&
+                    e.swipeDirection != GestureInput.SwipeDir.DownLeft &&
+                    e.swipeDirection != GestureInput.SwipeDir.DownRight) {
+
+                    isBusy = true;
+
+                    player.DrainStamina();
+
+                    OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+
+                    float tempTimer = 0f;
+
+                    switch (e.swipeDirection) {
+
+                        case GestureInput.SwipeDir.Left:
+                            tempTimer = leftSwipeTimer;
+                            break;
+                        case GestureInput.SwipeDir.Up:
+                            tempTimer = upSwipeTimer;
+                            break;
+                        case GestureInput.SwipeDir.Down:
+                            tempTimer = downSwipeTimer;
+                            break;
+                        case GestureInput.SwipeDir.Right:
+                            tempTimer = rightSwipeTimer;
+                            break;
+                        default:
+                            isBusy = false;
+                            break;
+                    }
+                    if (tempTimer != 0) {
+                        player.PlayerWeapon.OpenWeaponDamageWindow(tempTimer);
+                        StartCoroutine(StartBusyTimer(tempTimer));
+                    }
+                }
             }
         }
     }
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
 
-        if (canDash == true && isLimited == false) {
-            canAttack = false;
-            canDash = false;
+        //if (canDash == true && isLimited == false) {
+        //    canAttack = false;
+        //    canDash = false;
+        //    OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
+        //    StartCoroutine(DashRoutine(e.point));
+        //}
+        if (isBusy == false && player.Stamina > 0) {
+            isBusy = true;
             OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
+            player.DrainStamina();
             StartCoroutine(DashRoutine(e.point));
         }
     }
@@ -300,14 +358,19 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Block(object sender, EventArgs e) {
-        OnBlocking?.Invoke(this, EventArgs.Empty);
+        if (isBlocking == false) {
+            isBlocking = true;
+        }
     }
 
     private void ReleaseBlock(object sender, EventArgs e) {
-        OnReleaseBlock?.Invoke(this, EventArgs.Empty);
+        if (isBlocking == true) {
+            isBlocking = false;
+        }
     }
 
     private void Parry(object sender, EventArgs e) {
+
         OnParry?.Invoke(this, EventArgs.Empty);
         OnReleaseBlock?.Invoke(this, EventArgs.Empty);
     }
@@ -323,10 +386,16 @@ public class PlayerController : MonoBehaviour {
         LimitActions(e.animLength);
     }
 
-    private void LimitActions(float time) {
+    private IEnumerator StartBusyTimer(float time) {
+        yield return new WaitForSeconds(time);
+        isBusy = false;
+    }
+
+    public void LimitActions(float time) {
         isTiming = true;
         IsLimited = true;
         speedLimitMultiplier = .5f;
         timer = time;
     }
+
 }

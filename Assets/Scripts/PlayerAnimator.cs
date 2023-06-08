@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerAnimator : MonoBehaviour {
 
@@ -55,18 +54,6 @@ public class PlayerAnimator : MonoBehaviour {
         animator.SetTrigger(IS_USING_ITEM);
         OnUsingItem?.Invoke(this, new OnUsingItemEventArgs { animLength = useItemAnimLenght });
     }
-
-    //public void LateUpdate() {
-    //    AnimatorClipInfo[] clipInfoArray = animator.GetCurrentAnimatorClipInfo(0);
-
-    //    for (int i = 0; i < clipInfoArray.Length; i++) {
-    //        if (clipInfoArray[i].clip.name == "Use_Bottle_1") {
-    //            Debug.Log(clipInfoArray[i].clip.name);
-    //            AnimatorClipInfo clipInfo = clipInfoArray[i];
-    //            OnUsingItem?.Invoke(this, new OnUsingItemEventArgs { animLength = clipInfo.clip.length });
-    //        }
-    //    }
-    //}
 
     public void CallOnFinishedUsingItem() {
         OnFinishedUsingItem?.Invoke(this, EventArgs.Empty);

@@ -9,7 +9,7 @@ public class Shake : MonoBehaviour
 {
     private Quaternion originalRotation;
     private Transform cameraTransform;
-    [SerializeField] private PlayerController playerController = null;
+    [SerializeField] private Player player = null;
 
     [SerializeField] private float duration;
     [SerializeField] private float rotationSpeed;
@@ -19,12 +19,12 @@ public class Shake : MonoBehaviour
 
     void Start()
     {
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        player = GameObject.Find("Player").GetComponent<Player>();
         cameraTransform = GetComponent<Transform>();
         originalRotation = cameraTransform.localRotation;
 
         // Player Controller Event Subscribers
-        playerController.OnDamageTaken += StartCameraShake;
+        player.OnDamageTaken += StartCameraShake;
     }
 
     public void StartCameraShake(object sender, EventArgs e) {

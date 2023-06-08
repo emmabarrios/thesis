@@ -1,17 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
 
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
+    private float value = 30f;
+
     private enum ItemState { Ready, Holstered }
 
     private ItemState _state = ItemState.Holstered;
+
+    Player player;
 
     private Canvas canvas;
 
@@ -53,6 +55,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     public void Start() {
         scale = fillImage.GetComponent<RectTransform>().localScale;
+        player = GameObject.Find("Player").GetComponent<Player>();
         canvas = GetComponentInParent<Canvas>();
         toggle = GameObject.Find("Pouch Toggle").GetComponent<Toggle>();
         playerAnimator = GameObject.Find("Player Visual").GetComponent<PlayerAnimator>();
@@ -120,6 +123,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         Instantiate(objectPrefab, Vector3.zero, Quaternion.identity);
 
         playerAnimator.Trigger_UsingItem_AnimState();
+        player.FillHealth(value);
 
         Destroy(this.gameObject);
     }

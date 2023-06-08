@@ -12,7 +12,7 @@ public class PlayerVisuals : MonoBehaviour
 
     [Header("Timer Settings")]
     [SerializeField] private float timer;
-    [SerializeField] private bool isTiming;
+    [SerializeField] private bool isTiming = false;
 
     private void Start() {
         animator = GetComponentInParent<PlayerAnimator>();

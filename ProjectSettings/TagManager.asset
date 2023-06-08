@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Protection
   - ButtonA
+  - Tcharacter
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - Water
   - UI
   - PP
-  - 
-  - 
+  - NoPush
+  - Visual
   - 
   - 
   - 
