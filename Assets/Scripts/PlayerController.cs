@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour {
     private bool isRotating;
     private bool isWalking;
     private bool isLimited = false;
+    [SerializeField] private bool parryExecuted = false;
 
     public bool IsLimited { get { return isLimited; } set { isLimited = value; } }
     public bool IsBusy { get { return isBusy; } set { isBusy = value; } }
@@ -54,6 +56,7 @@ public class PlayerController : MonoBehaviour {
     public bool CanDash { get { return canDash;} set { canDash = value; } }
     public bool IsBlocking { get { return isBlocking; } set { IsBlocking = value; } }
     public bool IsRotating { get { return isRotating; } set { isRotating = value; } }
+    public bool ParryExecuted { get { return parryExecuted; } set { parryExecuted = value; } }
 
     [Header("Timer Settings")]
     [SerializeField] private float timer;
@@ -66,7 +69,7 @@ public class PlayerController : MonoBehaviour {
     public Button buttonA;
 
     // Events
-    public event EventHandler OnDamageTaken;
+    //public event EventHandler OnDamageTaken;
     public event EventHandler OnBlocking;
     public event EventHandler OnReleaseBlock;
     public event EventHandler OnParry;
@@ -154,7 +157,7 @@ public class PlayerController : MonoBehaviour {
                 isLimited = false;
                 isTiming = false;
             }
-        } 
+        }
 
     }
 
@@ -302,7 +305,7 @@ public class PlayerController : MonoBehaviour {
         
         if (currentState == PlayerState.Combat) {
 
-            if (isBusy == false && player.Stamina > 0) {
+            if (isBusy == false && player.Stamina > 0 && isLimited == false) {
 
                 if (e.swipeDirection != GestureInput.SwipeDir.None &&
                     e.swipeDirection != GestureInput.SwipeDir.UpLeft &&
@@ -367,23 +370,36 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Block(object sender, EventArgs e) {
-        if (isBlocking == false) {
-            hitArea.ActivateBlockArea();
+        if (isBlocking == false && isLimited == false) {
+            
             isBlocking = true;
         }
     }
 
     private void ReleaseBlock(object sender, EventArgs e) {
-        if (isBlocking == true) {
-            hitArea.DeactivateBlockArea();
-            isBlocking = false;
+        if (parryExecuted == false ) {
+            if (isBlocking == true) {
+                isBlocking = false;
+            }
         }
     }
 
     private void Parry(object sender, EventArgs e) {
 
-        OnParry?.Invoke(this, EventArgs.Empty);
-        OnReleaseBlock?.Invoke(this, EventArgs.Empty);
+        if (isBusy == false) {
+            isBusy = true;
+
+            parryExecuted = true;
+            isBlocking = false;
+
+            StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
+
+            player.DrainStamina();
+
+            OnParry?.Invoke(this, EventArgs.Empty);
+            OnReleaseBlock?.Invoke(this, EventArgs.Empty);
+        }
+        
     }
 
     private void InheritMovementFromAnimation_OnAnimating(object sender, EventArgs e) {
@@ -400,13 +416,19 @@ public class PlayerController : MonoBehaviour {
     private IEnumerator StartBusyTimer(float time) {
         yield return new WaitForSeconds(time);
         isBusy = false;
+        parryExecuted = false;
     }
 
     public void LimitActions(float time) {
-        isTiming = true;
-        IsLimited = true;
-        speedLimitMultiplier = .5f;
-        timer = time;
+
+        float _poise = player.Poise;
+
+        if (_poise < 1) {
+            isTiming = true;
+            IsLimited = true;
+            speedLimitMultiplier = .5f;
+            timer = time;
+        }
     }
 
     public void WeaponHitDetected_OnWeaponHit(object sender, EventArgs e) {
@@ -414,11 +436,14 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-
-        HitArea otherHitArea = other.GetComponent<HitArea>();
-
-        if (otherHitArea != null && isBlocking == true) {
-            playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
+        if (isBlocking == true) {
+            HitArea enemyArea = other.GetComponent<HitArea>();
+            if (enemyArea != hitArea) {
+                playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
+                player.DrainStamina();
+                isBusy = true;
+                StartCoroutine(StartBusyTimer(player.HitBlockRecoveryCost));
+            }
         }
     }
 

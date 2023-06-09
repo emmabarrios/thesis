@@ -10,13 +10,19 @@ public class Player : Character, IDamageable
     [SerializeField] private float healthRecoveryDelay;
 
     [SerializeField] private float stamina = 100f;
+    [SerializeField] private float staminaRecoverySpeed = 1f;
     [SerializeField] private float staminaRecoveryFactor = 1f;
-    [SerializeField] private float staminaCostFactor = 5f;
+    [SerializeField] private float staminaCost = 5f;
 
+    [SerializeField] private float poise;
+    [SerializeField] private float hitBlockRecoveryCost;
     
     private PlayerController playerController;
     private Weapon playerWeapon;
+    private Weapon playerShield;
     public Weapon PlayerWeapon { get { return playerWeapon; } set { playerWeapon = value; } }
+    public Weapon PlayerShield { get { return playerShield; } set { playerShield = value; } }
+
 
     [SerializeField] private float timer;
     [SerializeField] private float itemUseDelay = 5f;
@@ -24,6 +30,10 @@ public class Player : Character, IDamageable
 
     public float Health { get { return health; } set {  health = value; } }
     public float Stamina { get { return stamina; } set {  stamina = value; } }
+    public float Poise { get { return poise; } set { poise = value; } }
+    public float HitBlockRecoveryCost { get { return hitBlockRecoveryCost; } set { hitBlockRecoveryCost = value; } }
+    public float StaminaRecoverySpeed { get { return staminaRecoverySpeed; } set { staminaRecoverySpeed = value; } }
+    public float StaminaRecoveryFactor { get { return staminaRecoveryFactor; } set { staminaRecoveryFactor = value; } }
 
     public event EventHandler<OnWeaponHitDetectedEventArgs> OnWeaponHitDetected;
     public event EventHandler<OnHealthValueChanged_EventArgs> OnHealthValueChanged;
@@ -41,6 +51,7 @@ public class Player : Character, IDamageable
 
     private void Awake() {
         PlayerWeapon = GameObject.Find("Player Weapon Anchor Point R").GetComponentInChildren<Weapon>();
+        PlayerShield = GameObject.Find("Player Weapon Anchor Point L").GetComponentInChildren<Weapon>();
     }
 
     private void Start() {
@@ -52,27 +63,45 @@ public class Player : Character, IDamageable
     }
 
     public void Update() {
-        if (stamina < 100f && playerController.IsBusy == false) {
-            stamina += staminaRecoveryFactor * Time.deltaTime;
+
+        bool isPlayerBusy = playerController.IsBusy;
+
+        if (stamina < 100f && isPlayerBusy == false) {
+
+            if (playerController.IsBlocking) {
+                stamina += staminaRecoverySpeed * staminaRecoveryFactor * Time.deltaTime;
+            } else {
+                stamina += staminaRecoverySpeed * Time.deltaTime;
+            }
+           
             OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = stamina });
 
             if (stamina > 100f) {
                 stamina = 100f;
+            } else if (stamina < -5) {
+                stamina = -5;
             }
 
         }
     }
 
     public void DrainStamina() {
-        this.stamina -= staminaCostFactor;
+        this.stamina -= staminaCost;
         OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = stamina });
     }
 
     public void TakeDamage(float damage) {
-        this.health -= damage;
-        playerController.LimitActions(1f);
-        OnDamageTaken?.Invoke(this, EventArgs.Empty);
-        OnHealthValueChanged?.Invoke(this, new OnHealthValueChanged_EventArgs { value = health });
+
+        bool isB = playerController.IsBlocking;
+        bool isP = playerController.ParryExecuted;
+
+        if (isB == false && isP == false) {
+            this.health -= damage;
+            //playerController.LimitActions(1f);
+            OnDamageTaken?.Invoke(this, EventArgs.Empty);
+            OnHealthValueChanged?.Invoke(this, new OnHealthValueChanged_EventArgs { value = health });
+        }
+
     }
 
     public void FillHealth(float value) {

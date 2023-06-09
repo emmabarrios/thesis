@@ -18,6 +18,7 @@ public class PlayerAnimator : MonoBehaviour {
     private const string IS_USING_ITEM = "isUsingItem";
 
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private HitArea hitArea = null;
 
     [SerializeField] private float useItemAnimLenght;
 
@@ -41,6 +42,8 @@ public class PlayerAnimator : MonoBehaviour {
         playerController.OnBlocking += ExecuteRiseShieldAnimation;
         playerController.OnReleaseBlock += ExecuteLowerShieldAnimation;
         playerController.OnParry += ExecuteParryAnimation;
+
+        hitArea.OnHitDeflected += ExecuteHitDeflectionAnimation;
     }
 
     // Update is called once per frame
@@ -100,6 +103,10 @@ public class PlayerAnimator : MonoBehaviour {
 
     private void OnAnimatorMove() {
         OnAnimating?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ExecuteHitDeflectionAnimation(object sender, EventArgs e) {
+        animator.SetTrigger("deflectedHit");
     }
 
 }

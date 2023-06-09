@@ -9,6 +9,9 @@ TagManager:
   - Protection
   - ButtonA
   - Tcharacter
+  - playerHitArea
+  - enemyHitArea
+  - hitArea
   layers:
   - Default
   - TransparentFX

@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 public class Shake : MonoBehaviour
 {
@@ -11,6 +8,7 @@ public class Shake : MonoBehaviour
     private Transform cameraTransform;
     [SerializeField] private Player player = null;
 
+    [SerializeField] private float poiseModifier;
     [SerializeField] private float duration;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float magnitude;
@@ -50,7 +48,16 @@ public class Shake : MonoBehaviour
         isrotating = false;
 
         // Apply the rotation around the Z-axis
+
+
+        float _poise = player.Poise;
+
         Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
+
+        if (_poise > 1) {
+            rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * poiseModifier * direction);
+        }
+        //Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
         cameraTransform.localRotation = rotation;
 
         while (cameraTransform.localRotation != originalRotation) {

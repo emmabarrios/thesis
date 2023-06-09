@@ -2,8 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Enemy : Character, IDamageable 
-{
+public class Enemy : Character, IDamageable {
     [SerializeField] private float health;
     [SerializeField] private float maxHealth;
     private float currentHealth;
@@ -33,14 +32,21 @@ public class Enemy : Character, IDamageable
     [SerializeField] private bool isWalking = true;
     [SerializeField] private bool isDefeated = false;
     [SerializeField] private bool isHit = false;
+    [SerializeField] private bool isAttacking = false;
+
+    public float raycastDistance = 1f;
+    public LayerMask targetLayer;
+    public float raycastOffset = 0.5f;
+    public Color rayColor = Color.red;
+
+    public float actionDelay = 1f;
 
     private void Awake() {
         EnemyWeapon = GameObject.Find("Enemy Weapon Anchor Point R").GetComponentInChildren<Weapon>();
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         hitArea = GetComponentInChildren<HitArea>();
         controller = GetComponent<CharacterController>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
@@ -49,25 +55,23 @@ public class Enemy : Character, IDamageable
         text.text = enemyName;
         health = maxHealth;
         currentHealth = health;
+
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         // Timer
-        if (isTiming && health > 0) {
+        //if (isTiming && health > 0) {
 
-            timer -= Time.deltaTime;
-            if (timer < 0.1f) {
-                timer = limitedTime;
-                isTiming = false;
-                isWalking = false;
-                Attack();
-                animator.SetTrigger("attack");
-            }
-        }
-
-
+        //    timer -= Time.deltaTime;
+        //    if (timer < 0.1f) {
+        //        timer = limitedTime;
+        //        isTiming = false;
+        //        isWalking = false;
+        //        Attack();
+        //        animator.SetTrigger("attack");
+        //    }
+        //}
 
         if (health <= 0) {
             isWalking = false;
@@ -80,15 +84,31 @@ public class Enemy : Character, IDamageable
         }
 
 
+        Vector3 rayStart = transform.position + transform.forward * raycastOffset;
+
+        // Perform the raycast
+        RaycastHit hit;
+
+        if (Physics.Raycast(rayStart, transform.forward, out hit, raycastDistance, targetLayer)) {
+            // Check if the ray hits a CharacterController
+            CharacterController characterController = hit.collider.GetComponent<CharacterController>();
+
+            if (characterController != null && characterController != controller) {
+                // Perform the desired action when the ray hits a CharacterController
+                isAttacking = true;
+                Attack();
+                animator.SetTrigger("attack");
+            }
+        }
+        Debug.DrawRay(rayStart, transform.forward * raycastDistance, rayColor);
 
         animator.SetFloat("walkSpeed", walkSpeed);
 
 
-        if (isWalking == true && isDefeated == false) {
-            //Vector3 movement = transform.forward * walkSpeed * Time.deltaTime;
-            //controller.Move(movement);
+        if (isWalking == true && isDefeated == false && isAttacking == false) {
             RotateToTarget(rotationSpeed, Time.deltaTime);
         }
+
         animator.SetBool("isDefeated", isDefeated);
         animator.SetBool("isWalking", isWalking);
         animator.SetFloat("health", health);
@@ -105,11 +125,11 @@ public class Enemy : Character, IDamageable
         isWalking = false;
         isTiming = false;
 
-        
+
         if (health <= 0) {
             text.text = "";
             controller.enabled = false;
-        } 
+        }
 
         StartCoroutine(Recover(1f));
     }
@@ -123,16 +143,15 @@ public class Enemy : Character, IDamageable
 
     private IEnumerator Recover(float time) {
         yield return new WaitForSeconds(time);
-        //isHit = false;
         isWalking = true;
         isTiming = true;
     }
 
     private IEnumerator AttackState(float time) {
         yield return new WaitForSeconds(time);
-        //isHit = false;
         isWalking = true;
         isTiming = true;
+        isAttacking = false;
     }
 
     private void OnAnimatorMove() {

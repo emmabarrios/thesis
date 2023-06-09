@@ -1,14 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager.UI;
+using System;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class HitArea : MonoBehaviour
 {
-    public enum AreaType {None, Attack, Defense, Parry }
-
-    public AreaType areaType;
-
     [SerializeField] private Collider collider;
 
     private bool isTiming = false;
@@ -18,6 +13,8 @@ public class HitArea : MonoBehaviour
     [SerializeField] private float areaSpawnTime = 0f;
 
     [SerializeField] private float damage;
+
+    public event EventHandler OnHitDeflected;
 
 
     void Start()
@@ -34,69 +31,41 @@ public class HitArea : MonoBehaviour
             if (areaSpawnTime < 0.1f) {
                 collider.enabled = false;
                 isTiming = false;
+                //areaType = AreaType.None;
             }
         }
     }
 
     public void ActivateHitArea(float damage, float window) {
-        areaType = AreaType.Attack;
+        //areaType = AreaType.Attack;
         this.damage = damage;
         areaSpawnTime = window;
         isTiming = true;
         collider.enabled = true;
     }
 
-    public void ActivateBlockArea() {
-        areaType = AreaType.Defense;
-        collider.enabled = true;
+    public void DeactivateHitArea() {
         isTiming = false;
-    }
-    
-    public void DeactivateBlockArea() {
-        areaType = AreaType.None;
         collider.enabled = false;
-    }
-    
-    public void ActivateParryArea(float window) {
-        areaType = AreaType.Parry;
-        areaSpawnTime = window;
-        isTiming = true;
-        collider.enabled = true;
+        areaSpawnTime = 0f;
     }
 
-    //private void OnTriggerEnter(Collider other) {
+    private void OnTriggerEnter(Collider other) {
 
-    //    if (!other.gameObject.CompareTag(parentTarget.tag)) {
-    //        IDamageable damageable = other.GetComponent<IDamageable>();
-    //        if (damageable != null) {
-    //            GetComponent<Collider>().enabled = false;
-    //            damageable.TakeDamage(this.damage);
-    //        }
-    //    }
-    //}
+        if (!other.gameObject.CompareTag(parentTarget.tag)) {
 
-    private void OnTriggerStay(Collider other) {
+            PlayerController pc = other.gameObject.GetComponent<PlayerController>();
 
-        // If a shield is blocking my attack
+            if (pc != null && pc.ParryExecuted) {
+                parentTarget.GetComponent<Animator>().SetTrigger("staggered");
+            }
 
-        HitArea opositeArea = other.GetComponent<HitArea>();
-        IDamageable damageable = other.GetComponent<IDamageable>();
-
-
-        if (opositeArea != null ) {
-
-            // Attackers HitBox is disable agaisnt Defense Hitbox
-            if (this.areaType == AreaType.Attack && opositeArea.areaType == AreaType.Defense) {
-                collider.enabled = false;
-                return;
+            IDamageable damageable = other.GetComponent<IDamageable>();
+            if (damageable != null) {
+                DeactivateHitArea();
+                damageable.TakeDamage(this.damage);
             }
         }
-
-        // If reached here, no Defense Hitbox was detected and will deal damage to the other collider
-        if (areaType == AreaType.Attack && damageable != null && !other.gameObject.CompareTag(parentTarget.tag)) {
-            collider.enabled = false;
-            damageable.TakeDamage(this.damage);
-        }
-
     }
+
 }
