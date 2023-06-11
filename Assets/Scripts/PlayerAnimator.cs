@@ -17,7 +17,7 @@ public class PlayerAnimator : MonoBehaviour {
     private const string WALK_SPEED = "WalkSpeed";
     private const string IS_USING_ITEM = "isUsingItem";
 
-    [SerializeField] private PlayerController playerController;
+    [SerializeField] private Controller controller;
     [SerializeField] private HitArea hitArea = null;
 
     [SerializeField] private float useItemAnimLenght;
@@ -28,6 +28,8 @@ public class PlayerAnimator : MonoBehaviour {
     public event EventHandler OnEnterAttack;
     public event EventHandler OnFinishedAction;
 
+    [SerializeField] private Player player;
+
     public class OnUsingItemEventArgs: EventArgs {
         public float animLength;
     }
@@ -35,26 +37,27 @@ public class PlayerAnimator : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         animator = GetComponent<Animator>();
-        playerController = GetComponentInParent<PlayerController>();
+        controller = GetComponentInParent<Controller>();
+        player = GetComponentInParent<Player>();
 
-        playerController.OnAttack += ProcessPlayerAttack;
-        playerController.OnDash += ExecuteDashAnimation;
-        playerController.OnBlocking += ExecuteRiseShieldAnimation;
-        playerController.OnReleaseBlock += ExecuteLowerShieldAnimation;
-        playerController.OnParry += ExecuteParryAnimation;
+        controller.OnAttack += ProcessPlayerAttack;
+        controller.OnDash += ExecuteDashAnimation;
+        //playerController.OnBlocking += ExecuteRiseShieldAnimation;
+        //playerController.OnReleaseBlock += ExecuteLowerShieldAnimation;
+        controller.OnParry += ExecuteParryAnimation;
 
         hitArea.OnHitDeflected += ExecuteHitDeflectionAnimation;
     }
 
     // Update is called once per frame
     void Update() {
-        animator.SetBool(IS_WALKING, playerController.IsWalking);
-        animator.SetFloat(WALK_SPEED, Mathf.Clamp(playerController.CurrentSpeed, 0.1f, 1));
-        animator.SetBool(IS_BLOCKING, playerController.IsBlocking);
+        animator.SetBool(IS_WALKING, controller.IsWalking);
+        animator.SetFloat(WALK_SPEED, Mathf.Clamp(controller.CurrentSpeed, 0.1f, 1));
+        animator.SetBool(IS_BLOCKING, controller.IsBlocking);
     }
 
     public void Trigger_UsingItem_AnimState() {
-        animator.SetTrigger(IS_USING_ITEM);
+        //animator.SetTrigger(IS_USING_ITEM);
         OnUsingItem?.Invoke(this, new OnUsingItemEventArgs { animLength = useItemAnimLenght });
     }
 
@@ -82,7 +85,7 @@ public class PlayerAnimator : MonoBehaviour {
         animator.SetBool("parry", true);
     }
 
-    private void ProcessPlayerAttack(object sender, PlayerController.OnAttackEventArgs e) {
+    private void ProcessPlayerAttack(object sender, Controller.OnAttackEventArgs e) {
 
         if (e.swipeDirection == GestureInput.SwipeDir.Right) {
             animator.SetTrigger(IS_ATTACKING_RIGHT);

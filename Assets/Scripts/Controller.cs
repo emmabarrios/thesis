@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using UnityEditor.Rendering;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-
-    public enum PlayerState { Normal, Combat }
-    public PlayerState currentState;
+public class Controller : MonoBehaviour {
 
     [SerializeField] private Player player;
     private CharacterController characterController;
@@ -40,21 +38,26 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float lookRotationSpeedMultiplier = 4f;
 
     [Header("Boolean parameters")]
-    private bool canAttack = true;
     private bool canDash = true;
-    [SerializeField] private bool isBlocking = false;
     private bool isRotating;
     private bool isWalking;
-    private bool isLimited = false;
-    [SerializeField] private bool parryExecuted = false;
+    [SerializeField] private bool parryPerformed = false;
 
-    public bool IsLimited { get { return isLimited; } set { isLimited = value; } }
+    [SerializeField] private bool isDrawingItem = false;
+    [SerializeField] private bool isBlocking = false;
+    //[SerializeField] private bool isParrying = false;
+    [SerializeField] private bool isBusy = false;
+    [SerializeField] private bool attackPerformed = false;
+
     public bool IsWalking { get { return isWalking; } set { isWalking = value; } }
-    public bool CanAttack { get { return canAttack; } set { canAttack = value; } }
     public bool CanDash { get { return canDash;} set { canDash = value; } }
-    public bool IsBlocking { get { return isBlocking; } set { IsBlocking = value; } }
     public bool IsRotating { get { return isRotating; } set { isRotating = value; } }
-    public bool ParryExecuted { get { return parryExecuted; } set { parryExecuted = value; } }
+    public bool ParryPerformed { get { return parryPerformed; } set { parryPerformed = value; } }
+    public bool IsDrawingItem { get { return isDrawingItem; } set { isDrawingItem = value; } }
+    public bool IsBusy { get { return isBusy; } set { isBusy = value; } }
+    //public bool IsParrying { get { return isParrying; } set { isParrying = value; } }
+    public bool IsBlocking { get { return isBlocking; } set { isBlocking = value; } }
+    public bool AttackPerformed { get { return attackPerformed; } set { attackPerformed = value; } }
 
     [Header("Timer Settings")]
     [SerializeField] private float timer;
@@ -88,7 +91,7 @@ public class PlayerController : MonoBehaviour {
 
     private void Start() {
 
-        currentState = PlayerState.Combat;
+        //currentState = PlayerState.Combat;
 
         player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
@@ -101,7 +104,7 @@ public class PlayerController : MonoBehaviour {
 
         // Animator Event Subscribers
         playerAnimator.OnAnimating += InheritMovementFromAnimation_OnAnimating;
-        playerAnimator.OnUsingItem += RunStatusTimer_OnUsingItem;
+        playerAnimator.OnUsingItem += RunUsingItemTimer_OnUsingItem;
         playerAnimator.OnFinishedAction += EnableActions_OnFinishedAction;
 
         // Input Event Subscribers
@@ -125,18 +128,25 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Update() {
-
         Vector2 inputMovement = joystick.Direction;
+
+        // I don't know if this is performant or not... but is the safest way I've found to perfectly determine 
+        // if the player is allowed to move or not.
+        AnimatorStateInfo stateInfo = playerAnimator.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+
+        AttackPerformed = stateInfo.IsName("Swing_Left") || stateInfo.IsName("Swing_Right") || 
+            stateInfo.IsName("Swing_Stab") || 
+            stateInfo.IsName("Swing_Down") || stateInfo.IsName("Shield_Parry");
 
         if (!isRotating) {
 
-            switch (currentState) {
-                case PlayerState.Normal:
+            switch (player.currentState) {
+                case Character.State.Normal:
                     Orbitate(inputMovement);
                     break;
 
-                case PlayerState.Combat:
-                    if (!player.IsBusy) {
+                case Character.State.Combat:
+                    if (!IsBusy && !ParryPerformed && !AttackPerformed) {
                         Orbitate(inputMovement);
                     }
                     break;
@@ -146,15 +156,28 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        // Limited Status Timer 
+        // Using Item timer
         if (isTiming) {
             timer -= Time.deltaTime;
             if (timer < 0.1f) {
                 timer = 0;
                 speedLimitMultiplier = 1f;
-                isLimited = false;
+                IsDrawingItem = false;
                 isTiming = false;
             }
+        }
+
+        if (player.ParryPerformed != ParryPerformed) {
+            player.ParryPerformed = ParryPerformed;
+        }
+        if (player.IsBlocking != IsBlocking) {
+            player.IsBlocking = IsBlocking;
+        }
+        if (player.IsBusy != IsBusy) {
+            player.IsBusy = IsBusy;
+        }
+        if (player.AttackPerformed != AttackPerformed) {
+            player.AttackPerformed = AttackPerformed;
         }
 
     }
@@ -209,6 +232,133 @@ public class PlayerController : MonoBehaviour {
         isRotating = false;
     }
 
+   
+    private void RotateToTarget(float followRotationSpeed, float timeDelta) {
+        Vector3 directionToTarget = target.position - transform.position;
+        directionToTarget.y = 0f;
+        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
+    }
+
+    private void ProcessGestureSwipes(object sender, GestureInput.SwipeDirectionChangedEventArgs e) {
+
+        // Turn 90° in normal state
+        if (player.currentState == Character.State.Normal) {
+            if (!isRotating) {
+                if (e.swipeDirection == GestureInput.SwipeDir.Left) {
+
+                    StartCoroutine(RotateDegrees(1));
+
+                } else if (e.swipeDirection == GestureInput.SwipeDir.Right) {
+
+                    StartCoroutine(RotateDegrees(-1));
+                }
+            }
+        }
+
+        if (player.currentState == Character.State.Combat) {
+
+            if (player.Stamina > 0 && !IsDrawingItem) {
+
+                if (e.swipeDirection != GestureInput.SwipeDir.None &&
+                    e.swipeDirection != GestureInput.SwipeDir.UpLeft &&
+                    e.swipeDirection != GestureInput.SwipeDir.UpRight &&
+                    e.swipeDirection != GestureInput.SwipeDir.DownLeft &&
+                    e.swipeDirection != GestureInput.SwipeDir.DownRight) {
+
+                    OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+
+                    player.DrainStamina();
+
+                }
+            }
+        }
+    }
+
+    private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
+
+        if (!IsBusy && player.Stamina > 0) {
+            IsBusy = true;
+            OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
+            player.DrainStamina();
+            StartCoroutine(DashRoutine(e.point));
+        }
+    }
+
+    private void EnableActions_OnFinishedAction(object sender, EventArgs e) {
+        canDash = true;
+    }
+
+    private void Block(object sender, EventArgs e) {
+        if (!IsBlocking && !IsDrawingItem) {
+            IsBlocking = true;
+        }
+    }
+
+    private void ReleaseBlock(object sender, EventArgs e) {
+        if (IsBlocking) {
+            IsBlocking = false;
+        }
+    }
+
+    private void Parry(object sender, EventArgs e) {
+
+        ParryPerformed = true;
+        player.DrainStamina();
+        OnParry?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
+    }
+
+    private void InheritMovementFromAnimation_OnAnimating(object sender, EventArgs e) {
+        Animator animator = playerAnimator.GetComponent<Animator>();
+        Vector3 deltaPosition = animator.deltaPosition;
+        Vector3 worldDeltaPosition = deltaPosition;
+        characterController.Move(worldDeltaPosition);
+    }
+
+    public void RunUsingItemTimer_OnUsingItem(object sender, PlayerAnimator.OnUsingItemEventArgs e) {
+
+        isTiming = true;
+        IsDrawingItem = true;
+        speedLimitMultiplier = .5f;
+        timer = e.animLength;
+    }
+
+    public void LimitActions(float time) {
+
+        float _poise = player.Poise;
+
+        if (_poise < 1) {
+            isTiming = true;
+            speedLimitMultiplier = .5f;
+            timer = time;
+        }
+    }
+
+    public void WeaponHitDetected_OnWeaponHit(object sender, EventArgs e) {
+        hitArea.ActivateHitArea(player.PlayerWeapon.damage, player.PlayerWeapon.hitWindow);
+    }
+
+    private void OnTriggerEnter(Collider other) {
+
+        // If enemy hit landed on shield, run shiled hit animation and drain stamina
+        if (IsBlocking) {
+            HitArea enemyArea = other.GetComponent<HitArea>();
+            if (enemyArea != hitArea) {
+                playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
+                player.DrainStamina();
+            }
+        }
+    }
+
+    // Handle both the Busy Time and parry window, not sure if is the best aproach since the method above is also running a timer but in
+    // the update method
+    private IEnumerator StartBusyTimer(float time) {
+        yield return new WaitForSeconds(time);
+        IsBusy = false;
+        ParryPerformed = false;
+    }
+
     private IEnumerator RestoreFacingDirection() {
         isRotating = true;
 
@@ -253,196 +403,13 @@ public class PlayerController : MonoBehaviour {
 
             characterController.Move(currentPosition - characterController.transform.position);
 
-            RotateToTarget(lookRotationSpeed * lookRotationSpeedMultiplier , t);
+            RotateToTarget(lookRotationSpeed * lookRotationSpeedMultiplier, t);
 
             elapsedTime += Time.fixedDeltaTime;
 
             yield return null;
         }
 
-        player.IsBusy = false;
-
-        //CanDash = true;
-        //CanAttack = true;
+        IsBusy = false;
     }
-
-    private void SwitchState(PlayerController.PlayerState state) {
-        currentState = state;
-    }
-
-    private void RotateToTarget(float followRotationSpeed, float timeDelta) {
-        Vector3 directionToTarget = target.position - transform.position;
-        directionToTarget.y = 0f;
-        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
-    }
-
-    private void ProcessGestureSwipes(object sender, GestureInput.SwipeDirectionChangedEventArgs e) {
-
-        // Turn 90° in normal state
-        if (currentState == PlayerState.Normal) {
-            if (!isRotating) {
-                if (e.swipeDirection == GestureInput.SwipeDir.Left) {
-
-                    StartCoroutine(RotateDegrees(1));
-
-                } else if (e.swipeDirection == GestureInput.SwipeDir.Right) {
-
-                    StartCoroutine(RotateDegrees(-1));
-                }
-            }
-        }
-
-        //if (currentState == PlayerState.Combat) {
-        //    if (canAttack == true && isLimited == false) {
-        //        canAttack = false;
-        //        canDash = false;
-        //        OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
-        //    }
-        //} 
-        
-        if (currentState == PlayerState.Combat) {
-
-            if (!player.IsBusy && player.Stamina > 0 && isLimited == false) {
-
-                if (e.swipeDirection != GestureInput.SwipeDir.None &&
-                    e.swipeDirection != GestureInput.SwipeDir.UpLeft &&
-                    e.swipeDirection != GestureInput.SwipeDir.UpRight &&
-                    e.swipeDirection != GestureInput.SwipeDir.DownLeft &&
-                    e.swipeDirection != GestureInput.SwipeDir.DownRight) {
-
-                    player.IsBusy = true;
-
-                    player.DrainStamina();
-
-                    OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
-
-                    float tempTimer = 0f;
-
-                    switch (e.swipeDirection) {
-
-                        case GestureInput.SwipeDir.Left:
-                            tempTimer = leftSwipeTimer;
-                            break;
-                        case GestureInput.SwipeDir.Up:
-                            tempTimer = upSwipeTimer;
-                            break;
-                        case GestureInput.SwipeDir.Down:
-                            tempTimer = downSwipeTimer;
-                            break;
-                        case GestureInput.SwipeDir.Right:
-                            tempTimer = rightSwipeTimer;
-                            break;
-                        default:
-                            player.IsBusy = false;
-                            break;
-                    }
-                    if (tempTimer != 0) {
-                        //player.PlayerWeapon.OpenWeaponDamageWindow(tempTimer);
-                        StartCoroutine(StartBusyTimer(tempTimer));
-                    }
-                }
-            }
-        }
-    }
-
-    private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
-
-        //if (canDash == true && isLimited == false) {
-        //    canAttack = false;
-        //    canDash = false;
-        //    OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
-        //    StartCoroutine(DashRoutine(e.point));
-        //}
-        if (!player.IsBusy && player.Stamina > 0) {
-            player.IsBusy = true;
-            OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
-            player.DrainStamina();
-            StartCoroutine(DashRoutine(e.point));
-        }
-    }
-
-    private void EnableActions_OnFinishedAction(object sender, EventArgs e) {
-        canAttack = true;
-        canDash = true;
-    }
-
-    private void Block(object sender, EventArgs e) {
-        if (isBlocking == false && isLimited == false) {
-            
-            isBlocking = true;
-        }
-    }
-
-    private void ReleaseBlock(object sender, EventArgs e) {
-        if (parryExecuted == false ) {
-            if (isBlocking == true) {
-                isBlocking = false;
-            }
-        }
-    }
-
-    private void Parry(object sender, EventArgs e) {
-
-        if (!player.IsBusy) {
-            player.IsBusy = true;
-
-            parryExecuted = true;
-            isBlocking = false;
-
-            StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
-
-            player.DrainStamina();
-
-            OnParry?.Invoke(this, EventArgs.Empty);
-            OnReleaseBlock?.Invoke(this, EventArgs.Empty);
-        }
-        
-    }
-
-    private void InheritMovementFromAnimation_OnAnimating(object sender, EventArgs e) {
-        Animator animator = playerAnimator.GetComponent<Animator>();
-        Vector3 deltaPosition = animator.deltaPosition;
-        Vector3 worldDeltaPosition = deltaPosition;
-        characterController.Move(worldDeltaPosition);
-    }
-
-    public void RunStatusTimer_OnUsingItem(object sender, PlayerAnimator.OnUsingItemEventArgs e) {
-        LimitActions(e.animLength);
-    }
-
-    private IEnumerator StartBusyTimer(float time) {
-        yield return new WaitForSeconds(time);
-        player.IsBusy = false;
-        parryExecuted = false;
-    }
-
-    public void LimitActions(float time) {
-
-        float _poise = player.Poise;
-
-        if (_poise < 1) {
-            isTiming = true;
-            IsLimited = true;
-            speedLimitMultiplier = .5f;
-            timer = time;
-        }
-    }
-
-    public void WeaponHitDetected_OnWeaponHit(object sender, EventArgs e) {
-        hitArea.ActivateHitArea(player.PlayerWeapon.damage, player.PlayerWeapon.hitWindow);
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        if (isBlocking == true) {
-            HitArea enemyArea = other.GetComponent<HitArea>();
-            if (enemyArea != hitArea) {
-                playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
-                player.DrainStamina();
-                player.IsBusy = true;
-                StartCoroutine(StartBusyTimer(player.ParryRecoveryTime));
-            }
-        }
-    }
-
 }

@@ -55,9 +55,9 @@ public class HitArea : MonoBehaviour
 
         if (!other.gameObject.CompareTag(parentTarget.tag)) {
 
-            PlayerController pc = other.gameObject.GetComponent<PlayerController>();
+            Controller controller = other.gameObject.GetComponent<Controller>();
 
-            if (pc != null && pc.ParryExecuted) {
+            if (controller != null && controller.ParryPerformed) {
                 parentTarget.GetComponent<Animator>().SetTrigger("staggered");
             }
 

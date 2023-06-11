@@ -1347,6 +1347,7 @@ MonoBehaviour:
   playerController: {fileID: 0}
   hitArea: {fileID: 1717161279}
   useItemAnimLenght: 2.5
+  player: {fileID: 0}
 --- !u!95 &251679306
 Animator:
   serializedVersion: 3
@@ -6504,6 +6505,9 @@ MonoBehaviour:
   poise: 0
   parryRecoveryTime: 0
   isBusy: 0
+  isBlocking: 0
+  isParrying: 0
+  isDrawingItem: 0
   timer: 0
   itemUseDelay: 5
   isTiming: 0

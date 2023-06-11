@@ -121,6 +121,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         Instantiate(objectPrefab, Vector3.zero, Quaternion.identity);
 
         playerAnimator.Trigger_UsingItem_AnimState();
+        playerAnimator.GetComponent<Animator>().Play("Use_Item");
         player.RecoverHealth(value);
 
         Destroy(this.gameObject);
