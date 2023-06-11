@@ -25,7 +25,7 @@ public class Shake : MonoBehaviour
         player.OnDamageTaken += StartCameraShake;
     }
 
-    public void StartCameraShake(object sender, EventArgs e) {
+    public void StartCameraShake() {
         if (isrotating == false) {
             StartCoroutine(ShakeCamera(duration, magnitude, direction));
         }
@@ -36,20 +36,6 @@ public class Shake : MonoBehaviour
         // Reset the camera's rotation to the original rotation
         cameraTransform.localRotation = originalRotation;
 
-        isrotating = true;
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < duration) {
-            // Increment the elapsed time
-            elapsedTime += Time.deltaTime;
-        }
-
-        isrotating = false;
-
-        // Apply the rotation around the Z-axis
-
-
         float _poise = player.Poise;
 
         Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
@@ -57,21 +43,18 @@ public class Shake : MonoBehaviour
         if (_poise > 1) {
             rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * poiseModifier * direction);
         }
-        //Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
         cameraTransform.localRotation = rotation;
 
         while (cameraTransform.localRotation != originalRotation) {
             // Apply the rotation towards the original rotation
-            cameraTransform.localRotation = Quaternion.Lerp(cameraTransform.localRotation, originalRotation, Time.deltaTime * rotationSpeed);
+            cameraTransform.localRotation = Quaternion.Lerp(cameraTransform.localRotation, originalRotation, Time.fixedDeltaTime * rotationSpeed);
 
             if (Mathf.Abs(cameraTransform.localRotation.z - originalRotation.z) < 0.01) {
                 cameraTransform.localRotation = originalRotation;
             }
-            //Debug.Log(cameraTransform.localRotation.z);
 
             yield return null;
         }
 
-        
     }
 }

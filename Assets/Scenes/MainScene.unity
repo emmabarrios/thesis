@@ -6421,7 +6421,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   player: {fileID: 0}
-  isBusy: 0
   leftSwipeTimer: 0.6
   rightSwipeTimer: 0.6
   upSwipeTimer: 0.8
@@ -6497,13 +6496,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
-  healthRecoveryDelay: 1.8
+  beginHealthRecoverDelay: 0
   stamina: 100
   staminaRecoverySpeed: 20
   staminaRecoveryFactor: 0.5
   staminaCost: 30
   poise: 0
-  hitBlockRecoveryCost: 0.5
+  parryRecoveryTime: 0
+  isBusy: 0
   timer: 0
   itemUseDelay: 5
   isTiming: 0
@@ -6752,7 +6752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 30
   damageFactor: 0
-  hitWindow: 1
+  hitWindow: 0.2
 --- !u!1 &1407254285
 GameObject:
   m_ObjectHideFlags: 0
@@ -9257,6 +9257,10 @@ PrefabInstance:
     - target: {fileID: 7073319600603918402, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: walkSpeed
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073319600603918402, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
+      propertyPath: isDefeated
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7073319600603918402, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: rotationSpeed

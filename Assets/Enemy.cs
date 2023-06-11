@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Enemy : Character, IDamageable {
-    [SerializeField] private float health;
-    [SerializeField] private float maxHealth;
+
     private float currentHealth;
     private Animator animator;
 
@@ -53,8 +52,8 @@ public class Enemy : Character, IDamageable {
         animator = GetComponent<Animator>();
         isTiming = true;
         text.text = enemyName;
-        health = maxHealth;
-        currentHealth = health;
+        Health = MaxHealth;
+        currentHealth = Health;
 
     }
 
@@ -73,14 +72,14 @@ public class Enemy : Character, IDamageable {
         //    }
         //}
 
-        if (health <= 0) {
+        if (Health <= 0) {
             isWalking = false;
             isDefeated = true;
         }
 
-        if (currentHealth != health) {
-            currentHealth = health;
-            image.fillAmount = currentHealth / maxHealth;
+        if (currentHealth != Health) {
+            currentHealth = Health;
+            image.fillAmount = currentHealth / MaxHealth;
         }
 
 
@@ -111,7 +110,7 @@ public class Enemy : Character, IDamageable {
 
         animator.SetBool("isDefeated", isDefeated);
         animator.SetBool("isWalking", isWalking);
-        animator.SetFloat("health", health);
+        animator.SetFloat("health", Health);
     }
 
     private void Attack() {
@@ -120,13 +119,13 @@ public class Enemy : Character, IDamageable {
 
     public void TakeDamage(float damage) {
         animator.Play("Skeleton@Damage01");
-        health -= damage;
+        Health -= damage;
         isHit = true;
         isWalking = false;
         isTiming = false;
 
 
-        if (health <= 0) {
+        if (Health <= 0) {
             text.text = "";
             controller.enabled = false;
         }

@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour {
     private PlayerAnimator playerAnimator;
 
     [Header("Busy Settings")]
-    [SerializeField] private bool isBusy = false;
     [SerializeField] private float leftSwipeTimer;
     [SerializeField] private float rightSwipeTimer;
     [SerializeField] private float upSwipeTimer;
@@ -50,7 +49,6 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private bool parryExecuted = false;
 
     public bool IsLimited { get { return isLimited; } set { isLimited = value; } }
-    public bool IsBusy { get { return isBusy; } set { isBusy = value; } }
     public bool IsWalking { get { return isWalking; } set { isWalking = value; } }
     public bool CanAttack { get { return canAttack; } set { canAttack = value; } }
     public bool CanDash { get { return canDash;} set { canDash = value; } }
@@ -138,7 +136,7 @@ public class PlayerController : MonoBehaviour {
                     break;
 
                 case PlayerState.Combat:
-                    if (isBusy == false) {
+                    if (!player.IsBusy) {
                         Orbitate(inputMovement);
                     }
                     break;
@@ -262,7 +260,7 @@ public class PlayerController : MonoBehaviour {
             yield return null;
         }
 
-        isBusy = false;
+        player.IsBusy = false;
 
         //CanDash = true;
         //CanAttack = true;
@@ -305,7 +303,7 @@ public class PlayerController : MonoBehaviour {
         
         if (currentState == PlayerState.Combat) {
 
-            if (isBusy == false && player.Stamina > 0 && isLimited == false) {
+            if (!player.IsBusy && player.Stamina > 0 && isLimited == false) {
 
                 if (e.swipeDirection != GestureInput.SwipeDir.None &&
                     e.swipeDirection != GestureInput.SwipeDir.UpLeft &&
@@ -313,7 +311,7 @@ public class PlayerController : MonoBehaviour {
                     e.swipeDirection != GestureInput.SwipeDir.DownLeft &&
                     e.swipeDirection != GestureInput.SwipeDir.DownRight) {
 
-                    isBusy = true;
+                    player.IsBusy = true;
 
                     player.DrainStamina();
 
@@ -336,7 +334,7 @@ public class PlayerController : MonoBehaviour {
                             tempTimer = rightSwipeTimer;
                             break;
                         default:
-                            isBusy = false;
+                            player.IsBusy = false;
                             break;
                     }
                     if (tempTimer != 0) {
@@ -356,8 +354,8 @@ public class PlayerController : MonoBehaviour {
         //    OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
         //    StartCoroutine(DashRoutine(e.point));
         //}
-        if (isBusy == false && player.Stamina > 0) {
-            isBusy = true;
+        if (!player.IsBusy && player.Stamina > 0) {
+            player.IsBusy = true;
             OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
             player.DrainStamina();
             StartCoroutine(DashRoutine(e.point));
@@ -386,8 +384,8 @@ public class PlayerController : MonoBehaviour {
 
     private void Parry(object sender, EventArgs e) {
 
-        if (isBusy == false) {
-            isBusy = true;
+        if (!player.IsBusy) {
+            player.IsBusy = true;
 
             parryExecuted = true;
             isBlocking = false;
@@ -415,7 +413,7 @@ public class PlayerController : MonoBehaviour {
 
     private IEnumerator StartBusyTimer(float time) {
         yield return new WaitForSeconds(time);
-        isBusy = false;
+        player.IsBusy = false;
         parryExecuted = false;
     }
 
@@ -441,8 +439,8 @@ public class PlayerController : MonoBehaviour {
             if (enemyArea != hitArea) {
                 playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
                 player.DrainStamina();
-                isBusy = true;
-                StartCoroutine(StartBusyTimer(player.HitBlockRecoveryCost));
+                player.IsBusy = true;
+                StartCoroutine(StartBusyTimer(player.ParryRecoveryTime));
             }
         }
     }

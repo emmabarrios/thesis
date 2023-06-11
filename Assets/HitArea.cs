@@ -31,6 +31,7 @@ public class HitArea : MonoBehaviour
             if (areaSpawnTime < 0.1f) {
                 collider.enabled = false;
                 isTiming = false;
+                areaSpawnTime = 0;
                 //areaType = AreaType.None;
             }
         }
