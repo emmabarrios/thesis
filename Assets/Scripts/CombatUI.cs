@@ -1,10 +1,14 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using static Player;
 
 public class CombatUI : MonoBehaviour
 {
     public Image healthImage;
     public Image staminaImage;
+
+    [SerializeField][Range(.1f, 1f)] float healthBarReoverSpeed = 0.25f;
 
     public Player player;
     public float healthPoints;
@@ -13,7 +17,8 @@ public class CombatUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player.OnHealthValueChanged += Update_HealthBar;
+        player.OnHealthValueReduced += ReduceHealthBar;
+        player.OnHealthValueRestored += FillHealthBar;
         player.OnStaminaValueChanged += Update_StaminaBar;
 
         healthPoints = player.Health;
@@ -23,12 +28,30 @@ public class CombatUI : MonoBehaviour
         staminaImage.fillAmount = staminaPoints / staminaPoints;
     }
 
-    private void Update_HealthBar(object sender, Player.OnHealthValueChanged_EventArgs e) {
-        healthImage.fillAmount = e.value / healthPoints;
+    private void ReduceHealthBar(float value) {
+        healthImage.fillAmount = value / healthPoints;
     }
     
     private void Update_StaminaBar(object sender, Player.OnStaminaValueChanged_EventArgs e) {
         staminaImage.fillAmount = e.value / staminaPoints;
     }
 
+    private void FillHealthBar(float currentValue, float targetValue) {
+        StartCoroutine(FillHealthBarCoroutine(currentValue, targetValue));
+    }
+    private IEnumerator FillHealthBarCoroutine(float currentValue, float targetValue) {
+
+        float startTime = Time.time;
+        float endTime = startTime + healthBarReoverSpeed;
+
+        while (Time.time < endTime) {
+            float elapsedTime = Time.time - startTime;
+            float progress = elapsedTime / healthBarReoverSpeed;
+
+            currentValue = Mathf.Lerp(currentValue, targetValue, progress);
+            healthImage.fillAmount = currentValue / healthPoints;
+            yield return null;
+
+        }
+    }
 }

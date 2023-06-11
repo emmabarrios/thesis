@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    
+    //public enum State { Normal, Combat, None }
+    //public State CurrentState { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //public void SetState(State newState) {
+    //    if (newState == CurrentState) return;
+    //    CurrentState = newState;
+    //}
+
 }

@@ -1,13 +1,20 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Player : Character, IDamageable 
 {
+    #region Revision
+
+   
+
+    #endregion
+
+
     [SerializeField] private float health = 100f;
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float healthVisualRecoveryFactor = 1f;
-    [SerializeField] private float healthRecoveryDelay;
+    [SerializeField] private float BeginHealthRecoverDelay;
 
     [SerializeField] private float stamina = 100f;
     [SerializeField] private float staminaRecoverySpeed = 1f;
@@ -36,7 +43,7 @@ public class Player : Character, IDamageable
     public float StaminaRecoveryFactor { get { return staminaRecoveryFactor; } set { staminaRecoveryFactor = value; } }
 
     public event EventHandler<OnWeaponHitDetectedEventArgs> OnWeaponHitDetected;
-    public event EventHandler<OnHealthValueChanged_EventArgs> OnHealthValueChanged;
+    //public event EventHandler<OnHealthValueChanged_EventArgs> OnHealthValueChanged;
     public event EventHandler<OnStaminaValueChanged_EventArgs>  OnStaminaValueChanged;
     public event EventHandler OnDamageTaken;
     public class OnHealthValueChanged_EventArgs {
@@ -48,6 +55,10 @@ public class Player : Character, IDamageable
     public class OnWeaponHitDetectedEventArgs: EventArgs {
         public float damage;
     }
+
+    public Action <float, float> OnHealthValueRestored;
+    public Action <float> OnHealthValueReduced;
+
 
     private void Awake() {
         PlayerWeapon = GameObject.Find("Player Weapon Anchor Point R").GetComponentInChildren<Weapon>();
@@ -97,18 +108,18 @@ public class Player : Character, IDamageable
 
         if (isB == false && isP == false) {
             this.health -= damage;
-            //playerController.LimitActions(1f);
+
             OnDamageTaken?.Invoke(this, EventArgs.Empty);
-            OnHealthValueChanged?.Invoke(this, new OnHealthValueChanged_EventArgs { value = health });
+            OnHealthValueReduced?.Invoke(health);
         }
 
     }
 
-    public void FillHealth(float value) {
-        StartCoroutine(FillHealthVisual(value, healthRecoveryDelay));
+    public void RecoverHealth(float value) {
+        StartCoroutine(RecoverHealthCoroutine(value, BeginHealthRecoverDelay));
     }
 
-    private IEnumerator FillHealthVisual(float healthAmmount, float delay) {
+    private IEnumerator RecoverHealthCoroutine(float healthAmmount, float delay) {
 
         yield return new WaitForSeconds(delay);
 
@@ -128,17 +139,8 @@ public class Player : Character, IDamageable
 
         float targetValue = health;
         float currentValue = health - _tempHealth;
-        float startTime = Time.time;
-        float endTime = startTime + healthVisualRecoveryFactor;
 
-        while (Time.time < endTime) {
-            float elapsedTime = Time.time - startTime;
-            float progress = elapsedTime / healthVisualRecoveryFactor;
-
-            currentValue = Mathf.Lerp(currentValue, targetValue, progress);
-            OnHealthValueChanged?.Invoke(this, new OnHealthValueChanged_EventArgs { value = currentValue });
-            yield return null;
-        }
+        OnHealthValueRestored?.Invoke(currentValue, targetValue);
     }
 
     
