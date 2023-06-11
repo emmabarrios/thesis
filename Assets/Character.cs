@@ -27,6 +27,7 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] private bool isBusy = false;
     [SerializeField] private bool parryPerformed = false;
     [SerializeField] private bool attackPerformed = false;
+    [SerializeField] bool canDrainStamina = false;
 
     public float Health { get { return health; } set { health = value; } }
     public float Stamina { get { return stamina; } set { stamina = value; } }
@@ -63,7 +64,7 @@ public class Character : MonoBehaviour, IDamageable
     }
 
     private void Update() {
-        if (Stamina < 100f && !IsBusy && !AttackPerformed && !ParryPerformed) {
+        if (Stamina < 100f && !IsBusy && !AttackPerformed && !ParryPerformed && canDrainStamina) {
 
             if (IsBlocking) {
                 Stamina += StaminaRecoverySpeed * StaminaRecoveryFactor * Time.deltaTime;
@@ -83,8 +84,9 @@ public class Character : MonoBehaviour, IDamageable
     }
 
     public void DrainStamina() {
-        this.Stamina -= StaminaCost;
-        OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
+        canDrainStamina = false;
+        StartCoroutine(DelayStaminaDrain(.15f));
+        
     }
 
     public void TakeDamage(float damage) {
@@ -123,6 +125,13 @@ public class Character : MonoBehaviour, IDamageable
         float currentValue = Health - _tempHealth;
 
         OnHealthValueRestored?.Invoke(currentValue, targetValue);
+    }
+
+    private IEnumerator DelayStaminaDrain(float time) {
+        yield return new WaitForSeconds(time);
+        canDrainStamina = true;
+        this.Stamina -= StaminaCost;
+        OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
     }
 
 }
