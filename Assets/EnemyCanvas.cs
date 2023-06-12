@@ -19,7 +19,8 @@ public class EnemyCanvas : MonoBehaviour
         Quaternion currentRotation = transform.rotation;
 
         // Ignore rotation around X-axis
-        targetRotation.eulerAngles = new Vector3(currentRotation.eulerAngles.x, targetRotation.eulerAngles.y, targetRotation.eulerAngles.z);
+        //targetRotation.eulerAngles = new Vector3(currentRotation.eulerAngles.x, targetRotation.eulerAngles.y, targetRotation.eulerAngles.z);
+        targetRotation.eulerAngles = new Vector3(0f, targetRotation.eulerAngles.y, 0f);
 
         transform.rotation = targetRotation;
     }

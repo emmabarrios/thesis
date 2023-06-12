@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Analytics;
 
 public class HitArea : MonoBehaviour
 {

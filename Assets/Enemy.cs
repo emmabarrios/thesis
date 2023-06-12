@@ -4,6 +4,11 @@ using UnityEngine.UI;
 
 public class Enemy : Character, IDamageable {
 
+    public Transform camPole;
+    public Transform camTarget;
+    public float yOffset;
+
+
     private float currentHealth;
     private Animator animator;
 
@@ -59,18 +64,6 @@ public class Enemy : Character, IDamageable {
 
     // Update is called once per frame
     void Update() {
-        // Timer
-        //if (isTiming && health > 0) {
-
-        //    timer -= Time.deltaTime;
-        //    if (timer < 0.1f) {
-        //        timer = limitedTime;
-        //        isTiming = false;
-        //        isWalking = false;
-        //        Attack();
-        //        animator.SetTrigger("attack");
-        //    }
-        //}
 
         if (Health <= 0) {
             isWalking = false;
@@ -111,6 +104,12 @@ public class Enemy : Character, IDamageable {
         animator.SetBool("isDefeated", isDefeated);
         animator.SetBool("isWalking", isWalking);
         animator.SetFloat("health", Health);
+
+        if (Health <= 0) {
+            text.text = "";
+            camTarget.position = camPole.transform.position + Vector3.up * yOffset;
+        }
+
     }
 
     private void Attack() {
@@ -123,12 +122,6 @@ public class Enemy : Character, IDamageable {
         isHit = true;
         isWalking = false;
         isTiming = false;
-
-
-        if (Health <= 0) {
-            text.text = "";
-            controller.enabled = false;
-        }
 
         StartCoroutine(Recover(1f));
     }

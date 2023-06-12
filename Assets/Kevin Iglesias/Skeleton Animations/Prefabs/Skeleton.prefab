@@ -752,20 +752,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 0
+  beginHealthRecoverDelay: 0
+  stamina: 100
+  staminaRecoverySpeed: 1
+  staminaRecoveryFactor: 1
+  staminaCost: 5
+  poise: 0
+  parryRecoveryTime: 0
+  isBlocking: 0
+  isBusy: 0
+  parryPerformed: 0
+  attackPerformed: 0
+  canDrainStamina: 0
+  camPole: {fileID: 0}
+  camTarget: {fileID: 0}
+  yOffset: 0
   timer: 0
   limitedTime: 5
   isTiming: 0
   attackWindow: 1
-  weapon: {fileID: 0}
+  hitArea: {fileID: 0}
   image: {fileID: 524538414414016000}
   text: {fileID: 8017852960649188793}
   enemyName: Chavez
   rotationSpeed: 0
-  moveSpeed: 0
+  walkSpeed: 0
   attackStateTime: 0
   isWalking: 1
   isDefeated: 0
   isHit: 0
+  isAttacking: 0
+  raycastDistance: 1
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  raycastOffset: 0.5
+  rayColor: {r: 1, g: 0, b: 0, a: 1}
+  actionDelay: 1
 --- !u!143 &1843386849938919854
 CharacterController:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ TagManager:
   - playerHitArea
   - enemyHitArea
   - hitArea
+  - hitContactArea
   layers:
   - Default
   - TransparentFX

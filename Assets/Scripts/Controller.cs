@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Controller : MonoBehaviour {
@@ -127,7 +125,7 @@ public class Controller : MonoBehaviour {
 
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         Vector2 inputMovement = joystick.Direction;
 
         // I don't know if this is performant or not... but is the safest way I've found to perfectly determine 
