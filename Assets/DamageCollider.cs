@@ -43,12 +43,18 @@ public class DamageCollider : MonoBehaviour
             if (damageable != null) {
                 if (!collision.CompareTag(parentTransform.tag)) {
 
-                    // If the attack was deflected by a parry
-                    //if (collisionTransformRoot.GetComponent<Character>().IsParryPerformed) {
-                    //    parentTransform.GetComponent<Animator>().SetTrigger("staggered");
-                    //    DisableDamageCollider();
-                    //    return;
-                    //}
+                    CharacterEffectsManager fx = collisionTransformRoot.GetComponent<CharacterEffectsManager>();
+
+                    Vector3 contactPoint = collision.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+                    fx.PlayDamageEffect(contactPoint);
+
+
+                    //If the attack was deflected by a parry
+                    if (collisionTransformRoot.GetComponent<Character>().IsParryPerformed) {
+                        parentTransform.GetComponent<Animator>().SetTrigger("staggered");
+                        DisableDamageCollider();
+                        return;
+                    }
 
                     damageable.TakeDamage(weaponDamage);
                     DisableDamageCollider();
