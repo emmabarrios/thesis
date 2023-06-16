@@ -59,7 +59,6 @@ public class Enemy : Character, IDamageable {
         text.text = enemyName;
         Health = MaxHealth;
         currentHealth = Health;
-
     }
 
     // Update is called once per frame

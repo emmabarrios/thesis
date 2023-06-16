@@ -304,7 +304,7 @@ public class Controller : MonoBehaviour {
         ParryPerformed = true;
         player.DrainStamina();
         OnParry?.Invoke(this, EventArgs.Empty);
-        StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
+        //StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
     }
 
     private void InheritMovementFromAnimation_OnAnimating(object sender, EventArgs e) {
@@ -334,7 +334,7 @@ public class Controller : MonoBehaviour {
     }
 
     public void WeaponHitDetected_OnWeaponHit(object sender, EventArgs e) {
-        hitArea.ActivateHitArea(player.PlayerWeapon.damage, player.PlayerWeapon.hitWindow);
+       // hitArea.ActivateHitArea(player.PlayerWeapon.damage, player.PlayerWeapon.hitWindow);
     }
 
     private void OnTriggerEnter(Collider other) {

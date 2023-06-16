@@ -148,13 +148,6 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
                 fillImage.fillAmount = fillAmount;
             }
 
-            //float swipeDistance = eventData.position.x - initialTouchPosition.x;
-            //if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
-
-            //    ResetFillAmount();
-            //    yield break;
-            //}
-
             Vector2  swipeDistance = new Vector2(eventData.position.x, eventData.position.y) - initialTouchPosition;
             if (Mathf.Abs(swipeDistance.magnitude) > eventSwipeThreshold) {
 
@@ -190,23 +183,4 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         return isLongPressDetected;
     }
 
-    ///Makes the image position to be draggable only on the Y-Axis from its anchor point///
-    //public void OnDrag(PointerEventData eventData) {
-
-    //    if (isLongPressDetected) {
-    //        Vector2 position;
-    //        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-    //            (RectTransform)canvas.transform,
-    //            eventData.position,
-    //            canvas.worldCamera,
-    //            out position);
-
-    //        Vector3 newPosition = canvas.transform.TransformPoint(position);
-    //        newPosition.x = initialPosition.x; // Lock the X position
-
-    //        if (newPosition.y >= initialPosition.y) {
-    //            image.transform.position = newPosition;
-    //        } 
-    //    }
-    //}
 }

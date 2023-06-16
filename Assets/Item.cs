@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class _Item : MonoBehaviour
 {
-    private enum State {Spawned, Attached }
-    private State state;
-
     [SerializeField] private Vector3 offset;
     [SerializeField] private Transform attachPointA;
     [SerializeField] private Transform attachPointB;
@@ -22,8 +19,6 @@ public class Item : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        state = State.Spawned;
-
         attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
 
         attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
@@ -49,39 +44,6 @@ public class Item : MonoBehaviour
     }
 
     private void Update() {
-
-        //if (isTiming && state == State.Spawned) {
-        //    if (animator != null) {
-
-        //        timer -= Time.deltaTime;
-        //        if (timer < 0.1f) {
-        //            timer = 0;
-        //            Destroy(gameObject);
-        //        }
-
-        //        isAttached = true;
-        //        AttachToPoint(attachPointB);
-        //        this.transform.localPosition = transform.localPosition + offset;
-        //        //transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-        //        isTiming = true;
-
-        //    }
-        //}
-
-        //if (isAttached == false) {
-        //    if (animator != null) {
-        //        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        //        if (stateInfo.IsName("Idle")) {
-        //            AttachToPoint(attachPointB);
-        //            isAttached = true;
-
-        //            this.transform.localPosition = transform.localPosition + offset;
-        //            isTiming = true;
-        //        }
-        //    }
-        //}
-
 
         if (isTiming && isAttached == false) {
             timer -= Time.deltaTime;

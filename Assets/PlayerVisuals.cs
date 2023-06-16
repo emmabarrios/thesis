@@ -23,8 +23,10 @@ public class PlayerVisuals : MonoBehaviour
         animator.OnUsingItem += RunStatusTimer_OnUsingItem;
 
 
-        anchorPointL = GameObject.Find("Player Weapon Anchor Point R").GetComponent<Transform>();
-        anchorPointR = GameObject.Find("Player Weapon Anchor Point R").GetComponent<Transform>();
+        //anchorPointL = GameObject.Find("Player Weapon Anchor Point R").GetComponent<Transform>();
+        anchorPointL = null;
+        //anchorPointR = GameObject.Find("Player Weapon Anchor Point R").GetComponent<Transform>();
+        anchorPointR = null;
     }
 
     private void Update() {
