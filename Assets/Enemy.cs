@@ -46,7 +46,7 @@ public class Enemy : Character, IDamageable {
     public float actionDelay = 1f;
 
     private void Awake() {
-        EnemyWeapon = GameObject.Find("Enemy Weapon Anchor Point R").GetComponentInChildren<Weapon>();
+        //EnemyWeapon = GameObject.Find("Enemy Weapon Anchor Point R").GetComponentInChildren<Weapon>();
     }
 
     // Start is called before the first frame update

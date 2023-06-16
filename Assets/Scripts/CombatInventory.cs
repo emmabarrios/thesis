@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class PlayerInventory : MonoBehaviour
+public class CombatInventory : MonoBehaviour
 {
     WeaponSlotManager weaponSlotManager;
 
     public WeaponItem rightWeapon;
     public WeaponItem leftWeapon;
-
-
 
     private void Awake() {
         weaponSlotManager = GetComponentInChildren<WeaponSlotManager>();

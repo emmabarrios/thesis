@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 45181626441602836}
   - component: {fileID: 9153932343280487503}
   - component: {fileID: 1550114430457904168}
+  - component: {fileID: 8365563668987114413}
   m_Layer: 0
   m_Name: Old Sword Model
   m_TagString: Untagged
@@ -126,7 +127,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990722990060517057}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.2
   m_Height: 2.5
@@ -147,6 +148,22 @@ MonoBehaviour:
   damageCollider: {fileID: 0}
   weaponDamage: 10
   parentTransform: {fileID: 0}
+--- !u!54 &8365563668987114413
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990722990060517057}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!1 &2611586386200455630
 GameObject:
   m_ObjectHideFlags: 0

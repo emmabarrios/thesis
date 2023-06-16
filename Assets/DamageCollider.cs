@@ -7,7 +7,6 @@ public class DamageCollider : MonoBehaviour
     [SerializeField] private Collider damageCollider;
     [SerializeField] private float weaponDamage;
     [SerializeField] private Transform parentTransform;
-    [SerializeField] private Character characterUser;
 
     private void Awake() {
         damageCollider = GetComponent<Collider>();
@@ -18,8 +17,9 @@ public class DamageCollider : MonoBehaviour
 
     private void Start() {
         parentTransform = GetComponent<Transform>().root;
-        characterUser = parentTransform.GetComponent<Character>();
-        if (characterUser.CompareTag("Player")) {
+        Debug.Log(parentTransform.tag);
+
+        if (parentTransform.CompareTag("Player")) {
             int _layer = LayerMask.NameToLayer("Player");
             this.gameObject.layer = _layer;
         }
@@ -39,9 +39,10 @@ public class DamageCollider : MonoBehaviour
 
         if (bodyPart!=null) {
             IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
-            Debug.Log(bodyPart.bodyPart);
             if (damageable != null) {
                 if (!collision.CompareTag(parentTransform.tag)) {
+                    Debug.Log(collision.gameObject.name +": "+bodyPart.bodyPart);
+
                     damageable.TakeDamage(weaponDamage);
                     DisableDamageCollider();
                 }

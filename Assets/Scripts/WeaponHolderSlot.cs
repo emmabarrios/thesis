@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WeaponHolderSlot : MonoBehaviour
 {
-    Character characterUser;
     public Transform parentOverride;
     public GameObject currentWeaponModel;
     public bool isLeftHandSlot;
@@ -43,11 +42,7 @@ public class WeaponHolderSlot : MonoBehaviour
             model.transform.localRotation = Quaternion.identity;
             model.transform.localScale = Vector3.one;
         }
-        characterUser = GetComponentInParent<Character>();
-        if (characterUser.CompareTag("Player")) {
-            int _layer = LayerMask.NameToLayer("Player");
-            gameObject.layer = _layer;
-        }
+       
         currentWeaponModel = model;
     }
 }

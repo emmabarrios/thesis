@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class Player : Character, IDamageable
 {
     PlayerStats stats;
 
-    public void TakeDamage(float damage) {
-        throw new NotImplementedException();
+    private void Start() {
+        stats = GetComponent<PlayerStats>();
+        currentState = State.Combat;
     }
 
     //private Weapon playerWeapon;
@@ -21,4 +21,9 @@ public class Player : Character, IDamageable
         //PlayerShield = GameObject.Find("Player Weapon Anchor Point L").GetComponentInChildren<Weapon>();
     }
 
+    public void TakeDamage(float damage) {
+        Health -= damage;
+        OnDamageTaken?.Invoke();
+        OnHealthValueReduced?.Invoke(Health);
+    }
 }

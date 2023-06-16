@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character : MonoBehaviour, IAttributes
 {
     public enum State { Normal, Combat, None }
-    public State currentState { get; private set; }
+    public State currentState { get; set; }
 
     public void SetState(State newState) {
         if (newState == currentState) return;
@@ -62,6 +62,10 @@ public class Character : MonoBehaviour, IAttributes
     public float MagicDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     public float FrostbiteDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+    public Action OnDamageTaken;
+    public Action<float, float> OnHealthValueRestored;
+    public Action<float> OnHealthValueReduced;
+
     public event EventHandler<OnWeaponHitDetectedEventArgs> OnWeaponHitDetected;
     public event EventHandler<OnStaminaValueChanged_EventArgs> OnStaminaValueChanged;
     public class OnHealthValueChanged_EventArgs {
@@ -73,10 +77,6 @@ public class Character : MonoBehaviour, IAttributes
     public class OnWeaponHitDetectedEventArgs : EventArgs {
         public float damage;
     }
-
-    public Action OnDamageTaken;
-    public Action<float, float> OnHealthValueRestored;
-    public Action<float> OnHealthValueReduced;
 
     #endregion
 
@@ -107,7 +107,6 @@ public class Character : MonoBehaviour, IAttributes
     public void DrainStamina() {
         canDrainStamina = false;
         StartCoroutine(DelayStaminaDrain(.15f));
-        
     }
 
     public void RecoverHealth(float value) {
