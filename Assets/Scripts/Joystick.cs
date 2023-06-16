@@ -75,6 +75,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         set { deadZone = Mathf.Abs(value); }
     }
 
+
     public void OnPointerDown(PointerEventData eventData)
     {
         //background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);

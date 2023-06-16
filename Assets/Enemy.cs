@@ -12,6 +12,8 @@ public class Enemy : Character, IDamageable {
     private float currentHealth;
     private Animator animator;
 
+    [SerializeField] float maxHealth;
+
     [SerializeField] private float timer;
     [SerializeField] private float limitedTime = 5f;
     [SerializeField] private bool isTiming;
@@ -58,6 +60,7 @@ public class Enemy : Character, IDamageable {
         isTiming = true;
         text.text = enemyName;
         currentHealth = Health;
+        maxHealth = Health;
     }
 
     // Update is called once per frame
@@ -68,10 +71,10 @@ public class Enemy : Character, IDamageable {
             isDefeated = true;
         }
 
-        if (currentHealth != Health) {
-            currentHealth = Health;
-            image.fillAmount = currentHealth / Health;
-        }
+        //if (currentHealth != Health) {
+        //    currentHealth = Health;
+        //    image.fillAmount = currentHealth / Health;
+        //}
 
 
         Vector3 rayStart = transform.position + transform.forward * raycastOffset;
@@ -117,6 +120,7 @@ public class Enemy : Character, IDamageable {
     public void TakeDamage(float damage) {
         animator.Play("Skeleton@Damage01");
         Health -= damage;
+        image.fillAmount = Health / maxHealth;
         isHit = true;
         isWalking = false;
         isTiming = false;

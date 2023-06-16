@@ -44,11 +44,11 @@ public class DamageCollider : MonoBehaviour
                 if (!collision.CompareTag(parentTransform.tag)) {
 
                     // If the attack was deflected by a parry
-                    if (collisionTransformRoot.GetComponent<Character>().IsParryPerformed) {
-                        parentTransform.GetComponent<Animator>().SetTrigger("staggered");
-                        DisableDamageCollider();
-                        return;
-                    }
+                    //if (collisionTransformRoot.GetComponent<Character>().IsParryPerformed) {
+                    //    parentTransform.GetComponent<Animator>().SetTrigger("staggered");
+                    //    DisableDamageCollider();
+                    //    return;
+                    //}
 
                     damageable.TakeDamage(weaponDamage);
                     DisableDamageCollider();

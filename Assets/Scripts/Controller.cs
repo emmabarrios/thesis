@@ -71,7 +71,7 @@ public class Controller : MonoBehaviour {
     //public event EventHandler OnDamageTaken;
     public event EventHandler OnBlocking;
     public event EventHandler OnReleaseBlock;
-    public event EventHandler OnParry;
+    public Action OnParry;
     public event EventHandler<OnAttackEventArgs> OnAttack;
     public event EventHandler<OnDashEventArgs> OnDash;
     public class OnDashEventArgs: EventArgs {
@@ -108,8 +108,9 @@ public class Controller : MonoBehaviour {
 
         // Input Event Subscribers
         buttonA.OnBlocking += Block;
-        buttonA.OnHandleDroped += ReleaseBlock;
-        buttonA.OnParry += Parry;
+        buttonA.OnToggleValueChanged += Block;
+        //buttonA.OnParry += Parry;
+        //buttonA.OnHandleDroped += ReleaseBlock;
 
         gestureInput.SwipeDirectionChanged += ProcessGestureSwipes;
         joystick.OnDoubleTap += Dash;
@@ -166,9 +167,6 @@ public class Controller : MonoBehaviour {
             }
         }
 
-        //if (player.IsParryPerformed != ParryPerformed) {
-        //    player.IsParryPerformed = ParryPerformed;
-        //}
         if (player.IsBlocking != IsBlocking) {
             player.IsBlocking = IsBlocking;
         }
@@ -265,7 +263,11 @@ public class Controller : MonoBehaviour {
                     e.swipeDirection != GestureInput.SwipeDir.DownLeft &&
                     e.swipeDirection != GestureInput.SwipeDir.DownRight) {
 
-                    OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+                    if (!IsBlocking) {
+                        OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+                    } else if (IsBlocking && e.swipeDirection == GestureInput.SwipeDir.Left) {
+                        Parry();
+                    }
 
                     player.DrainStamina();
 
@@ -292,6 +294,13 @@ public class Controller : MonoBehaviour {
         if (!IsBlocking && !IsDrawingItem) {
             IsBlocking = true;
         }
+    }  
+    
+    private void Block(bool value) {
+        IsBlocking = value;
+        //if (!IsBlocking && !IsDrawingItem) {
+        //    IsBlocking = value;
+        //}
     }
 
     private void ReleaseBlock(object sender, EventArgs e) {
@@ -300,12 +309,13 @@ public class Controller : MonoBehaviour {
         }
     }
 
-    private void Parry(object sender, EventArgs e) {
+    private void Parry() {
 
         player.IsParryPerformed = true;
+        IsBlocking = false;
         player.DrainStamina();
         player.OpenParryWindow();
-        OnParry?.Invoke(this, EventArgs.Empty);
+        OnParry?.Invoke();
         //StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
     }
 

@@ -79,7 +79,7 @@ public class PlayerAnimator : MonoBehaviour {
         animator.SetTrigger(IS_DASHING);
     }
 
-    private void ExecuteParryAnimation(object sender, EventArgs e) {
+    private void ExecuteParryAnimation() {
         animator.SetBool("parry", true);
     }
 

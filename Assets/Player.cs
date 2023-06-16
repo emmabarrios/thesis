@@ -17,6 +17,7 @@ public class Player : Character, IDamageable
 
     [SerializeField] bool canDrainStamina = false;
     [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float beginHealthRecoverDelay;
     [SerializeField] private float staminaRecoverySpeed = 1f;
     [SerializeField] private float staminaRecoveryModifier = 1f;
@@ -29,6 +30,7 @@ public class Player : Character, IDamageable
     public float StaminaCost { get { return staminaCost; } set { staminaCost = value; } }
     public float BeginHealthRecoverDelay { get { return beginHealthRecoverDelay; } set { beginHealthRecoverDelay = value; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
+    public float MaxStamina { get { return maxStamina; } set { maxStamina = value; } }
 
     public Action OnDamageTaken;
     public Action<float, float> OnHealthValueRestored;
@@ -56,10 +58,13 @@ public class Player : Character, IDamageable
         animator = GetComponentInChildren<PlayerAnimator>();
         stats = GetComponent<PlayerStatsManager>();
         currentState = PlayerState.Combat;
+        stats.InitializePlayerStats(this);
+        MaxHealth = Health;
+        MaxStamina = Stamina;
     }
 
     private void Update() {
-        if (Stamina < 100f && !IsBusy && !IsAttackPerformed && !IsParryPerformed && canDrainStamina) {
+        if (Stamina < MaxStamina && !IsBusy && !IsAttackPerformed && !IsParryPerformed && canDrainStamina) {
 
             if (IsBlocking) {
                 Stamina += StaminaRecoverySpeed * staminaRecoveryModifier * Time.deltaTime;
@@ -69,8 +74,8 @@ public class Player : Character, IDamageable
 
             OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
 
-            if (Stamina > 100f) {
-                Stamina = 100f;
+            if (Stamina > MaxStamina) {
+                Stamina = MaxStamina;
             } else if (Stamina < -5) {
                 Stamina = -5;
             }

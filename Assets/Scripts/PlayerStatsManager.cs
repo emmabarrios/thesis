@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PlayerStatsManager: MonoBehaviour {
 
-    Character character;
-
     [SerializeField] private int vitality;
     [SerializeField] private int endurance;
     [SerializeField] private int strenght;
@@ -25,16 +23,11 @@ public class PlayerStatsManager: MonoBehaviour {
     public int Vigor { get { return vigor; } set { vigor = value; } }
     public int Luck { get { return luck; } set { luck = value; } }
 
-
-    private void Start() {
-        character = GetComponent<Character>();
-    }
-
-    public void InitializePlayerStats() {
+    public void InitializePlayerStats(Player player) {
 
         // Calculate health based on Vitality
-        character.Health = 100f + (vitality * 10f);
-        character.Stamina = 100f + (vitality * 10f);
+        player.Health = 100f + (vitality * 10f);
+        player.Stamina = 100f + (vitality * 10f);
 
         // Calculate Slash Damage and Thrust Damage based on Dexterity
         //float dexterityDamageBonus = dexterity * 10f;

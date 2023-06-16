@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 
 public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
 
@@ -48,6 +47,14 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
 
     [SerializeField] private Vector2 scale;
 
+    #region Shield
+    private bool isToggle;
+    public bool toggleValue = false;
+    public Action<bool> OnToggleValueChanged;
+
+    private Controller playerController;
+    #endregion
+
     public Vector2 Scale {
         get { return scale; }
         set { scale = value; }
@@ -72,11 +79,17 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         public string a;
     }
 
+
+
     private void Start() {
+        playerController = GameObject.Find("Player").GetComponent<Controller>();
+        playerController.OnParry += ChangeToggleValue;
+
         Scale = this.GetComponent<RectTransform>().localScale;
         canvas = GetComponentInParent<Canvas>();
-        if (canvas == null)
+        if (canvas == null) {
             Debug.LogError("The Joystick is not placed inside a canvas");
+        }
         Vector2 center = new Vector2(0.5f, 0.5f);
         background.pivot = center;
         handle.anchorMin = center;
@@ -133,10 +146,14 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
 
         if (axisOptions == AxisOptions.Shield) {
 
-            float swipeDistance = eventData.position.x - initialTouchPosition.x;
-            if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
-                OnParry?.Invoke(this, new OnParryEventArgs { a = "Parry!" });
-            }
+            // This is for the parry
+            //float swipeDistance = eventData.position.x - initialTouchPosition.x;
+            //if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
+            //    OnParry?.Invoke(this, new OnParryEventArgs { a = "Parry!" });
+            //}
+            toggleValue = !toggleValue;
+            OnToggleValueChanged?.Invoke(toggleValue);
+
         }
 
         OnHandleDroped?.Invoke(this, EventArgs.Empty);
@@ -221,5 +238,9 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
 
     public void SetAnchorPosition(Vector2 anchor) {
         this.GetComponent<RectTransform>().anchoredPosition = anchor;
+    }
+
+    private void ChangeToggleValue() {
+        toggleValue = !toggleValue;
     }
 }

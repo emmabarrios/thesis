@@ -7705,9 +7705,10 @@ MonoBehaviour:
   animator: {fileID: 0}
   canDrainStamina: 0
   maxHealth: 100
+  maxStamina: 100
   beginHealthRecoverDelay: 1.5
   staminaRecoverySpeed: 20
-  staminaRecoveryModifier: 1
+  staminaRecoveryModifier: 0.5
   staminaCost: 30
   parryWindow: 1
   isTiming: 0
@@ -7738,8 +7739,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c6297fcbc8ab148acf51e60950acf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vitality: 1
-  endurance: 1
+  vitality: 2
+  endurance: 2
   strenght: 1
   dexterity: 1
   agility: 1
@@ -10677,7 +10678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7073319600603918402, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: isDefeated
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7073319600603918402, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: rotationSpeed
