@@ -75,6 +75,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
         set { deadZone = Mathf.Abs(value); }
     }
 
+    public bool isLocked = false;
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -98,16 +99,17 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        background.gameObject.SetActive(false);
+        if (isLocked == false) {
+            background.gameObject.SetActive(false);
 
-        input = Vector2.zero;
-        handle.anchoredPosition = Vector2.zero;
-        OnHandleDroped?.Invoke(this, EventArgs.Empty);
+            input = Vector2.zero;
+            handle.anchoredPosition = Vector2.zero;
+            OnHandleDroped?.Invoke(this, EventArgs.Empty);
 
-        DoubleTap(eventData);
+            DoubleTap(eventData);
 
-        StartCoroutine(FadeTo(.2f, fadeTime));
-
+            StartCoroutine(FadeTo(.2f, fadeTime));
+        }
     }
 
     private void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)
@@ -207,6 +209,18 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             image.color = newColor;
 
             yield return null;
+        }
+    }
+
+    public void ChangeToggleValue() {
+        isLocked = !isLocked;
+        if (isLocked == false) {
+            // Same as OnPointerUp but don't know how to call it without arguments
+            background.gameObject.SetActive(false);
+            input = Vector2.zero;
+            handle.anchoredPosition = Vector2.zero;
+            OnHandleDroped?.Invoke(this, EventArgs.Empty);
+            StartCoroutine(FadeTo(.2f, fadeTime));
         }
     }
 }
