@@ -94,6 +94,7 @@ public class Controller : MonoBehaviour {
         player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
+        //player.animator = GetComponentInChildren<PlayerAnimator>();
 
         // Input
         buttonA = GameObject.Find("A Button").GetComponent<Button>();
@@ -139,11 +140,11 @@ public class Controller : MonoBehaviour {
         if (!isRotating) {
 
             switch (player.currentState) {
-                case Character.State.Normal:
+                case Player.PlayerState.Normal:
                     Orbitate(inputMovement);
                     break;
 
-                case Character.State.Combat:
+                case Player.PlayerState.Combat:
                     if (!IsBusy && !ParryPerformed && !AttackPerformed) {
                         Orbitate(inputMovement);
                     }
@@ -165,17 +166,17 @@ public class Controller : MonoBehaviour {
             }
         }
 
-        if (player.ParryPerformed != ParryPerformed) {
-            player.ParryPerformed = ParryPerformed;
-        }
+        //if (player.IsParryPerformed != ParryPerformed) {
+        //    player.IsParryPerformed = ParryPerformed;
+        //}
         if (player.IsBlocking != IsBlocking) {
             player.IsBlocking = IsBlocking;
         }
         if (player.IsBusy != IsBusy) {
             player.IsBusy = IsBusy;
         }
-        if (player.AttackPerformed != AttackPerformed) {
-            player.AttackPerformed = AttackPerformed;
+        if (player.IsAttackPerformed != AttackPerformed) {
+            player.IsAttackPerformed = AttackPerformed;
         }
 
     }
@@ -241,7 +242,7 @@ public class Controller : MonoBehaviour {
     private void ProcessGestureSwipes(object sender, GestureInput.SwipeDirectionChangedEventArgs e) {
 
         // Turn 90° in normal state
-        if (player.currentState == Character.State.Normal) {
+        if (player.currentState == Player.PlayerState.Normal) {
             if (!isRotating) {
                 if (e.swipeDirection == GestureInput.SwipeDir.Left) {
 
@@ -254,7 +255,7 @@ public class Controller : MonoBehaviour {
             }
         }
 
-        if (player.currentState == Character.State.Combat) {
+        if (player.currentState == Player.PlayerState.Combat) {
 
             if (player.Stamina > 0 && !IsDrawingItem) {
 
@@ -301,8 +302,9 @@ public class Controller : MonoBehaviour {
 
     private void Parry(object sender, EventArgs e) {
 
-        ParryPerformed = true;
+        player.IsParryPerformed = true;
         player.DrainStamina();
+        player.OpenParryWindow();
         OnParry?.Invoke(this, EventArgs.Empty);
         //StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
     }
@@ -337,17 +339,17 @@ public class Controller : MonoBehaviour {
        // hitArea.ActivateHitArea(player.PlayerWeapon.damage, player.PlayerWeapon.hitWindow);
     }
 
-    private void OnTriggerEnter(Collider other) {
+    //private void OnTriggerEnter(Collider other) {
 
-        // If enemy hit landed on shield, run shiled hit animation and drain stamina
-        if (IsBlocking) {
-            HitArea enemyArea = other.GetComponent<HitArea>();
-            if (enemyArea != hitArea) {
-                playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
-                player.DrainStamina();
-            }
-        }
-    }
+    //    // If enemy hit landed on shield, run shiled hit animation and drain stamina
+    //    if (IsBlocking) {
+    //        HitArea enemyArea = other.GetComponent<HitArea>();
+    //        if (enemyArea != hitArea) {
+    //            playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
+    //            player.DrainStamina();
+    //        }
+    //    }
+    //}
 
     // Handle both the Busy Time and parry window, not sure if is the best aproach since the method above is also running a timer but in
     // the update method

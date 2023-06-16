@@ -57,7 +57,6 @@ public class Enemy : Character, IDamageable {
         animator = GetComponent<Animator>();
         isTiming = true;
         text.text = enemyName;
-        Health = MaxHealth;
         currentHealth = Health;
     }
 
@@ -71,7 +70,7 @@ public class Enemy : Character, IDamageable {
 
         if (currentHealth != Health) {
             currentHealth = Health;
-            image.fillAmount = currentHealth / MaxHealth;
+            image.fillAmount = currentHealth / Health;
         }
 
 

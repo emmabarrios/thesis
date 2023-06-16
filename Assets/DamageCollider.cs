@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class DamageCollider : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class DamageCollider : MonoBehaviour
 
     private void Start() {
         parentTransform = GetComponent<Transform>().root;
-        Debug.Log(parentTransform.tag);
 
         if (parentTransform.CompareTag("Player")) {
             int _layer = LayerMask.NameToLayer("Player");
@@ -39,9 +39,16 @@ public class DamageCollider : MonoBehaviour
 
         if (bodyPart!=null) {
             IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
+            Transform collisionTransformRoot = bodyPart.GetComponentInParent<Transform>().root;
             if (damageable != null) {
                 if (!collision.CompareTag(parentTransform.tag)) {
-                    Debug.Log(collision.gameObject.name +": "+bodyPart.bodyPart);
+
+                    // If the attack was deflected by a parry
+                    if (collisionTransformRoot.GetComponent<Character>().IsParryPerformed) {
+                        parentTransform.GetComponent<Animator>().SetTrigger("staggered");
+                        DisableDamageCollider();
+                        return;
+                    }
 
                     damageable.TakeDamage(weaponDamage);
                     DisableDamageCollider();
