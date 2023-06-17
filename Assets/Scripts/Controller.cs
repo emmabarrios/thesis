@@ -127,7 +127,7 @@ public class Controller : MonoBehaviour {
 
     }
 
-    private void FixedUpdate() {
+    private void Update() {
         Vector2 inputMovement = joystick.Direction;
 
         // I don't know if this is performant or not... but is the safest way I've found to perfectly determine 

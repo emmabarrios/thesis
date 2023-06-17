@@ -7,7 +7,7 @@ public class LookToTarget : MonoBehaviour
     [SerializeField] private Transform targetObject = null;
     public float rotationSpeed;
 
-    private void Update() {
+    private void FixedUpdate() {
        // transform.LookAt(targetObject);
         // Smoothly rotate the camera holder towards the target object
         Quaternion targetRotation = Quaternion.LookRotation(targetObject.position - transform.position);

@@ -64,7 +64,7 @@ public class Enemy : Character, IDamageable {
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
 
         if (Health <= 0) {
             isWalking = false;
@@ -99,7 +99,7 @@ public class Enemy : Character, IDamageable {
 
 
         if (isWalking == true && isDefeated == false && isAttacking == false) {
-            RotateToTarget(rotationSpeed, Time.deltaTime);
+            RotateToTarget(rotationSpeed, Time.fixedDeltaTime);
         }
 
         animator.SetBool("isDefeated", isDefeated);

@@ -285,6 +285,7 @@ GameObject:
   - component: {fileID: 14110622}
   - component: {fileID: 14110621}
   - component: {fileID: 14110620}
+  - component: {fileID: 14110623}
   m_Layer: 0
   m_Name: World Camera
   m_TagString: MainCamera
@@ -391,6 +392,21 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &14110623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14110618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdcd512468080a04e9fffdd387605212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1324944686}
+  bobbingSpeed: 12
+  bobbingAmount: 0.008
 --- !u!1 &28454044
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,7 +613,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92373485}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -0.3}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1545848059}
@@ -612,13 +628,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92373485}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ae0e5748ca486f4d9f782d6b0824375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   targetObject: {fileID: 679321415}
-  rotationSpeed: 3
+  rotationSpeed: 1
 --- !u!114 &92373488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,8 +650,8 @@ MonoBehaviour:
   player: {fileID: 1324944689}
   poiseModifier: 0.2
   duration: 0
-  rotationSpeed: 10
-  magnitude: 10
+  rotationSpeed: 15
+  magnitude: 15
   direction: 1
   isrotating: 0
 --- !u!1 &116546297
@@ -2034,7 +2050,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.44460082}
+  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.3}
   m_Center: {x: -0.011977494, y: 0.46683264, z: -0.07012433}
 --- !u!1 &401893871
 GameObject:
@@ -2395,7 +2411,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.44460082}
+  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.3}
   m_Center: {x: -0.011977494, y: 0.46683264, z: -0.07012433}
 --- !u!1 &438041551
 GameObject:
@@ -2516,7 +2532,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 454098671}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.07, z: 0}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children:
   - {fileID: 1183175091}
@@ -3235,7 +3251,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.38662565, z: 0.44460082}
+  m_Size: {x: 0.4, y: 0.38662565, z: 0.3}
   m_Center: {x: -0.011977509, y: 0.6307561, z: -0.07012433}
 --- !u!1 &555773146
 GameObject:
@@ -3328,7 +3344,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.30742845, y: 0.0872401, z: 0.0856301}
+  m_Size: {x: 0.30742845, y: 0.2, z: 0.2}
   m_Center: {x: -0.12772083, y: 0.0062003997, z: 0.008327447}
 --- !u!54 &556982111
 Rigidbody:
@@ -3659,7 +3675,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.44460082}
+  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.3}
   m_Center: {x: -0.011977494, y: 0.46683264, z: -0.07012433}
 --- !u!1 &675141689
 GameObject:
@@ -3931,7 +3947,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.44460082}
+  m_Size: {x: 0.16798532, y: 0.71447253, z: 0.3}
   m_Center: {x: -0.011977494, y: 0.46683264, z: -0.07012433}
 --- !u!1 &738663839
 GameObject:
@@ -5245,7 +5261,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.52117234, y: 0.09939092, z: 0.09348741}
+  m_Size: {x: 0.52117234, y: 0.2, z: 0.2}
   m_Center: {x: -0.24454997, y: -0.0026519995, z: 0.009208035}
 --- !u!54 &931826102
 Rigidbody:
@@ -5376,7 +5392,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.50601894, y: 0.08673904, z: 0.084447205}
+  m_Size: {x: 0.50601894, y: 0.2, z: 0.2}
   m_Center: {x: -0.24699046, y: 0.006793347, z: 0.005730412}
 --- !u!54 &973804307
 Rigidbody:
@@ -5480,7 +5496,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.23470229, z: 0.44460082}
+  m_Size: {x: 0.4, y: 0.23470229, z: 0.3}
   m_Center: {x: -0.011977509, y: 0.7067177, z: -0.07012433}
 --- !u!1 &983545380
 GameObject:
@@ -6017,7 +6033,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.46985036, y: 0.34163046, z: 0.31836453}
+  m_Size: {x: 0.4, y: 0.4, z: 0.4}
   m_Center: {x: -0.029699313, y: 0.0013968128, z: 0.026691893}
 --- !u!54 &1078374738
 Rigidbody:
@@ -6582,7 +6598,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.34633514, y: 0.30603287, z: 0.3298167}
+  m_Size: {x: 0.4, y: 0.4, z: 0.4}
   m_Center: {x: -0.17683272, y: 0.003028385, z: 0.026767906}
 --- !u!54 &1162440500
 Rigidbody:
@@ -6969,7 +6985,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.32841218, y: 0.08585189, z: 0.08764914}
+  m_Size: {x: 0.32841218, y: 0.2, z: 0.2}
   m_Center: {x: -0.12496935, y: 0.0008074394, z: 0.008153107}
 --- !u!54 &1206395254
 Rigidbody:
@@ -7562,8 +7578,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.27894884, y: 0.30000007, z: 0.4204703}
-  m_Center: {x: -0.0018899143, y: 0.67406887, z: -0.058059067}
+  m_Size: {x: 0.27894884, y: 0.30000007, z: 0.3}
+  m_Center: {x: -0.0018899143, y: 0.67406887, z: -0.06055793}
 --- !u!4 &1312683382 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4620900675884628736, guid: e68c80fb32a68bc4b8b0706215846818, type: 3}
@@ -7648,12 +7664,12 @@ MonoBehaviour:
   target: {fileID: 381421975}
   lookRotationSpeed: 15
   movementSpeed: 2
-  maxMovementSpeed: 5
+  maxMovementSpeed: 4
   accelerationTime: 1.5
   deaccelerationTime: 7
   speedLimitMultiplier: 1
   turnSpeed: 90
-  dashDistance: 3
+  dashDistance: 4
   dashMovementSpeed: 10
   dirMultiplier: 1
   lookRotationSpeedMultiplier: 0.1
@@ -10239,7 +10255,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1843386849938919854, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: m_Radius
-      value: 0.5
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 1843386849938919854, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: m_Enabled
@@ -10719,7 +10735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7073319600603918402, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: rotationSpeed
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7073319600603918402, guid: fcc7e72ef9922724c9dbe91fe1141293, type: 3}
       propertyPath: attackStateTime

@@ -26,11 +26,11 @@ public class Shake : MonoBehaviour
     }
 
     public void StartCameraShake() {
-        //if (isrotating == false) {
-        //    StartCoroutine(ShakeCamera(duration, magnitude, direction));
-        //}
-        Quaternion rotation = originalRotation * Quaternion.Euler(magnitude * direction, 0f, magnitude * direction);
-        cameraTransform.localRotation = rotation;
+        if (isrotating == false) {
+            StartCoroutine(ShakeCamera(duration, magnitude, direction));
+        }
+        //Quaternion rotation = originalRotation * Quaternion.Euler(magnitude * direction, 0f, magnitude * direction);
+        //cameraTransform.localRotation = rotation;
 
     }
 
@@ -38,28 +38,28 @@ public class Shake : MonoBehaviour
     private IEnumerator ShakeCamera(float duration, float magnitude, int direction) {
         Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
 
-        // Reset the camera's rotation to the original rotation
-        //cameraTransform.localRotation = originalRotation;
+        //Reset the camera's rotation to the original rotation
+        cameraTransform.localRotation = originalRotation;
 
-        //float _poise = player.Poise;
+        float _poise = player.Poise;
 
         //Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
 
-        //if (_poise > 1) {
-        //    rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * poiseModifier * direction);
-        //}
-        //cameraTransform.localRotation = rotation;
+        if (_poise > 1) {
+            rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * poiseModifier * direction);
+        }
+        cameraTransform.localRotation = rotation;
 
-        //while (cameraTransform.localRotation != originalRotation) {
-        //    // Apply the rotation towards the original rotation
-        //    cameraTransform.localRotation = Quaternion.Lerp(cameraTransform.localRotation, originalRotation, Time.fixedDeltaTime * rotationSpeed);
+        while (cameraTransform.localRotation != originalRotation) {
+            // Apply the rotation towards the original rotation
+            cameraTransform.localRotation = Quaternion.Lerp(cameraTransform.localRotation, originalRotation, Time.fixedDeltaTime * rotationSpeed);
 
-        //    if (Mathf.Abs(cameraTransform.localRotation.z - originalRotation.z) < 0.01) {
-        //        cameraTransform.localRotation = originalRotation;
-        //    }
+            if (Mathf.Abs(cameraTransform.localRotation.z - originalRotation.z) < 0.01) {
+                cameraTransform.localRotation = originalRotation;
+            }
 
-        //    yield return null;
-        //}
+            yield return null;
+        }
         yield return null;
 
     }
