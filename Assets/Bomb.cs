@@ -8,17 +8,21 @@ public class Bomb : MonoBehaviour
     public float damage;
     public float time;
     public GameObject explosionFX;
-
+    public GameObject explosionRadius;
+    
     private void Start() {
         StartCoroutine(CountDown());
     }
 
     IEnumerator CountDown() {
         yield return new WaitForSeconds(time);
+        explosionRadius.GetComponent<SphereCollider>().enabled = true;
+        yield return new WaitForSeconds(0.5f);
         Explode();
     }
 
     private void Explode() {
+       
         Instantiate(explosionFX, transform.localPosition, Quaternion.identity);
         Destroy(gameObject);
     }

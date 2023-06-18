@@ -11,6 +11,8 @@ public class Throwable : MonoBehaviour, IUsable
     public float timer;
     private bool isTiming;
 
+    [SerializeField] private float rotationForce = 5f; // The rotational force to apply
+
     private void Start() {
         thrower = GameObject.Find("Bomb Thrower").GetComponent<Thrower>();
     }
@@ -26,7 +28,8 @@ public class Throwable : MonoBehaviour, IUsable
             timer -= Time.deltaTime;
             if (timer < 0.1f) {
                 timer = 0;;
-                thrower.Throw(projectile, throwForce, throwUpwardForce, offset);
+                thrower.Throw(projectile, throwForce, throwUpwardForce, rotationForce, offset);
+
                 isTiming = false;
                 Destroy(gameObject);
             }

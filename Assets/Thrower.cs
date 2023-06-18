@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Thrower : MonoBehaviour
 {
-    public void Throw(GameObject projectile, float throwForce, float throwUpwardForce, Vector3 offset) {
+    public void Throw(GameObject projectile, float throwForce, float throwUpwardForce,float rotationForce, Vector3 offset) {
         GameObject _projectile = Instantiate(projectile, transform.position + offset, transform.rotation);
         Vector3 force = transform.forward * throwForce + (transform.up * throwUpwardForce);
         Rigidbody rb = _projectile.GetComponent<Rigidbody>();
         rb.AddForce(force, ForceMode.Impulse);
+        rb.AddTorque(transform.up * rotationForce + transform.right * rotationForce, ForceMode.Impulse);
     }
 }
