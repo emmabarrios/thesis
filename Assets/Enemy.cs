@@ -154,8 +154,4 @@ public class Enemy : Character, IDamageable {
         controller.Move(worldDeltaPosition);
     }
 
-    public void OnWeaponHit() {
-        hitArea.ActivateHitArea(enemyWeapon.damage, enemyWeapon.hitWindow);
-    }
-
 }

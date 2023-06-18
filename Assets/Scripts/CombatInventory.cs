@@ -7,8 +7,14 @@ public class CombatInventory : MonoBehaviour
 {
     WeaponSlotManager weaponSlotManager;
 
+    [Header("Main Weapons")]
     public WeaponItem rightWeapon;
     public WeaponItem leftWeapon;
+
+    [Header("Usable Items")]
+    public List<UsableItem> List_1;
+    public List<UsableItem> List_2;
+    public List<UsableItem> List_3;
 
     private void Awake() {
         weaponSlotManager = GetComponentInChildren<WeaponSlotManager>();

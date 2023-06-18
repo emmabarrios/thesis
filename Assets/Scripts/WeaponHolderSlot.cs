@@ -30,7 +30,7 @@ public class WeaponHolderSlot : MonoBehaviour
             return;
         }
 
-        GameObject model = Instantiate(weaponItem.modelPrefab) as GameObject;
+        GameObject model = Instantiate(weaponItem._prefab) as GameObject;
 
         if (model != null) {
             if (parentOverride != null) {

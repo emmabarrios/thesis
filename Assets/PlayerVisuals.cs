@@ -42,13 +42,13 @@ public class PlayerVisuals : MonoBehaviour
     }
 
     public void ToggleWeaponsVisuals(bool toggle) {
-        if (toggle == false) {
-            anchorPointL.GetChild(0).gameObject.SetActive(false);
-            anchorPointR.GetChild(0).gameObject.SetActive(false);
-        } else {
-            anchorPointL.GetChild(0).gameObject.SetActive(true);
-            anchorPointR.GetChild(0).gameObject.SetActive(true);
-        }
+        //if (toggle == false) {
+        //    anchorPointL.GetChild(0).gameObject.SetActive(false);
+        //    anchorPointR.GetChild(0).gameObject.SetActive(false);
+        //} else {
+        //    anchorPointL.GetChild(0).gameObject.SetActive(true);
+        //    anchorPointR.GetChild(0).gameObject.SetActive(true);
+        //}
     }
 
     public void RunStatusTimer_OnUsingItem(object sender, PlayerAnimator.OnUsingItemEventArgs e) {

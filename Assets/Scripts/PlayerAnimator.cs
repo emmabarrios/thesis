@@ -20,6 +20,9 @@ public class PlayerAnimator : MonoBehaviour {
 
     [SerializeField] private float useItemAnimLenght;
 
+    public Action OnOpenedFlask;
+    public Action OnDropedFlask;
+
     public event EventHandler<OnUsingItemEventArgs> OnUsingItem;
     public event EventHandler OnAnimating;
     public event EventHandler OnFinishedUsingItem;
@@ -108,6 +111,14 @@ public class PlayerAnimator : MonoBehaviour {
 
     private void ExecuteHitDeflectionAnimation(object sender, EventArgs e) {
         animator.SetTrigger("deflectedHit");
+    }
+
+    public void OpenFlask() {
+        OnOpenedFlask?.Invoke();
+    }
+    
+    public void DropFlask() {
+        OnDropedFlask?.Invoke();
     }
 
 }

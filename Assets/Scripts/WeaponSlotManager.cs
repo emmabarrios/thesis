@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class WeaponSlotManager : MonoBehaviour
 {
     [SerializeField] private WeaponHolderSlot leftHandSlot;
     [SerializeField] private WeaponHolderSlot rightHandSlot;
 
-    DamageCollider leftHandDamageCollider;
-    DamageCollider rightHandDamageCollider;
+    Weapon leftHandWeapon;
+    Weapon rightHandWeapon;
 
     private void Awake() {
         WeaponHolderSlot[] weaponHolderSlots = GetComponentsInChildren<WeaponHolderSlot>();
@@ -25,37 +22,42 @@ public class WeaponSlotManager : MonoBehaviour
     public void LoadWeaponOnSlot(WeaponItem weaponItem, bool isLeft) {
         if (isLeft) {
             leftHandSlot.LoadWeaponModel(weaponItem);
-            LoadLeftHandWeaponCollider();
+            LoadLeftHandWeapon();
         } else {
             rightHandSlot.LoadWeaponModel(weaponItem);
-            LoadRightHandWeaponCollider();
+            LoadRightHandWeapon();
         }
     }
 
     #region Weapon's Collider handling
-    public void LoadLeftHandWeaponCollider() {
-        leftHandDamageCollider = leftHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
+    public void LoadLeftHandWeapon() {
+        leftHandWeapon = leftHandSlot.currentWeaponModel.GetComponentInChildren<Weapon>();
     }
 
-    public void LoadRightHandWeaponCollider() {
-        rightHandDamageCollider = rightHandSlot.currentWeaponModel.GetComponentInChildren<DamageCollider>();
+    public void LoadRightHandWeapon() {
+        rightHandWeapon = rightHandSlot.currentWeaponModel.GetComponentInChildren<Weapon>();
     }
 
-    public void OpenRightHandDamageCollider() {
-        rightHandDamageCollider.EnableDamageCollider();
+    public void OpenRightHandWeaponCollider() {
+        rightHandWeapon.EnableDamageCollider();
     }
 
-    public void OpenLeftHandDamageCollider() {
-        leftHandDamageCollider.EnableDamageCollider();
+    public void OpenLeftHandWeaponCollider() {
+        leftHandWeapon.EnableDamageCollider();
     }
 
-    public void CloseRightHandDamageCollider() {
-        rightHandDamageCollider.DisableDamageCollider();
+    public void CloseRightHandWeaponCollider() {
+        rightHandWeapon.DisableDamageCollider();
     }
 
-    public void CloseLeftHandDamageCollider() {
-        leftHandDamageCollider.DisableDamageCollider();
+    public void CloseLeftHandWeaponCollider() {
+        leftHandWeapon.DisableDamageCollider();
     }
     #endregion
 
+    #region Weapon's Visual handling
+    public void ToggleRightHandWeaponVisual() {
+        rightHandSlot.currentWeaponModel.SetActive(!rightHandSlot.currentWeaponModel.gameObject.activeSelf);
+    }
+    #endregion
 }

@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
+    [Header("Holstered Item")]
+    public Image fillImage = null;
+    public GameObject itemPrefab;
+
     private float value = 30f;
 
     private enum ItemState { Ready, Holstered }
@@ -17,10 +21,6 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     public Sprite fillSprite; // The new sprite to assign to the Image component
     public Sprite hintSprite;
-
-    public Image fillImage = null;
-
-    public GameObject objectPrefab;
 
     [SerializeField] private Toggle toggle;
 
@@ -75,7 +75,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         if (_state == ItemState.Ready) {
             float swipeDistance = eventData.position.y - initialTouchPosition.y;
             if (Mathf.Abs(swipeDistance) > eventSwipeThreshold) {
-                UseItem();
+                DrawItem();
                 return;
             }
         }
@@ -113,17 +113,19 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         }
     }
 
-    private void UseItem() {
-        // Refactor
+    private void DrawItem() {
 
         toggle.isOn = !toggle.isOn;
 
-        Instantiate(objectPrefab, Vector3.zero, Quaternion.identity);
-
         playerAnimator.Trigger_UsingItem_AnimState();
         playerAnimator.GetComponent<Animator>().Play("Use_Item");
-        player.RecoverHealth(value);
 
+        GameObject _item = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        Consumable consumable = _item.GetComponent<Consumable>();
+        consumable.user = player.GetComponent<Character>();
+        consumable.Use();
+
+        // Destroy pouch item
         Destroy(this.gameObject);
     }
 

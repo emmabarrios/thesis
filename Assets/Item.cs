@@ -45,18 +45,19 @@ public class _Item : MonoBehaviour
 
     private void Update() {
 
+        // Attach to hand timer, when time is out, attach to hand.
         if (isTiming && isAttached == false) {
             timer -= Time.deltaTime;
             if (timer < 0.1f) {
                 animator.SetTrigger("isAttached");
                 AttachToPoint(attachPointB);
-                //this.transform.localPosition = transform.localPosition + offset;
-                this.transform.position = transform.position+ offset;
+                transform.position = transform.position+ offset;
                 timer = destroyTime;
                 isAttached = true;
             }
         }
 
+        // Destroy Timer, when time is out, destroy Usable.
         if (isTiming && isAttached == true) {
             timer -= Time.deltaTime;
             if (timer < 0.1f) {
