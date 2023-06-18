@@ -18,7 +18,7 @@ public class ConsumableItem : MonoBehaviour, IUsable
     public float thrustDefense;
 
     public float delayTime;
-    public Character user;
+    public Player user;
 
     public void Use() {
         GameObject.Find("Player Visual").GetComponent<Animator>().Play("Use_Item");
@@ -26,14 +26,15 @@ public class ConsumableItem : MonoBehaviour, IUsable
     }
 
     public void Start() {
-        user = GameObject.Find("Player").GetComponent<Character>();
+        user = GameObject.Find("Player").GetComponent<Player>();
     }
 
     private IEnumerator DelayedUse() {
         yield return new WaitForSeconds(delayTime);
 
         if (user != null) {
-            user.Health += health;
+            //user.Health += health;
+            user.RecoverHealth(health);
             //user.Stamina += stamina;
             //user.EquipLoad += equipLoad;
             //user.Poise += poise;
