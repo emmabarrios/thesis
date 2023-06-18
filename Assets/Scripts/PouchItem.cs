@@ -121,9 +121,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         playerAnimator.GetComponent<Animator>().Play("Use_Item");
 
         GameObject _item = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        Consumable consumable = _item.GetComponent<Consumable>();
-        consumable.user = player.GetComponent<Character>();
-        consumable.Use();
+        IUsable usable = _item.GetComponent<IUsable>();
+        usable.Use();
 
         // Destroy pouch item
         Destroy(this.gameObject);

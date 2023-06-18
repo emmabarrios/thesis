@@ -57,7 +57,7 @@ MonoBehaviour:
   strikeDefense: 0
   slashDefense: 0
   thrustDefense: 0
-  delayTime: 2
+  delayTime: 0.5
   user: {fileID: 0}
 --- !u!114 &2245069450103298061
 MonoBehaviour:
@@ -76,102 +76,65 @@ MonoBehaviour:
   attachPointA: {fileID: 0}
   attachPointB: {fileID: 0}
   enterTime: 0.5
---- !u!1001 &6137751001908188763
+--- !u!1001 &7556827880843581964
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 1342077820700973741}
     m_Modifications:
-    - target: {fileID: 2784144899312930202, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: flaskSeal
-      value: 
-      objectReference: {fileID: 1410325444693340118}
-    - target: {fileID: 2784144899312930202, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: SealPrefab
-      value: 
-      objectReference: {fileID: 6895672696066907224, guid: 9895186ede9f488429e9b85c10f0c357, type: 3}
-    - target: {fileID: 2784144899312930202, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: sealOffset.x
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2784144899312930202, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: sealOffset.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2784144899312930202, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: sealOffset.z
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2784144899312930202, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: flaskOffset.y
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2784144899312930202, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: flaskEmptyContainer
-      value: 
-      objectReference: {fileID: 8673602858101208464, guid: 9996e46fe5ac4d448a3722839fd14fee, type: 3}
-    - target: {fileID: 3730523972852220139, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: m_Name
-      value: Flask Type A
-      objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+    - target: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8001969361929479443, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: da70faa0513942a49a724957a13356db, type: 2}
+    - target: {fileID: 1024543793511500988, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
+      propertyPath: m_Name
+      value: Flask Type A
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
 --- !u!4 &7900166284629167114 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4075383164596378193, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-  m_PrefabInstance: {fileID: 6137751001908188763}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1410325444693340118 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5098030253602584973, guid: b141438445df4ae4f99ec7ed11422a04, type: 3}
-  m_PrefabInstance: {fileID: 6137751001908188763}
+  m_CorrespondingSourceObject: {fileID: 395254134311605766, guid: 38eb9b23ba888c74da46a3b682bb8326, type: 3}
+  m_PrefabInstance: {fileID: 7556827880843581964}
   m_PrefabAsset: {fileID: 0}
