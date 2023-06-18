@@ -117,8 +117,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         toggle.isOn = !toggle.isOn;
 
-        playerAnimator.Trigger_UsingItem_AnimState();
-        playerAnimator.GetComponent<Animator>().Play("Use_Item");
+        //playerAnimator.Trigger_UsingItem_AnimState();
+       // playerAnimator.GetComponent<Animator>().Play("Use_Item");
 
         GameObject _item = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         IUsable usable = _item.GetComponent<IUsable>();

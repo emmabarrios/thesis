@@ -11,14 +11,13 @@ public class Throwable : MonoBehaviour, IUsable
     public float timer;
     private bool isTiming;
 
-    public float delayTime;
-
     private void Start() {
         thrower = GameObject.Find("Bomb Thrower").GetComponent<Thrower>();
     }
 
     public void Use() {
         isTiming = true;
+        GameObject.Find("Player Visual").GetComponent<Animator>().Play("Throw_Item");
         //StartCoroutine(DelayedUse());
     }
 
@@ -29,17 +28,10 @@ public class Throwable : MonoBehaviour, IUsable
                 timer = 0;;
                 thrower.Throw(projectile, throwForce, throwUpwardForce, offset);
                 isTiming = false;
+                Destroy(gameObject);
             }
         }
     }
 
-    //private IEnumerator DelayedUse() {
-    //    yield return new WaitForSeconds(delayTime);
-    //    GameObject _projectile = Instantiate(projectile, thrower.position, thrower.rotation);
-    //    Vector3 force = thrower.transform.forward * throwForce + (transform.up * throwUpwardForce);
-    //    _projectile.GetComponent<Projectile>().ApplyForceWithOffset(force);
-
-    //    Destroy(gameObject);
-    //}
 }
 

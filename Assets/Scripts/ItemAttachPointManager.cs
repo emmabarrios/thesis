@@ -5,6 +5,7 @@ public class ItemAttachPointManager : MonoBehaviour {
 
     [Header("Attach Points")]
     [SerializeField] private Vector3 positionOffset;
+    [SerializeField] private Vector3 AOffset;
     [SerializeField] private Quaternion rotationOffset;
     [SerializeField] private Transform attachPointA;
     [SerializeField] private Transform attachPointB;
@@ -21,7 +22,7 @@ public class ItemAttachPointManager : MonoBehaviour {
 
     public void AttachToPoint(Transform point) {
         this.transform.SetParent(point);
-        this.transform.localPosition = Vector3.zero;
+        this.transform.localPosition = Vector3.zero + AOffset;
         this.transform.localRotation = Quaternion.identity;
     }
 

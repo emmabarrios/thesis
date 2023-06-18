@@ -21,6 +21,7 @@ public class ConsumableItem : MonoBehaviour, IUsable
     public Character user;
 
     public void Use() {
+        GameObject.Find("Player Visual").GetComponent<Animator>().Play("Use_Item");
         StartCoroutine(DelayedUse());
     }
 
