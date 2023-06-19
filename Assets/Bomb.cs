@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Bomb : MonoBehaviour
+public class Bomb : Throwable
 {
-    public float damage;
     public float time;
-    public GameObject explosionFX;
     public GameObject explosionRadius;
-    
+    public bool isTimed = false;
+
     private void Start() {
-        StartCoroutine(CountDown());
+        if (isTimed) {
+            StartCoroutine(CountDown());
+        }
     }
 
-    IEnumerator CountDown() {
+    private IEnumerator CountDown() {
         yield return new WaitForSeconds(time);
         explosionRadius.GetComponent<SphereCollider>().enabled = true;
         yield return new WaitForSeconds(0.5f);
@@ -22,28 +23,11 @@ public class Bomb : MonoBehaviour
     }
 
     private void Explode() {
-       
         Instantiate(explosionFX, transform.localPosition, Quaternion.identity);
         Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other) {
-        BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
-
-        if (bodyPart != null) {
-            IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
-            Transform collisionTransformRoot = bodyPart.GetComponentInParent<Transform>().root;
-            if (damageable != null) {
-                if (other.gameObject.name != "Player") {
-
-                    Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-
-                    Instantiate(explosionFX, contactPoint, Quaternion.identity);
-
-                    damageable.TakeDamage(damage);
-                    Destroy(gameObject);
-                }
-            }
-        }
+        DealDamage(other);
     }
 }

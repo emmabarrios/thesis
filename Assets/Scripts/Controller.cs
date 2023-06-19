@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO.Pipes;
 using UnityEngine;
 
 public class Controller : MonoBehaviour {
@@ -72,14 +73,16 @@ public class Controller : MonoBehaviour {
     public event EventHandler OnBlocking;
     public event EventHandler OnReleaseBlock;
     public Action OnParry;
-    public event EventHandler<OnAttackEventArgs> OnAttack;
-    public event EventHandler<OnDashEventArgs> OnDash;
-    public class OnDashEventArgs: EventArgs {
-        public Vector2 dashPoint;
-    }
-    public class OnAttackEventArgs: EventArgs {
-        public GestureInput.SwipeDir swipeDirection;
-    }
+    public Action<Vector2> OnDash;
+    public Action<GestureInput.SwipeDir> OnAttack;
+    //public event EventHandler<OnAttackEventArgs> OnAttack;
+   // public event EventHandler<OnDashEventArgs> OnDash;
+    //public class OnDashEventArgs: EventArgs {
+    //    public Vector2 dashPoint;
+    //}
+    //public class OnAttackEventArgs: EventArgs {
+    //    public GestureInput.SwipeDir swipeDirection;
+    //}
 
     // HitBoxes
     [Header("Hit Area")]
@@ -133,6 +136,7 @@ public class Controller : MonoBehaviour {
         // I don't know if this is performant or not... but is the safest way I've found to perfectly determine 
         // if the player is allowed to move or not.
         AnimatorStateInfo stateInfo = playerAnimator.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+
 
         AttackPerformed = stateInfo.IsName("Swing_Left") || stateInfo.IsName("Swing_Right") || 
             stateInfo.IsName("Swing_Stab") || 
@@ -264,7 +268,10 @@ public class Controller : MonoBehaviour {
                     e.swipeDirection != GestureInput.SwipeDir.DownRight) {
 
                     if (!IsBlocking) {
-                        OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+                        // OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
+
+                        OnAttack?.Invoke(e.swipeDirection);
+
                     } else if (IsBlocking && e.swipeDirection == GestureInput.SwipeDir.Left) {
                         Parry();
                     }
@@ -280,7 +287,8 @@ public class Controller : MonoBehaviour {
 
         if (!IsBusy && player.Stamina > 0) {
             IsBusy = true;
-            OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
+            //OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
+            OnDash?.Invoke(e.point.normalized );
             player.DrainStamina();
             StartCoroutine(DashRoutine(e.point));
         }

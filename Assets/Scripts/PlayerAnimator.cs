@@ -78,7 +78,7 @@ public class PlayerAnimator : MonoBehaviour {
         OnFinishedAction?.Invoke(this, EventArgs.Empty);
     }
 
-    private void ExecuteDashAnimation(object sender, EventArgs e) {
+    private void ExecuteDashAnimation(Vector2 dir) {
         animator.SetTrigger(IS_DASHING);
     }
 
@@ -86,15 +86,15 @@ public class PlayerAnimator : MonoBehaviour {
         animator.SetBool("parry", true);
     }
 
-    private void ProcessPlayerAttack(object sender, Controller.OnAttackEventArgs e) {
+    private void ProcessPlayerAttack(GestureInput.SwipeDir swipeDirection) {
 
-        if (e.swipeDirection == GestureInput.SwipeDir.Right) {
+        if (swipeDirection == GestureInput.SwipeDir.Right) {
             animator.SetTrigger(IS_ATTACKING_RIGHT);
-        } else if (e.swipeDirection == GestureInput.SwipeDir.Left) {
+        } else if (swipeDirection == GestureInput.SwipeDir.Left) {
             animator.SetTrigger(IS_ATTACKING_LEFT);
-        } else if (e.swipeDirection == GestureInput.SwipeDir.Down) {
+        } else if (swipeDirection == GestureInput.SwipeDir.Down) {
             animator.SetTrigger(IS_ATTACKING_DOWN);
-        } else if (e.swipeDirection == GestureInput.SwipeDir.Up) {
+        } else if (swipeDirection == GestureInput.SwipeDir.Up) {
             animator.SetTrigger(IS_ATTACKING_UP);
         } else {
             CallFinishedAction();
@@ -119,6 +119,13 @@ public class PlayerAnimator : MonoBehaviour {
     
     public void DropFlask() {
         OnDropedFlask?.Invoke();
+    }
+    
+    public void RotateCameraRight() {
+        GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_right", -1,0f);
+    }
+    public void RotateCameraLeft() {
+        GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_left", -1,0f);
     }
 
 }

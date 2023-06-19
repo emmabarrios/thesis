@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Throwable : MonoBehaviour, IUsable
-{
+public class ThrowableItem : MonoBehaviour, IUsable {
     [SerializeField] private GameObject projectile;
     public float throwForce;
     public float throwUpwardForce;
@@ -14,7 +13,7 @@ public class Throwable : MonoBehaviour, IUsable
     [SerializeField] private float rotationForce = 5f; // The rotational force to apply
 
     private void Start() {
-        thrower = GameObject.Find("Bomb Thrower").GetComponent<Thrower>();
+        thrower = GameObject.Find("Item Thrower").GetComponent<Thrower>();
     }
 
     public void Use() {
@@ -27,7 +26,7 @@ public class Throwable : MonoBehaviour, IUsable
         if (isTiming) {
             timer -= Time.deltaTime;
             if (timer < 0.1f) {
-                timer = 0;;
+                timer = 0; ;
                 thrower.Throw(projectile, throwForce, throwUpwardForce, rotationForce, offset);
 
                 isTiming = false;
