@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Shake : MonoBehaviour
+public class CamHolderMotion : MonoBehaviour
 {
     private Quaternion originalRotation;
     private Transform cameraTransform;
@@ -52,7 +52,7 @@ public class Shake : MonoBehaviour
 
     public void StartCameraShake() {
         if (isrotating == false) {
-            StartCoroutine(ShakeCamera(duration, magnitude, direction));
+            StartCoroutine(ShakeCamera( magnitude, direction));
         }
     }
     
@@ -71,7 +71,11 @@ public class Shake : MonoBehaviour
 
     }
 
-    private IEnumerator ShakeCamera(float duration, float magnitude, int direction) {
+    private IEnumerator ShakeCamera(float magnitude, int direction) {
+
+        // Take away controll from the animator controller
+        GetComponent<Animator>().enabled = false;
+
         Quaternion rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
 
         //Reset the camera's rotation to the original rotation
@@ -91,9 +95,10 @@ public class Shake : MonoBehaviour
             if (Mathf.Abs(cameraTransform.localRotation.z - originalRotation.z) < 0.01) {
                 cameraTransform.localRotation = originalRotation;
             }
+            yield return null;
         }
-        yield return null;
-
+        // Return controll from the animator controller
+        GetComponent<Animator>().enabled = true;
     }
     
     private IEnumerator BobCamera() {
