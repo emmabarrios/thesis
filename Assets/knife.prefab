@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4202239891267620100}
   - component: {fileID: 3725787164478266439}
   - component: {fileID: 2326906110715992951}
-  - component: {fileID: -326174773178097585}
   - component: {fileID: -5448516973801680789}
   - component: {fileID: -5149278628630027792}
   m_Layer: 11
@@ -32,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 2400883259359898833}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0.11573163, y: 0.5706586, z: 3.2817845}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -120,23 +119,6 @@ CapsuleCollider:
   m_Height: 4.62
   m_Direction: 2
   m_Center: {x: 0, y: -0.00000007450579, z: 0.87799793}
---- !u!114 &-326174773178097585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2400883259359898833}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 493958f4a760aa9438a422d5df0c2f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 50
-  time: 0
-  explosionFX: {fileID: 1491359990764140, guid: 18c0a8b63ea8b4448a595b0c24c1384a, type: 3}
-  explosionRadius: {fileID: 0}
-  isTimed: 0
 --- !u!96 &-5448516973801680789
 TrailRenderer:
   serializedVersion: 2
