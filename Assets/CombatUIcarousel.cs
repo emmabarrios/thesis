@@ -6,6 +6,7 @@ using UnityEngine;
 public class CombatUIcarousel : MonoBehaviour
 {
     public GameObject rowPrefab;
+    public PouchIndicator indicatorContainer;
     // This public list is just to visualize in inspector as debug
     public List<CombatUIrow> rows = new List<CombatUIrow>();
 
@@ -18,5 +19,6 @@ public class CombatUIcarousel : MonoBehaviour
             // Add row to visualize in inspector
             rows.Add(row);
         }
+        indicatorContainer.InitializeRowIndicators(rows.Count);
     }
 }
