@@ -9,6 +9,7 @@ public class CamHolderMotion : MonoBehaviour
     [SerializeField] private Player player = null;
     Controller controller = null;
 
+    [Header("Shake Settings")]
     [SerializeField] private float poiseModifier;
     [SerializeField] private float duration;
     [SerializeField] private float rotationSpeed;
@@ -19,11 +20,12 @@ public class CamHolderMotion : MonoBehaviour
     [Header("Bobb Settings")]
     [SerializeField] private float bobDuration = 1f;
     [SerializeField] private float bobHeight = 1f;
+    [SerializeField] private float pointXThreshold = 1f;
     private bool isBobbing = false;
 
-    [Header("Bobb Settings")]
-    [SerializeField] private float rotationDuration = 1f;
-    [SerializeField] private float rotationMagnitude = 1f;
+   
+    //[SerializeField] private float rotationDuration = 1f;
+    //[SerializeField] private float rotationMagnitude = 1f;
 
 
     private Vector3 originalPosition;
@@ -46,8 +48,16 @@ public class CamHolderMotion : MonoBehaviour
 
     }
 
-    public void StartCameraBob(Vector2 placeholder) {
-        StartCoroutine(BobCamera());
+    public void StartCameraBob(int direction) {
+
+        if (Mathf.Abs(direction) > pointXThreshold) {
+            if (direction > 0) {
+                GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_right", -1, 0f);
+            } else {
+                GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_left", -1, 0f);
+            }
+        }
+        StartCoroutine(BobCamera(direction));
     }
 
     public void StartCameraShake() {
@@ -101,7 +111,7 @@ public class CamHolderMotion : MonoBehaviour
         GetComponent<Animator>().enabled = true;
     }
     
-    private IEnumerator BobCamera() {
+    private IEnumerator BobCamera(int dir) {
         isBobbing = true;
         float elapsedTime = 0f;
 

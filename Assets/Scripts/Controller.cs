@@ -73,7 +73,7 @@ public class Controller : MonoBehaviour {
     public event EventHandler OnBlocking;
     public event EventHandler OnReleaseBlock;
     public Action OnParry;
-    public Action<Vector2> OnDash;
+    public Action<int> OnDash;
     public Action<GestureInput.SwipeDir> OnAttack;
     //public event EventHandler<OnAttackEventArgs> OnAttack;
    // public event EventHandler<OnDashEventArgs> OnDash;
@@ -288,7 +288,8 @@ public class Controller : MonoBehaviour {
         if (!IsBusy && player.Stamina > 0) {
             IsBusy = true;
             //OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
-            OnDash?.Invoke(e.point.normalized );
+            OnDash?.Invoke((int)e.point.x);
+            //Debug.Log((int)e.point.x);
             player.DrainStamina();
             StartCoroutine(DashRoutine(e.point));
         }

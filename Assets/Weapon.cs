@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -17,6 +19,7 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] private Transform parentTransform;
 
+
     private void Awake() {
         damageCollider = GetComponent<Collider>();
         damageCollider.gameObject.SetActive(true);
@@ -35,10 +38,16 @@ public class Weapon : MonoBehaviour
 
     public void EnableDamageCollider() {
         damageCollider.enabled = true;
+        //GetComponent<MeleeWeaponTrail>().enabled = true;
+    }
+
+    public void ToggleWeaponTrail() {
+        GetComponent<MeleeWeaponTrail>().enabled = !GetComponent<MeleeWeaponTrail>().enabled;
     }
 
     public void DisableDamageCollider() {
         damageCollider.enabled = false;
+        //GetComponent<MeleeWeaponTrail>().enabled = false;
     }
 
     private void OnTriggerEnter(Collider collision) {
@@ -56,18 +65,18 @@ public class Weapon : MonoBehaviour
                     Vector3 contactPoint = collision.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
                     fx.PlayDamageEffect(contactPoint);
 
-
                     //If the attack was deflected by a parry
                     if (collisionTransformRoot.GetComponent<Character>().IsParryPerformed) {
                         parentTransform.GetComponent<Animator>().SetTrigger("staggered");
                         DisableDamageCollider();
                         return;
                     }
-
                     damageable.TakeDamage(weaponDamage);
                     DisableDamageCollider();
                 }
             }
         }
     }
+
+
 }

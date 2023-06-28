@@ -6,7 +6,8 @@ public class Item : ScriptableObject {
     public string _name;
     public string _description;
     public Sprite _sprite;
-    public GameObject _prefab;
+    public GameObject _modelPrefab;
+    public GameObject _usablePrefab;
     public float _discoverability;
     public float _price;
 }

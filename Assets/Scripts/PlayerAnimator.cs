@@ -78,7 +78,7 @@ public class PlayerAnimator : MonoBehaviour {
         OnFinishedAction?.Invoke(this, EventArgs.Empty);
     }
 
-    private void ExecuteDashAnimation(Vector2 dir) {
+    private void ExecuteDashAnimation(int dir) {
         animator.SetTrigger(IS_DASHING);
     }
 
@@ -124,6 +124,7 @@ public class PlayerAnimator : MonoBehaviour {
     public void RotateCameraRight() {
         GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_right", -1,0f);
     }
+
     public void RotateCameraLeft() {
         GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_left", -1,0f);
     }

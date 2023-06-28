@@ -1,27 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class CombatInventory : MonoBehaviour
 {
-    WeaponSlotManager weaponSlotManager;
+    // Make it "singleton"
+    public static CombatInventory instance;
 
-    [Header("Main Weapons")]
-    public WeaponItem rightWeapon;
-    public WeaponItem leftWeapon;
+    [Header("Usable Items")]
+    public List<Item> itemList1 = new List<Item>();
+    public List<Item> itemList2 = new List<Item>();
+    public List<List<Item>> itemLists = new List<List<Item>>();
 
-    //[Header("Usable Items")]
-    //public List<ThrowableItem> List_1;
-    //public List<ThrowableItem> List_2;
-    //public List<ThrowableItem> List_3;
+    [Header("Main Weapoms")]
+    public WeaponItem leftWeaponItemSO;
+    public WeaponItem RightWeaponItemSO;
+    public WeaponSlotManager weaponSlotManager = null;
 
-    private void Awake() {
-        weaponSlotManager = GetComponentInChildren<WeaponSlotManager>();
+    void Awake() {
+        if (instance != null) { return; }
+        instance = this;
     }
 
-    private void Start() {
-        weaponSlotManager.LoadWeaponOnSlot(rightWeapon, false);
-        weaponSlotManager.LoadWeaponOnSlot(leftWeapon, true);
+    void Start() {
+        itemLists.Add(itemList1);
+        itemLists.Add(itemList2);
+
+        weaponSlotManager.LoadWeaponOnSlot(leftWeaponItemSO, true);
+        weaponSlotManager.LoadWeaponOnSlot(RightWeaponItemSO, false);
     }
 }

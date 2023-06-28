@@ -201,6 +201,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     IEnumerator FadeTo(float aValue, float aTime) {
 
         float alpha = image.color.a;
+        float tempVal = 0f;
 
         for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / aTime) {
 
@@ -208,8 +209,18 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             newColor.a = Mathf.Lerp(alpha, aValue, t);
             image.color = newColor;
 
+            tempVal = newColor.a;
+
             yield return null;
         }
+
+        // Ensure to completely fade to transparent
+        if (image.color.a < 0.1f) {
+            Color newColor = image.color;
+            newColor.a = 0f;
+            image.color = newColor;
+        }
+
     }
 
     public void ChangeToggleValue() {

@@ -8,6 +8,12 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     [Header("Holstered Item")]
     public Image fillImage = null;
     public GameObject itemPrefab;
+    public GameObject objectPrefab;
+
+
+    [Header("New implementation")]
+    public Item itemSO;
+
 
     private float value = 30f;
 
@@ -40,6 +46,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     [SerializeField] private Vector2 scale;
 
     public GameObject image;
+    public Sprite imageSprite;
 
     private Coroutine longPressCoroutine;
 
@@ -120,7 +127,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         //playerAnimator.Trigger_UsingItem_AnimState();
        // playerAnimator.GetComponent<Animator>().Play("Use_Item");
 
-        GameObject _item = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        //GameObject _item = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         IUsable usable = _item.GetComponent<IUsable>();
         usable.Use();
 
@@ -184,4 +192,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         return isLongPressDetected;
     }
 
+    public void SetPouchItemImageSprite() {
+        image.GetComponent<Image>().sprite = itemSO._sprite;
+
+    }
 }

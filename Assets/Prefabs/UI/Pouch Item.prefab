@@ -165,10 +165,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 053ff9f0b1d4a7e45aaf7ede5688fca6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fillImage: {fileID: 4770818138900729778}
+  itemPrefab: {fileID: 0}
+  objectPrefab: {fileID: 1342077820700973742, guid: 7599b67ca705af3449de3e6a76b84294, type: 3}
   fillSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   hintSprite: {fileID: 21300000, guid: ea6b9559e574aef4cb97c81975dfb4dd, type: 3}
-  fillImage: {fileID: 4770818138900729778}
-  objectPrefab: {fileID: 1342077820700973742, guid: 7599b67ca705af3449de3e6a76b84294, type: 3}
+  toggle: {fileID: 0}
   longPressDuration: 1
   longPressDurationDelay: 0.5
   isLongPressDetected: 0
@@ -178,6 +180,7 @@ MonoBehaviour:
   scale: {x: 0, y: 0}
   image: {fileID: 4770818140376792683}
   canDraw: 0
+  playerAnimator: {fileID: 0}
 --- !u!1 &4770818140376792683
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +193,7 @@ GameObject:
   - component: {fileID: 4770818140376792676}
   - component: {fileID: 4770818140376792677}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Item Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

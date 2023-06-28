@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
         limit50 = 50,
         limit60 = 60
     }
+
+    [Header("Framerate settings")]
     public Limits limits;
              
     
@@ -22,5 +24,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = (int)limits;
+        InitializeCombatInventoryUI();
+    }
+    
+    public void InitializeCombatInventoryUI() {
+        GameObject.Find("Carousel").GetComponent<CombatUIcarousel>().InitializeUIcarousel(CombatInventory.instance.itemLists);
     }
 }
