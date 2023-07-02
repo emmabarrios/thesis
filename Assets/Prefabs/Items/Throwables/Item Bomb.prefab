@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectile: {fileID: 7509476204321123234, guid: 60b6292cd9d8f4843943d07d99d050a1, type: 3}
-  throwForce: 5
+  throwForce: 10
   throwUpwardForce: 5
   offset: {x: 0, y: 0, z: 0}
   thrower: {fileID: 0}

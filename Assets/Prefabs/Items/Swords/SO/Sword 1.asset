@@ -15,10 +15,8 @@ MonoBehaviour:
   _name: Old Sword
   _description: Sword goes whoosh
   _sprite: {fileID: 0}
-  _sprite_pouch: {fileID: 0}
-  _sprite_pouch_used: {fileID: 0}
-  _modelPrefab: {fileID: 7387705288878011683, guid: 5ef587d2a5994e17879f656f97e1f121, type: 3}
-  _usablePrefab: {fileID: 952802527015294292, guid: 3bf6ef911152c25459fbacc1b0f12315, type: 3}
+  _modelPrefab: {fileID: 6231215843636208481, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+  _usablePrefab: {fileID: 952802527015294292, guid: 9bf516c516b2c204396ea73f88eac754, type: 3}
   _discoverability: 50
   _price: 500
   durability: 100
