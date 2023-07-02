@@ -71,7 +71,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6189278417549844197, guid: fc93c4efdc25c9b4382cb797036f320f, type: 3}
       propertyPath: m_Name
-      value: Old Shield Model
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 6822789888157189215, guid: fc93c4efdc25c9b4382cb797036f320f, type: 3}
       propertyPath: m_RootOrder
@@ -129,6 +129,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6822789888157189215, guid: fc93c4efdc25c9b4382cb797036f320f, type: 3}
   m_PrefabInstance: {fileID: 9008387582981831617}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &5588717614896950093
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2945498375071933732}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.0050151, y: 0.5986583, z: 2.563726}
+  m_Center: {x: 0, y: -0.14862052, z: -0.21790676}
 --- !u!114 &7553914860301297993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,16 +157,3 @@ MonoBehaviour:
   damageCollider: {fileID: 0}
   weaponDamage: 0
   parentTransform: {fileID: 0}
---- !u!65 &5588717614896950093
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2945498375071933732}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.0050151, y: 0.5986583, z: 2.563726}
-  m_Center: {x: 0, y: -0.14862052, z: -0.21790676}

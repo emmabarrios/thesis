@@ -25,10 +25,12 @@ public class PouchIndicator : MonoBehaviour
 
         for (int i = 0; i < rowIndicators.Count; i++) {
             if (i == e.index) {
-                rowIndicators[i].sizeDelta = originalSize * increasedSize;
+                //rowIndicators[i].sizeDelta = originalSize * increasedSize;
+                rowIndicators[i].gameObject.transform.localScale = originalSize * increasedSize;
             } else {
                 if (rowIndicators[i].sizeDelta != originalSize) {
-                    rowIndicators[i].sizeDelta = originalSize;
+                    //rowIndicators[i].sizeDelta = originalSize;
+                    rowIndicators[i].gameObject.transform.localScale = originalSize;
                 }
             }
         }
@@ -39,8 +41,9 @@ public class PouchIndicator : MonoBehaviour
             RectTransform rowIndicator = Instantiate(rowIndicatorPrefab, this.transform);
             rowIndicators.Add(rowIndicator);
         }
-        originalSize = rowIndicators[0].sizeDelta;
-        rowIndicators[0].sizeDelta = originalSize * increasedSize;
+
+        originalSize = rowIndicators[0].transform.localScale;
+        rowIndicators[0].transform.localScale = originalSize * increasedSize;
         Vector2 currentPos = pouchRectTransform.position;
         Vector2 targetPosition = currentPos + new Vector2(-1*((pouchRectTransform.sizeDelta.x/2) * rowCount),0f);
         pouchRectTransform.position = targetPosition;

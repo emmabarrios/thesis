@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     [Header("Holstered Item")]
-    public Image fillImage = null;
-    public GameObject itemPrefab;
-    public GameObject objectPrefab;
+    //public GameObject itemPrefab;
+    //public GameObject objectPrefab;
 
 
     [Header("New implementation")]
     public Item itemSO;
-
+    public Sprite item_holder_graphic;
+    public Image fillImage = null;
 
     private float value = 30f;
 
@@ -45,7 +45,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public Vector2 initialFillImagePosition;
     [SerializeField] private Vector2 scale;
 
-    public GameObject image;
+    public GameObject item_image_gameObject;
+    public GameObject item_holder_gameObject;
     public Sprite imageSprite;
 
     private Coroutine longPressCoroutine;
@@ -70,7 +71,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         // Start the long press detection coroutine
         initialTouchPosition = eventData.position;
         isPressed = true;
-        initialPosition = image.transform.position;
+        initialPosition = item_image_gameObject.transform.position;
         initialFillImagePosition = fillImage.transform.position;
         longPressCoroutine = StartCoroutine(LongPressDetectionDelayed(eventData));
 
@@ -97,7 +98,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         _state = ItemState.Holstered;
 
         //Reset image to its original position
-        image.transform.position = initialPosition;
+        item_image_gameObject.transform.position = initialPosition;
 
         // Reset the long press detection flag
         isLongPressDetected = false;
@@ -124,10 +125,6 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         toggle.isOn = !toggle.isOn;
 
-        //playerAnimator.Trigger_UsingItem_AnimState();
-       // playerAnimator.GetComponent<Animator>().Play("Use_Item");
-
-        //GameObject _item = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         IUsable usable = _item.GetComponent<IUsable>();
         usable.Use();
@@ -180,9 +177,9 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         //Slightly elevate the image
         Vector2 offset = new Vector2(0f, 50f);
-        Vector2 currentPos = image.GetComponent<RectTransform>().transform.position;
+        Vector2 currentPos = item_image_gameObject.GetComponent<RectTransform>().transform.position;
         Vector2 currentPos2 = fillImage.GetComponent<RectTransform>().transform.position;
-        image.transform.position = currentPos + offset;
+        item_image_gameObject.transform.position = currentPos + offset;
         fillImage.transform.position = currentPos2 + offset;
 
     }
@@ -192,8 +189,9 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         return isLongPressDetected;
     }
 
-    public void SetPouchItemImageSprite() {
-        image.GetComponent<Image>().sprite = itemSO._sprite;
+    public void InitializeQuickItemGraphics() {
+        item_image_gameObject.GetComponent<Image>().sprite = itemSO._sprite;
+        item_holder_gameObject.GetComponent<Image>().sprite = itemSO._sprite_pouch;
 
     }
 }

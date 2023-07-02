@@ -6,7 +6,6 @@ public class WeaponHolderSlot : MonoBehaviour
 {
     public Transform parentOverride;
     public GameObject currentWeaponModel;
-    //public WeaponItem weaponItemSO;
     public bool isLeftHandSlot;
     public bool isRightHandSlot;
 
@@ -33,6 +32,8 @@ public class WeaponHolderSlot : MonoBehaviour
 
         GameObject model = Instantiate(weaponItem._usablePrefab) as GameObject;
 
+        
+
         if (model != null) {
             if (parentOverride != null) {
                 model.transform.parent = parentOverride;
@@ -43,7 +44,16 @@ public class WeaponHolderSlot : MonoBehaviour
             model.transform.localRotation = Quaternion.identity;
             model.transform.localScale = Vector3.one;
         }
-       
         currentWeaponModel = model;
+        SetLayerAllChildren(model.transform, model.transform.root.GetComponent<Transform>().gameObject.layer);
     }
+
+    void SetLayerAllChildren(Transform root, int layer) {
+        var children = root.GetComponentsInChildren<Transform>(includeInactive: true);
+        foreach (var child in children) {
+            //            Debug.Log(child.name);
+            child.gameObject.layer = layer;
+        }
+    }
+
 }

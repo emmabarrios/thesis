@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Flask : MonoBehaviour
 {
-    //private bool isActivated = false;
-    //public bool IsActivated { set { isActivated = value; } }
     
     [SerializeField] private Vector3 flaskOffset;
     [SerializeField] private GameObject flaskSeal;

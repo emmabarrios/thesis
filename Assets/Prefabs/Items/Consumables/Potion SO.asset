@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Small Health Potion
   _description: Potion goes glup glup
-  _sprite: {fileID: 21300000, guid: 06beb348ef4ccd840bb28b82aeb40abe, type: 3}
+  _sprite: {fileID: 21300000, guid: 455b121f13ce59246b12ed647ed7cd32, type: 3}
+  _sprite_pouch: {fileID: 21300000, guid: 6133c9989e48f3d488e9dd06dfd394bf, type: 3}
+  _sprite_pouch_used: {fileID: 21300000, guid: f8be481289b152b4f93c41633818a7b7, type: 3}
   _modelPrefab: {fileID: 6501061458142652759, guid: 4435922733eb06f40b0c8479df1681fd, type: 3}
   _usablePrefab: {fileID: 1342077820700973742, guid: 7599b67ca705af3449de3e6a76b84294, type: 3}
   _discoverability: 10

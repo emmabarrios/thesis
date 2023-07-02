@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CombatUIrow : MonoBehaviour
 {
@@ -15,8 +14,11 @@ public class CombatUIrow : MonoBehaviour
             if (itemList[i] != null) {
                 PouchItem currentPouchItem = Instantiate(pouchItemPrefab);
                 currentPouchItem.itemSO = itemList[i];
-                currentPouchItem.SetPouchItemImageSprite();
+                currentPouchItem.InitializeQuickItemGraphics();
                 currentPouchItem.transform.SetParent(slots[i].transform, false);
+
+                GameObject slot_child = slots[i];
+                slot_child.transform.GetChild(0).GetComponent<Image>().sprite = currentPouchItem.itemSO._sprite_pouch_used;
             }
         }
     }

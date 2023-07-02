@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Knife
   _description: Knife goes shiiiun
-  _sprite: {fileID: 21300000, guid: 5ee6feb2ec5b7244b9e2c40f3b8e6674, type: 3}
+  _sprite: {fileID: 21300000, guid: 7c77a4281ad81904e89739fb1b25ecdd, type: 3}
+  _sprite_pouch: {fileID: 21300000, guid: ffd6ce13a353edb4c948f62389e2fd9d, type: 3}
+  _sprite_pouch_used: {fileID: 21300000, guid: ad98825dd953518418a05302c5cdbf12, type: 3}
   _modelPrefab: {fileID: 3005735020196780283, guid: bb6b47e9be78c55408156e4e351cd7fa, type: 3}
   _usablePrefab: {fileID: 3238008565815877012, guid: ac258ff4f995f794599ae9b67ae7d80f, type: 3}
   _discoverability: 5

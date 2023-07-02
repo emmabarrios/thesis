@@ -1,6 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using static BodyPart;
 
 public class Weapon : MonoBehaviour
 {
@@ -19,6 +23,14 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] private Transform parentTransform;
 
+    [Header("Localized Damage bonus")]
+    [SerializeField] private float Head;
+    [SerializeField] private float Arm;
+    [SerializeField] private float Leg;
+    [SerializeField] private float Chest;
+    [SerializeField] private float Hip;
+
+    public Dictionary<Part, float> partDictionary;
 
     private void Awake() {
         damageCollider = GetComponent<Collider>();
@@ -30,15 +42,17 @@ public class Weapon : MonoBehaviour
     private void Start() {
         parentTransform = GetComponent<Transform>().root;
 
-        if (parentTransform.CompareTag("Player")) {
-            int _layer = LayerMask.NameToLayer("Player");
-            this.gameObject.layer = _layer;
-        }
+        partDictionary = new Dictionary<Part, float>();
+        SetPartValue(Part.Head, Head);
+        SetPartValue(Part.Arm, Arm);
+        SetPartValue(Part.Leg, Leg);
+        SetPartValue(Part.Leg, Chest);
+        SetPartValue(Part.Leg, Hip);
+
     }
 
     public void EnableDamageCollider() {
         damageCollider.enabled = true;
-        //GetComponent<MeleeWeaponTrail>().enabled = true;
     }
 
     public void ToggleWeaponTrail() {
@@ -47,16 +61,15 @@ public class Weapon : MonoBehaviour
 
     public void DisableDamageCollider() {
         damageCollider.enabled = false;
-        //GetComponent<MeleeWeaponTrail>().enabled = false;
     }
 
     private void OnTriggerEnter(Collider collision) {
-        //Character character = collision.GetComponent<Character>();
-        BodyPart bodyPart = collision.GetComponent<BodyPart>();
+        BodyPart detectedPart = collision.GetComponent<BodyPart>();
+        BodyPart.Part part = detectedPart.bodyPart;
 
-        if (bodyPart!=null) {
-            IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
-            Transform collisionTransformRoot = bodyPart.GetComponentInParent<Transform>().root;
+        if (detectedPart != null) {
+            IDamageable damageable = detectedPart.GetComponentInParent<IDamageable>();
+            Transform collisionTransformRoot = detectedPart.GetComponentInParent<Transform>().root;
             if (damageable != null) {
                 if (!collision.CompareTag(parentTransform.tag)) {
 
@@ -71,12 +84,20 @@ public class Weapon : MonoBehaviour
                         DisableDamageCollider();
                         return;
                     }
-                    damageable.TakeDamage(weaponDamage);
+                    float bonusPart = partDictionary[part];
+                    float totalDamage = weaponDamage + bonusPart;
+                    damageable.TakeDamage(totalDamage);
                     DisableDamageCollider();
                 }
             }
         }
     }
 
-
+    private void SetPartValue(Part part, float value) {
+        if (partDictionary.ContainsKey(part)) {
+            partDictionary[part] = value;
+        } else {
+            partDictionary.Add(part, value);
+        }
+    }
 }

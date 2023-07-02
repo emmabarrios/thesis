@@ -133,11 +133,8 @@ public class Controller : MonoBehaviour {
     private void Update() {
         Vector2 inputMovement = joystick.Direction;
 
-        // I don't know if this is performant or not... but is the safest way I've found to perfectly determine 
-        // if the player is allowed to move or not.
+        // Evaluate attack performed
         AnimatorStateInfo stateInfo = playerAnimator.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-
-
         AttackPerformed = stateInfo.IsName("Swing_Left") || stateInfo.IsName("Swing_Right") || 
             stateInfo.IsName("Swing_Stab") || 
             stateInfo.IsName("Swing_Down") || stateInfo.IsName("Shield_Parry");
@@ -259,7 +256,7 @@ public class Controller : MonoBehaviour {
 
         if (player.currentState == Player.PlayerState.Combat) {
 
-            if (player.Stamina > 0 && !IsDrawingItem) {
+            if (player.Stamina > 0 && !IsDrawingItem && !AttackPerformed) {
 
                 if (e.swipeDirection != GestureInput.SwipeDir.None &&
                     e.swipeDirection != GestureInput.SwipeDir.UpLeft &&
@@ -277,7 +274,6 @@ public class Controller : MonoBehaviour {
                     }
 
                     player.DrainStamina();
-
                 }
             }
         }
@@ -287,9 +283,7 @@ public class Controller : MonoBehaviour {
 
         if (!IsBusy && player.Stamina > 0) {
             IsBusy = true;
-            //OnDash?.Invoke(this, new OnDashEventArgs { dashPoint = e.point.normalized });
             OnDash?.Invoke((int)e.point.x);
-            //Debug.Log((int)e.point.x);
             player.DrainStamina();
             StartCoroutine(DashRoutine(e.point));
         }
@@ -307,9 +301,6 @@ public class Controller : MonoBehaviour {
     
     private void Block(bool value) {
         IsBlocking = value;
-        //if (!IsBlocking && !IsDrawingItem) {
-        //    IsBlocking = value;
-        //}
     }
 
     private void ReleaseBlock(object sender, EventArgs e) {
@@ -325,7 +316,6 @@ public class Controller : MonoBehaviour {
         player.DrainStamina();
         player.OpenParryWindow();
         OnParry?.Invoke();
-        //StartCoroutine(StartBusyTimer(player.PlayerShield.hitWindow));
     }
 
     private void InheritMovementFromAnimation_OnAnimating(object sender, EventArgs e) {
@@ -358,20 +348,6 @@ public class Controller : MonoBehaviour {
        // hitArea.ActivateHitArea(player.PlayerWeapon.damage, player.PlayerWeapon.hitWindow);
     }
 
-    //private void OnTriggerEnter(Collider other) {
-
-    //    // If enemy hit landed on shield, run shiled hit animation and drain stamina
-    //    if (IsBlocking) {
-    //        HitArea enemyArea = other.GetComponent<HitArea>();
-    //        if (enemyArea != hitArea) {
-    //            playerAnimator.GetComponent<Animator>().SetTrigger("deflectedHit");
-    //            player.DrainStamina();
-    //        }
-    //    }
-    //}
-
-    // Handle both the Busy Time and parry window, not sure if is the best aproach since the method above is also running a timer but in
-    // the update method
     private IEnumerator StartBusyTimer(float time) {
         yield return new WaitForSeconds(time);
         IsBusy = false;
