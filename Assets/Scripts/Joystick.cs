@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler {
 
+    public static Joystick instance;
+
     public float MoveThreshold { get { return moveThreshold; } set { moveThreshold = Mathf.Abs(value); } }
 
     public Vector2 Direction { get { return new Vector2(input.x, input.y); } }
@@ -43,6 +45,8 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
 
     private void Start() {
+
+        instance = this;
 
         texture = (Texture2D)image.mainTexture;
 
@@ -99,14 +103,14 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        DoubleTap(eventData);
+
         if (isLocked == false) {
             background.gameObject.SetActive(false);
 
             input = Vector2.zero;
             handle.anchoredPosition = Vector2.zero;
             OnHandleDroped?.Invoke(this, EventArgs.Empty);
-
-            DoubleTap(eventData);
 
             StartCoroutine(FadeTo(.2f, fadeTime));
         }
@@ -223,15 +227,16 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     }
 
-    public void ChangeToggleValue() {
+    public void PointCursorUp() {
+        // Same as OnPointerUp but don't know how to call it without arguments
+        background.gameObject.SetActive(false);
+        input = Vector2.zero;
+        handle.anchoredPosition = Vector2.zero;
+        OnHandleDroped?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(FadeTo(.2f, fadeTime));
+    }
+
+    public void LockCursor() {
         isLocked = !isLocked;
-        if (isLocked == false) {
-            // Same as OnPointerUp but don't know how to call it without arguments
-            background.gameObject.SetActive(false);
-            input = Vector2.zero;
-            handle.anchoredPosition = Vector2.zero;
-            OnHandleDroped?.Invoke(this, EventArgs.Empty);
-            StartCoroutine(FadeTo(.2f, fadeTime));
-        }
     }
 }

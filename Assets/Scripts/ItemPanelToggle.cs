@@ -10,10 +10,9 @@ using UnityEngine.UI;
 public class ItemPanelToggle : MonoBehaviour
 {
     [SerializeField] private GameObject buttonA = null;
-    //[SerializeField] private GameObject buttonB = null;
-    //[SerializeField] private GameObject leftIndicator = null;
-    //[SerializeField] private GameObject rightIndicator = null;
+    [SerializeField] private GameObject QuickItemPanel = null;
     private Toggle toggle;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -27,20 +26,17 @@ public class ItemPanelToggle : MonoBehaviour
     }
 
     void ToggleValueChanged(Toggle change) {
-        if (change.isOn) {
-            buttonA.SetActive(false);
-            //buttonB.SetActive(false);
 
-            //leftIndicator.GetComponent<MoveLinear>().IsActive = true;
-            //rightIndicator.GetComponent<MoveLinear>().IsActive = true;
+        buttonA.SetActive(!change.isOn);
 
-        } else {
-            buttonA.SetActive(true);
-            //buttonB.SetActive(true);
+        //if (change.isOn) {
+        //    buttonA.SetActive(false);
+        //    QuickItemPanel.SetActive(false);
 
-            //leftIndicator.GetComponent<MoveLinear>().IsActive = false;
-            //rightIndicator.GetComponent<MoveLinear>().IsActive = false;
-        }
+        //} else {
+        //    buttonA.SetActive(true);
+        //    QuickItemPanel.SetActive(false);
+        //}
     }
 
 }

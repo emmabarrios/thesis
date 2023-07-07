@@ -45,7 +45,7 @@ public class PouchIndicator : MonoBehaviour
         originalSize = rowIndicators[0].transform.localScale;
         rowIndicators[0].transform.localScale = originalSize * increasedSize;
         Vector2 currentPos = pouchRectTransform.position;
-        Vector2 targetPosition = currentPos + new Vector2(-1*((pouchRectTransform.sizeDelta.x/2) * rowCount),0f);
+        Vector2 targetPosition = currentPos + new Vector2(-1*((pouchRectTransform.sizeDelta.x/2) * rowCount/2),0f);
         pouchRectTransform.position = targetPosition;
     }
     

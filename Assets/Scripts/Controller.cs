@@ -266,14 +266,18 @@ public class Controller : MonoBehaviour {
 
                     if (!IsBlocking) {
                         // OnAttack?.Invoke(this, new OnAttackEventArgs { swipeDirection = e.swipeDirection });
-
+                        Joystick.instance.PointCursorUp();
                         OnAttack?.Invoke(e.swipeDirection);
+                        player.DrainStamina();
 
                     } else if (IsBlocking && e.swipeDirection == GestureInput.SwipeDir.Left) {
+                        Joystick.instance.PointCursorUp();
                         Parry();
+                        player.DrainStamina();
+                        
                     }
 
-                    player.DrainStamina();
+                    
                 }
             }
         }
