@@ -8,6 +8,7 @@ using NHance.Assets.Scripts.Items;
 using NHance.Assets.StylizedCharacter.Scripts;
 using UnityEngine;
 
+#if UNITY_EDITOR
 namespace NHance.Assets.Scripts
 {
     [HelpURL("https://github.com/DustCoron/NhanceRPGDocumentation/wiki/Demo-scene")]
@@ -142,3 +143,4 @@ namespace NHance.Assets.Scripts
         }
     }
 }
+#endif

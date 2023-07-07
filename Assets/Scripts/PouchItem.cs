@@ -26,7 +26,9 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     private Canvas canvas;
 
     public Sprite fillSprite; // The new sprite to assign to the Image component
+    public Color fillSpriteColor;
     public Sprite hintSprite;
+    public Color hintSpriteColor;
 
     [SerializeField] private Toggle toggle;
 
@@ -60,6 +62,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public PlayerAnimator playerAnimator;
 
     public void Start() {
+        //fillImage.color = fillSpriteColor;
+
         scale = fillImage.GetComponent<RectTransform>().localScale;
         player = GameObject.Find("Player").GetComponent<Player>();
         canvas = GetComponentInParent<Canvas>();
@@ -69,6 +73,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     public void OnPointerDown(PointerEventData eventData) {
         // Start the long press detection coroutine
+        fillImage.color = fillSpriteColor;
+
         initialTouchPosition = eventData.position;
         isPressed = true;
         initialPosition = item_image_gameObject.transform.position;
@@ -117,13 +123,15 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
             fillImage.sprite = fillSprite;
             fillImage.transform.position = initialFillImagePosition;
             fillImage.GetComponent<RectTransform>().localScale = scale;
-            fillImage.color = Color.white;
+            //fillImage.color = Color.white;
+            //fillImage.color = fillSpriteColor;
         }
     }
 
     private void DrawItem() {
 
-        toggle.isOn = !toggle.isOn;
+        // Toggle quick item button
+        //toggle.isOn = !toggle.isOn;
 
         GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         IUsable usable = _item.GetComponent<IUsable>();
@@ -173,7 +181,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         //fillImage.fillAmount = 0;
         fillImage.sprite = hintSprite;
         fillImage.GetComponent<RectTransform>().localScale = fillImage.GetComponent<RectTransform>().localScale / 3f;
-        fillImage.color = Color.red;
+        //fillImage.color = Color.red;
+        fillImage.color = hintSpriteColor;
 
         //Slightly elevate the image
         Vector2 offset = new Vector2(0f, 50f);

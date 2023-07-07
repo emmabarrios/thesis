@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: a78739e80af846645b84aecdc11021e7, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -244,11 +244,13 @@ MonoBehaviour:
   itemSO: {fileID: 0}
   item_holder_graphic: {fileID: 0}
   fillImage: {fileID: 4770818138900729778}
-  fillSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  fillSprite: {fileID: 21300000, guid: a78739e80af846645b84aecdc11021e7, type: 3}
+  fillSpriteColor: {r: 1, g: 0.89104825, b: 0, a: 1}
   hintSprite: {fileID: 21300000, guid: ea6b9559e574aef4cb97c81975dfb4dd, type: 3}
+  hintSpriteColor: {r: 1, g: 0.9783717, b: 0, a: 1}
   toggle: {fileID: 0}
-  longPressDuration: 1
-  longPressDurationDelay: 0.5
+  longPressDuration: 0.5
+  longPressDurationDelay: 0.1
   isLongPressDetected: 0
   isPressed: 0
   initialPosition: {x: 0, y: 0}
