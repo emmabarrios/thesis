@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO.Pipes;
-using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,6 +11,8 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     [SerializeField] int carouselPosition = 0;
     [SerializeField] float pouchSize = 755f;
     private RectTransform rectTransform;
+
+    public float cooldownTimer = 0f;
 
     public bool isMoving = false;
     public bool isSwipeInProgress = false;
@@ -29,7 +29,6 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     private void Start() {
         rectTransform = this.GetComponent<RectTransform>();
         pouchCount = this.transform.childCount - 1;
-        //ModifyImageAlpha(leftHint.GetComponent<Image>(),0f);
     }
 
     private void ModifyImageAlpha(Image image, float alpha) {
@@ -160,5 +159,33 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         public int index;
     }
 
+    public void CallCoolDownOnUse() {
+        StartCoroutine(CoolDownOnUse());
+    }
 
+    private IEnumerator CoolDownOnUse() {
+
+        ToggleRaycastTargetsRecursive(this.transform, false);
+        yield return new WaitForSeconds(cooldownTimer);
+        ToggleRaycastTargetsRecursive(this.transform, true);
+    }
+
+    private void ToggleRaycastTargetsRecursive(Transform parent, bool toggleValue) {
+
+        PouchItem[] pouchItems = GetComponentsInChildren<PouchItem>();
+
+        // Access or process the found objects
+        foreach (PouchItem pouchItem in pouchItems) {
+            Graphic graphic = pouchItem.GetComponent<Graphic>();
+            if (graphic != null) {
+                graphic.raycastTarget = toggleValue;
+
+                if (toggleValue==false) {
+                    ModifyImageAlpha(graphic.transform.GetChild(0).GetComponent<Image>(), 0.4f);
+                } else {
+                    ModifyImageAlpha(graphic.transform.GetChild(0).GetComponent<Image>(), 1f);
+                }
+            }
+        }
+    }
 }

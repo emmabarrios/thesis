@@ -12,24 +12,6 @@ public class Character : MonoBehaviour, IAttributes
     public float Health { get { return health; } set { health = value; } }
     public float Stamina { get { return stamina; } set { stamina = value; } }
     public float Poise { get { return poise; } set { poise = value; } }
-    public float EquipLoad { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float PoisonDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float FireDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float LightningDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float MagicDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float FrostbiteDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float StrikeDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float SlashDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float ThrustDefense { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float CriticalDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float StrikeDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float SlashDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float ThrustDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float PoisonDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float FireDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float LightningDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float MagicDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public float FrostbiteDamage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     [SerializeField] private bool isBlocking = false;
     [SerializeField] private bool isBusy = false;

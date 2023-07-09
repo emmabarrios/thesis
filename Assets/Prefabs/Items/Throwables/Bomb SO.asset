@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Bomb
   _description: Bomb goes boooom
-  _sprite: {fileID: 21300000, guid: e2f43d5e75f8199419e20b36f38f4c7f, type: 3}
-  _sprite_pouch: {fileID: 21300000, guid: 858c41dd4a718ff499bca750467ce9d6, type: 3}
-  _sprite_pouch_used: {fileID: 21300000, guid: 9b63d4a9a7b969a4d8b240c4b140af51, type: 3}
+  _sprite: {fileID: 21300000, guid: ccbe7b5edd321c14bbf749a14394e0dd, type: 3}
+  _sprite_pouch: {fileID: 21300000, guid: f662fa9ff19f51f41aebe7484be81a5e, type: 3}
+  _sprite_pouch_used: {fileID: 21300000, guid: ba093d1d45844f640a2b2b31270f3703, type: 3}
+  _coodown: 1
   _modelPrefab: {fileID: 9032594408815822546, guid: 576b62da8128b9c42af62bcb7308e01e, type: 3}
   _usablePrefab: {fileID: 3238008565815877012, guid: 28aec59dc64547d4c84956120089b8c6, type: 3}
   _discoverability: 6

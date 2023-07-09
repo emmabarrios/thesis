@@ -1661,8 +1661,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d5a836b27bd3a684ba45463117d3363e, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 352887e7d9884e84f8365f5fa6557d6f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7276,8 +7276,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 04e2e38c7762bdf4ea08bdfbc1a63599, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 00766d314a869344aa8be9740eb4cd52, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7301,10 +7301,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5823973921775077864}
     m_Modifications:
-    - target: {fileID: 1763347542277726222, guid: f828b7c1152162b4e8992995efede6a0, type: 3}
-      propertyPath: m_Color.a
-      value: 0.3137255
-      objectReference: {fileID: 0}
     - target: {fileID: 4685811349350116950, guid: f828b7c1152162b4e8992995efede6a0, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -7392,10 +7388,6 @@ PrefabInstance:
     - target: {fileID: 4685811349350116953, guid: f828b7c1152162b4e8992995efede6a0, type: 3}
       propertyPath: m_Name
       value: Joystick
-      objectReference: {fileID: 0}
-    - target: {fileID: 4685811350595243528, guid: f828b7c1152162b4e8992995efede6a0, type: 3}
-      propertyPath: m_Color.a
-      value: 0.043137256
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f828b7c1152162b4e8992995efede6a0, type: 3}
@@ -7956,7 +7948,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 918571273ce14b747abf3c6ba999fe35, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f83bca08cbf2fbe4ab9050be0e98990a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10872,14 +10864,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1324944687}
     m_Modifications:
-    - target: {fileID: 3053346260848560460, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: ad086c0549e45ec4fa94fb4573d787ea, type: 2}
-    - target: {fileID: 3517313069339947362, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f8b534d041ce20c46824911c993f0f82, type: 2}
     - target: {fileID: 8643628448476613004, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: m_Name
       value: Player Visual
@@ -10888,18 +10872,6 @@ PrefabInstance:
       propertyPath: hitArea
       value: 
       objectReference: {fileID: 1717161279}
-    - target: {fileID: 8878072157992564911, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8878072157992564911, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 8878072157992564911, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.06
-      objectReference: {fileID: 0}
     - target: {fileID: 8989051728139162422, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: m_RootOrder
       value: 7

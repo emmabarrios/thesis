@@ -145,12 +145,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d20ed9e943053648918b315f2c64240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flaskOffset: {x: 0, y: 0, z: 0}
+  flaskSeal: {fileID: 0}
+  flaskEmptyContainer: {fileID: 0}
+  SealPrefab: {fileID: 0}
+  throwForce: 0
+  throwUpwardForce: 0
   offset: {x: 0, y: 0, z: 0}
-  seal: {fileID: 5098030253602584973}
-  SpawnSeal: {fileID: 6402151318054887905, guid: 3bd538821594ef4479cd4f0042b1a395, type: 3}
-  isTiming: 1
-  timer: 0
-  time: 1.1
+  playerAnimator: {fileID: 0}
+  thrower: {fileID: 0}
 --- !u!1 &4458950146844458932
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,7 +294,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8367705006879899164, guid: 67042a5e881c2094c99a19376eebdc3a, type: 3}
+  - {fileID: 2100000, guid: da70faa0513942a49a724957a13356db, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

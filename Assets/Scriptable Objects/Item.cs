@@ -8,6 +8,7 @@ public class Item : ScriptableObject {
     public Sprite _sprite;
     public Sprite _sprite_pouch;
     public Sprite _sprite_pouch_used;
+    public float _coodown;
     public GameObject _modelPrefab;
     public GameObject _usablePrefab;
     public float _discoverability;

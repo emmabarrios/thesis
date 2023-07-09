@@ -2,28 +2,19 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static BodyPart;
 
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
-
-    [Header("Holstered Item")]
-    //public GameObject itemPrefab;
-    //public GameObject objectPrefab;
-
 
     [Header("New implementation")]
     public Item itemSO;
     public Sprite item_holder_graphic;
     public Image fillImage = null;
 
-    private float value = 30f;
 
     private enum ItemState { Ready, Holstered }
 
     private ItemState _state = ItemState.Holstered;
-
-    Player player;
-
-    private Canvas canvas;
 
     public Sprite fillSprite; // The new sprite to assign to the Image component
     public Color fillSpriteColor;
@@ -62,13 +53,10 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public PlayerAnimator playerAnimator;
 
     public void Start() {
-        //fillImage.color = fillSpriteColor;
-
         scale = fillImage.GetComponent<RectTransform>().localScale;
-        player = GameObject.Find("Player").GetComponent<Player>();
-        canvas = GetComponentInParent<Canvas>();
         toggle = GameObject.Find("Pouch Toggle").GetComponent<Toggle>();
         playerAnimator = GameObject.Find("Player Visual").GetComponent<PlayerAnimator>();
+
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -123,19 +111,17 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
             fillImage.sprite = fillSprite;
             fillImage.transform.position = initialFillImagePosition;
             fillImage.GetComponent<RectTransform>().localScale = scale;
-            //fillImage.color = Color.white;
-            //fillImage.color = fillSpriteColor;
         }
     }
 
     private void DrawItem() {
 
-        // Toggle quick item button
-        //toggle.isOn = !toggle.isOn;
-
         GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         IUsable usable = _item.GetComponent<IUsable>();
         usable.Use();
+        Carousel carousel = transform.parent.transform.parent.transform.parent.GetComponent<Carousel>();
+        carousel.cooldownTimer = itemSO._coodown;
+        carousel.CallCoolDownOnUse();
 
         // Destroy pouch item
         Destroy(this.gameObject);
@@ -178,10 +164,8 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         isLongPressDetected = true;
 
         // Reset the image fill when completed
-        //fillImage.fillAmount = 0;
         fillImage.sprite = hintSprite;
         fillImage.GetComponent<RectTransform>().localScale = fillImage.GetComponent<RectTransform>().localScale / 3f;
-        //fillImage.color = Color.red;
         fillImage.color = hintSpriteColor;
 
         //Slightly elevate the image
@@ -203,4 +187,5 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         item_holder_gameObject.GetComponent<Image>().sprite = itemSO._sprite_pouch;
 
     }
+
 }
