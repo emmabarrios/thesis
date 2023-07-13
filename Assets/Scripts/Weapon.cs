@@ -55,10 +55,6 @@ public class Weapon : MonoBehaviour
         damageCollider.enabled = true;
     }
 
-    public void ToggleWeaponTrail() {
-        GetComponent<MeleeWeaponTrail>().enabled = !GetComponent<MeleeWeaponTrail>().enabled;
-    }
-
     public void DisableDamageCollider() {
         damageCollider.enabled = false;
     }

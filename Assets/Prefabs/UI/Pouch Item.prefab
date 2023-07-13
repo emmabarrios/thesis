@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 4770818140281189179}
   - component: {fileID: 4770818140281189172}
   - component: {fileID: 4770818140281189173}
-  - component: {fileID: 4770818140281189178}
+  - component: {fileID: 4335348937789660008}
   m_Layer: 5
   m_Name: Pouch Item
   m_TagString: Untagged
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4770818140281189178
+--- !u!114 &4335348937789660008
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -245,9 +245,9 @@ MonoBehaviour:
   item_holder_graphic: {fileID: 0}
   fillImage: {fileID: 4770818138900729778}
   fillSprite: {fileID: 21300000, guid: a78739e80af846645b84aecdc11021e7, type: 3}
-  fillSpriteColor: {r: 1, g: 0.89104825, b: 0, a: 1}
+  fillSpriteColor: {r: 1, g: 0.8901961, b: 0, a: 1}
   hintSprite: {fileID: 21300000, guid: ea6b9559e574aef4cb97c81975dfb4dd, type: 3}
-  hintSpriteColor: {r: 1, g: 0.9783717, b: 0, a: 1}
+  hintSpriteColor: {r: 1, g: 0.9764706, b: 0, a: 1}
   toggle: {fileID: 0}
   longPressDuration: 0.5
   longPressDurationDelay: 0.1

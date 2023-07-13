@@ -20,7 +20,7 @@ public class PlayerVisuals : MonoBehaviour
     private void Start() {
         animator = GetComponentInParent<PlayerAnimator>();
 
-        animator.OnUsingItem += RunStatusTimer_OnUsingItem;
+        //animator.OnUsingItem += RunStatusTimer_OnUsingItem;
 
 
         //anchorPointL = GameObject.Find("Player Weapon Anchor Point R").GetComponent<Transform>();
@@ -51,11 +51,11 @@ public class PlayerVisuals : MonoBehaviour
         //}
     }
 
-    public void RunStatusTimer_OnUsingItem(object sender, PlayerAnimator.OnUsingItemEventArgs e) {
-        ToggleWeaponsVisuals(false);
-        isTiming = true;
-        timer = e.animLength;
-    }
+    //public void RunStatusTimer_OnUsingItem(object sender, PlayerAnimator.OnUsingItemEventArgs e) {
+    //    ToggleWeaponsVisuals(false);
+    //    isTiming = true;
+    //    timer = e.animLength;
+    //}
 
     public void InvokeOnWeaponHit() {
         OnWeaponHit?.Invoke(this,  EventArgs.Empty);

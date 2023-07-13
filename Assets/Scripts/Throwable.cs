@@ -5,7 +5,7 @@ using UnityEngine;
 public class Throwable : MonoBehaviour
 {
     public float damage;
-    public GameObject explosionFX;
+    public GameObject damageFX;
 
     protected void DealDamage(Collider other) {
         BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
@@ -16,7 +16,7 @@ public class Throwable : MonoBehaviour
             if (damageable != null) {
                 if (other.gameObject.name != "Player") {
                     Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-                    Instantiate(explosionFX, contactPoint, Quaternion.identity);
+                    Instantiate(damageFX, contactPoint, Quaternion.identity);
 
                     float finalDamage;
 
@@ -38,8 +38,9 @@ public class Throwable : MonoBehaviour
             }
         } else {
             Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-            Instantiate(explosionFX, contactPoint, Quaternion.identity);
+            Instantiate(damageFX, contactPoint, Quaternion.identity);
             Destroy(gameObject);
         }
     }
+
 }

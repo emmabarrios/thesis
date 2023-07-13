@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class CamHolderMotion : MonoBehaviour
 {
+    private Animator animator;
     private Quaternion originalRotation;
     private Transform cameraTransform;
     [SerializeField] private Player player = null;
+    [SerializeField] private PlayerAnimator playerAnimator = null;
     Controller controller = null;
 
     [Header("Shake Settings")]
@@ -23,11 +25,6 @@ public class CamHolderMotion : MonoBehaviour
     [SerializeField] private float pointXThreshold = 1f;
     private bool isBobbing = false;
 
-   
-    //[SerializeField] private float rotationDuration = 1f;
-    //[SerializeField] private float rotationMagnitude = 1f;
-
-
     private Vector3 originalPosition;
 
 
@@ -35,15 +32,16 @@ public class CamHolderMotion : MonoBehaviour
     {
         player = GameObject.Find("Player").GetComponent<Player>();
         controller = player.GetComponent<Controller>();
-
+        animator = GetComponent<Animator>();
+        
         cameraTransform = GetComponent<Transform>();
         originalRotation = cameraTransform.localRotation;
 
         // Player Controller Event Subscribers
         player.OnDamageTaken += StartCameraShake;
         controller.OnDash += StartCameraBob;
-        //controller.OnAttack += StartCameraRotation;
-
+        playerAnimator.OnSwingLeft += PlayRotateLeftAnimation;
+        playerAnimator.OnSwingRight += PlayRotateRightAnimation;
         originalPosition = transform.localPosition;
 
     }
@@ -52,33 +50,26 @@ public class CamHolderMotion : MonoBehaviour
 
         if (Mathf.Abs(direction) > pointXThreshold) {
             if (direction > 0) {
-                GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_right", -1, 0f);
+                animator.Play("rotate_right");
             } else {
-                GameObject.Find("Camera Holder").GetComponent<Animator>().Play("rotate_left", -1, 0f);
+                animator.Play("rotate_left");
             }
         }
         StartCoroutine(BobCamera(direction));
+    }
+
+    private void PlayRotateLeftAnimation() {
+        animator.Play("rotate_left");
+    }
+    
+    private void PlayRotateRightAnimation() {
+        animator.Play("rotate_right");
     }
 
     public void StartCameraShake() {
         if (isrotating == false) {
             StartCoroutine(ShakeCamera( magnitude, direction));
         }
-    }
-    
-    public void StartCameraRotation(GestureInput.SwipeDir swipeDirection) {
-        //if (isrotating == false) {
-        //    int dir = -1;
-
-        //    if (swipeDirection == GestureInput.SwipeDir.Left) {
-        //        dir = 1;
-        //    }
-
-        //    StartCoroutine(RotateCamera(duration, magnitude, dir));
-        //}
-
-        //gameObject.GetComponent<Animator>().Play("cam_swing_rotation", -1, 0f);
-
     }
 
     private IEnumerator ShakeCamera(float magnitude, int direction) {
@@ -130,34 +121,4 @@ public class CamHolderMotion : MonoBehaviour
         isBobbing = false;
     }
 
-    private IEnumerator RotateCamera(float duration, float magnitude, int direction) {
-        Quaternion startRotation = cameraTransform.localRotation;
-        Quaternion targetRotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
-
-        float elapsedTime = 0f;
-        float halfDuration = duration / 2f;
-
-        while (elapsedTime < duration) {
-            // Calculate the interpolation factor based on the elapsed time and duration
-            float t = elapsedTime / halfDuration;
-
-            // Interpolate between startRotation and targetRotation for the first half
-            if (elapsedTime < halfDuration) {
-                Quaternion rotation = Quaternion.Lerp(startRotation, targetRotation, t);
-                cameraTransform.localRotation = rotation;
-            }
-            // Interpolate between targetRotation and startRotation for the second half
-            else {
-                t = (elapsedTime - halfDuration) / halfDuration;
-                Quaternion rotation = Quaternion.Lerp(targetRotation, startRotation, t);
-                cameraTransform.localRotation = rotation;
-            }
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        // Ensure the camera ends up at the original rotation
-       // cameraTransform.localRotation = originalRotation;
-    }
 }

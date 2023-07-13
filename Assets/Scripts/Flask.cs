@@ -36,6 +36,6 @@ public class Flask : MonoBehaviour
         _emptyBottle.transform.rotation = parentTransform.rotation;
         playerAnimator.OnDropedFlask -= Drop;
 
-        Destroy(GetComponentInParent<ConsumableItem>().gameObject);
+        Destroy(GetComponentInParent<Potion>().gameObject);
     }
 }

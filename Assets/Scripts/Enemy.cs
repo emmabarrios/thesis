@@ -22,8 +22,6 @@ public class Enemy : Character, IDamageable {
     private Weapon enemyWeapon;
     public Weapon EnemyWeapon { get { return enemyWeapon; } set { enemyWeapon = value; } }
 
-    public HitArea hitArea;
-
     [SerializeField] private Image image = null;
     [SerializeField] private Text text = null;
     [SerializeField] private string enemyName = null;
@@ -53,7 +51,6 @@ public class Enemy : Character, IDamageable {
 
     // Start is called before the first frame update
     void Start() {
-        hitArea = GetComponentInChildren<HitArea>();
         controller = GetComponent<CharacterController>();
         playerTransform = GameObject.Find("Player").GetComponent<Transform>();
         animator = GetComponent<Animator>();
@@ -70,12 +67,6 @@ public class Enemy : Character, IDamageable {
             isWalking = false;
             isDefeated = true;
         }
-
-        //if (currentHealth != Health) {
-        //    currentHealth = Health;
-        //    image.fillAmount = currentHealth / Health;
-        //}
-
 
         Vector3 rayStart = transform.position + transform.forward * raycastOffset;
 

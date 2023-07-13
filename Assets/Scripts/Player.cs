@@ -13,6 +13,7 @@ public class Player : Character, IDamageable
     }
 
     PlayerStatsManager stats;
+
     public PlayerAnimator animator;
 
     [SerializeField] bool canDrainStamina = false;
@@ -64,7 +65,7 @@ public class Player : Character, IDamageable
     }
 
     private void Update() {
-        if (Stamina < MaxStamina && !IsBusy && !IsAttackPerformed && !IsParryPerformed && canDrainStamina) {
+        if (Stamina < MaxStamina && !IsBusy && !IsAttackPerformed && canDrainStamina) {
 
             if (IsBlocking) {
                 Stamina += StaminaRecoverySpeed * staminaRecoveryModifier * Time.deltaTime;
@@ -138,7 +139,7 @@ public class Player : Character, IDamageable
             OnDamageTaken?.Invoke();
             OnHealthValueReduced?.Invoke(Health);
         } else {
-            animator.GetComponent<Animator>().SetTrigger("deflectedHit");
+            animator.GetComponent<Animator>().Play("Shield_Block", -1, 0f);
             DrainStamina();
         }
     }

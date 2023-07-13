@@ -56,7 +56,6 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         scale = fillImage.GetComponent<RectTransform>().localScale;
         toggle = GameObject.Find("Pouch Toggle").GetComponent<Toggle>();
         playerAnimator = GameObject.Find("Player Visual").GetComponent<PlayerAnimator>();
-
     }
 
     public void OnPointerDown(PointerEventData eventData) {

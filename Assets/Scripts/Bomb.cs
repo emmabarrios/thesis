@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bomb : Throwable
@@ -23,7 +21,7 @@ public class Bomb : Throwable
     }
 
     private void Explode() {
-        Instantiate(explosionFX, transform.localPosition, Quaternion.identity);
+        Instantiate(damageFX, transform.localPosition, Quaternion.identity);
         Destroy(gameObject);
     }
 
