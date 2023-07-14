@@ -124,7 +124,7 @@ MonoBehaviour:
   - {fileID: 8238457474375914638}
   - {fileID: 6664403992056573356}
   - {fileID: 9201924556172589534}
-  pouchItemPrefab: {fileID: 4770818140281189178, guid: d4cc401a7809e0e4594ef9a666c68bda, type: 3}
+  pouchItemPrefab: {fileID: 4335348937789660008, guid: d4cc401a7809e0e4594ef9a666c68bda, type: 3}
 --- !u!1 &775136657486017030
 GameObject:
   m_ObjectHideFlags: 0

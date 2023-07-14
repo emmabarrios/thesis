@@ -66,7 +66,7 @@ public class Controller : MonoBehaviour {
         characterController = GetComponent<CharacterController>();
 
         // Input
-        buttonA = GameObject.Find("A Button").GetComponent<Button>();
+        buttonA = GameObject.Find("Button").GetComponent<Button>();
         joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
         gestureInput = GameObject.Find("Gesture Input").GetComponent<GestureInput>();
 

@@ -114,10 +114,14 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     }
 
     private void DrawItem() {
+        // Instantiate model prefab
+        // Feed usable prefab (projectile) to thrower
+        
+        //GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        //IUsable usable = _item.GetComponent<IUsable>();
+        //usable.Use();
 
-        GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        IUsable usable = _item.GetComponent<IUsable>();
-        usable.Use();
+        // Use Item Cooldown
         Carousel carousel = transform.parent.transform.parent.transform.parent.GetComponent<Carousel>();
         carousel.cooldownTimer = itemSO._coodown;
         carousel.CallCoolDownOnUse();
@@ -184,7 +188,6 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public void InitializeQuickItemGraphics() {
         item_image_gameObject.GetComponent<Image>().sprite = itemSO._sprite;
         item_holder_gameObject.GetComponent<Image>().sprite = itemSO._sprite_pouch;
-
     }
 
 }

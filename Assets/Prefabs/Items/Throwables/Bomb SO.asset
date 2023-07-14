@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b762228d98c974a99bcc853bb6a0eb, type: 3}
   m_Name: Bomb SO
   m_EditorClassIdentifier: 
+  type: 1
   _name: Bomb
   _description: Bomb goes boooom
   _sprite: {fileID: 21300000, guid: ccbe7b5edd321c14bbf749a14394e0dd, type: 3}

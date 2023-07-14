@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b762228d98c974a99bcc853bb6a0eb, type: 3}
   m_Name: Knife SO
   m_EditorClassIdentifier: 
+  type: 1
   _name: Knife
   _description: Knife goes shiiiun
   _sprite: {fileID: 21300000, guid: 0dc4f5c030acc0a4a91ceadc27719f50, type: 3}

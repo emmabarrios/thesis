@@ -238,16 +238,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4770818140281189176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 053ff9f0b1d4a7e45aaf7ede5688fca6, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a4737c419aad0448a88da962608cb90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemSO: {fileID: 0}
   item_holder_graphic: {fileID: 0}
   fillImage: {fileID: 4770818138900729778}
   fillSprite: {fileID: 21300000, guid: a78739e80af846645b84aecdc11021e7, type: 3}
-  fillSpriteColor: {r: 1, g: 0.8901961, b: 0, a: 1}
+  fillSpriteColor: {r: 1, g: 0.75374484, b: 0, a: 1}
   hintSprite: {fileID: 21300000, guid: ea6b9559e574aef4cb97c81975dfb4dd, type: 3}
-  hintSpriteColor: {r: 1, g: 0.9764706, b: 0, a: 1}
+  hintSpriteColor: {r: 1, g: 0.31541085, b: 0, a: 1}
   toggle: {fileID: 0}
   longPressDuration: 0.5
   longPressDurationDelay: 0.1
