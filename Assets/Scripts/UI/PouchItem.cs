@@ -136,13 +136,13 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         // Load proyectile to thrower if there is a projectile
         if (itemSO._projectilePrefab != null) {
-            Projectile projectile = itemSO._projectilePrefab;
-            Thrower.instance.LoadThrower(projectile, projectile.ThrowForce, projectile.ThrowUpwardForce, projectile.RotationForce, projectile.Offset, projectile.Cooldown);
+            //Projectile projectile = itemSO._projectilePrefab;
+            Thrower.instance.LoadThrower(itemSO._projectilePrefab);
         }
 
         // Use Item Cooldown
         Carousel carousel = transform.parent.transform.parent.transform.parent.GetComponent<Carousel>();
-        carousel.cooldownTimer = itemSO._cooldown;
+        carousel.cooldownTimer = itemSO._projectilePrefab.GetComponent<Projectile>().UseCooldown;
         carousel.CallCoolDownOnUse();
 
         // Destroy pouch item

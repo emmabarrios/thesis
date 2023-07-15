@@ -20,13 +20,13 @@ public class Thrower : MonoBehaviour {
         instance = this;
     }
 
-    public void LoadThrower(Projectile projectile, float throwForce, float throwUpwardForce, float rotationForce, Vector3 offset, float loadTime) {
-        _timer = loadTime;
+    public void LoadThrower(Projectile projectile) {
         _projectile = projectile;
-        _throwForce = throwForce;
-        _throwUpwardForce = throwUpwardForce;
-        _rotationForce = rotationForce;
-        _offset = offset;
+        _throwForce = projectile.ThrowForce;
+        _throwUpwardForce = projectile.ThrowUpwardForce;
+        _rotationForce = projectile.RotationForce;
+        _offset = projectile.Offset;
+        _timer = projectile.SpawnDelay;
         _isTiming = true;
     }
 

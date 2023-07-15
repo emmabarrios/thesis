@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
-public class Bomb : MonoBehaviour
+public class Bomb : Projectile
 {
     [Header("Parent")]
     [SerializeField] Transform parent;
@@ -15,16 +15,11 @@ public class Bomb : MonoBehaviour
 
     [Header("Timer Settings")]
     [Range(0f, 10f)] public float timer;
-    [Range(0f, 10f)] public float activeRadiusThreshold;
     private bool isTiming;
-    private bool isRadiusActive;
 
-    private bool isTargetInRadius = false;
-    
 
     private void Start() {
         isTiming = true;
-        isRadiusActive = false;
         parent = this.transform.parent;
     }
 
@@ -33,7 +28,6 @@ public class Bomb : MonoBehaviour
         // Bomb timer
         if (isTiming) {
             timer -= Time.deltaTime;
-
             if (timer < 0.1f) {
                 timer = 0;
                 isTiming = false;
@@ -45,7 +39,7 @@ public class Bomb : MonoBehaviour
     private void Explode() {
         DealDamageOnRadius();
         Instantiate(explosionFX, transform.position, Quaternion.identity);
-        Destroy(parent.gameObject);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other) {

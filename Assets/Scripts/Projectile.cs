@@ -6,64 +6,69 @@ using UnityEngine.Rendering.UI;
 
 public class Projectile : MonoBehaviour {
     [Header("Throw Settings")]
-    [SerializeField] private float throwForce;
-    [SerializeField] private float throwUpwardForce;
-    [SerializeField] private float rotationForce = 5f;
-    [SerializeField] private float cooldown = 1f;
-    [SerializeField] private Vector3 offset;
+    [SerializeField] protected float throwForce;
+    [SerializeField] protected float throwUpwardForce;
+    [SerializeField] protected float rotationForce = 5f;
+    [SerializeField] protected float spawnDelay = 1f;
+    [SerializeField] protected float useCooldown = 1f;
+    [SerializeField] protected Vector3 offset;
 
     public float ThrowForce { get { return throwForce; } }
     public float ThrowUpwardForce { get { return throwUpwardForce; } }
     public float RotationForce { get { return rotationForce; } }
-    public float Cooldown { get { return cooldown; } }
+    public float SpawnDelay { get { return spawnDelay; } }
+    public float UseCooldown { get { return useCooldown; } }
     public Vector3 Offset { get { return offset; } }
 
     [Header("Impact Settigs")]
-    [SerializeField] private float impactDamage;
-    [SerializeField] private bool destroyOnImpact = false;
-    [SerializeField] private GameObject impactFX;
+    [SerializeField] protected float impactDamage;
+    [SerializeField] protected bool destroyOnImpact = false;
+    [SerializeField] protected GameObject impactFX;
     
-    private void OnCollisionEnter(Collision other) {
-        DealDamageOnImpact(other);
-        if (destroyOnImpact == true) {
-            Destroy(gameObject);
-        }
-    }
+    //private void OnTriggerEnter(Collider other) {
 
-    protected void DealDamageOnImpact(Collision other) {
-        BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
+    //    if (impactFX != null) {
+    //        Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+    //        Instantiate(impactFX, contactPoint, Quaternion.identity);
+    //    }
+    //    Debug.Log(other.name);
 
-        if (bodyPart != null) {
-            IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
+    //    DealDamageOnImpact(other);
 
-            if (damageable != null) {
-                if (other.gameObject.name != "Player") {
-                    Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+    //    if (destroyOnImpact == true) {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
-                    if (impactFX!=null) {
-                        Instantiate(impactFX, contactPoint, Quaternion.identity);
-                    }
+    //protected void DealDamageOnImpact(Collider other) {
+    //    BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
 
-                    float finalDamage;
+    //    if (bodyPart != null) {
+    //        IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
 
-                    // Localized damage
-                    switch (bodyPart.tag) {
-                        case "Head":
-                            finalDamage = impactDamage + 100;
-                            break;
-                        case "Chest":
-                            finalDamage = impactDamage + 30;
-                            break;
-                        default:
-                            finalDamage = impactDamage;
-                            break;
-                    }
+    //        if (damageable != null) {
+    //            if (other.gameObject.name != "Player") {
 
-                    damageable.TakeDamage(finalDamage);
+    //                float finalDamage;
+
+    //                // Localized damage
+    //                switch (bodyPart.tag) {
+    //                    case "Head":
+    //                        finalDamage = impactDamage + 100;
+    //                        break;
+    //                    case "Chest":
+    //                        finalDamage = impactDamage + 30;
+    //                        break;
+    //                    default:
+    //                        finalDamage = impactDamage;
+    //                        break;
+    //                }
+
+    //                damageable.TakeDamage(finalDamage);
                     
-                }
-            }
-        }
-    }
+    //            }
+    //        }
+    //    }
+    //}
 
 }
