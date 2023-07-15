@@ -129,11 +129,15 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
             armsAnimator.Play("Throw_Item");
         }
 
+        // Instantiate item model prefab
+        if (itemSO._modelPrefab != null) {
+            Instantiate(itemSO._modelPrefab, Vector3.zero, Quaternion.identity);
+        }
+
         // Load proyectile to thrower if there is a projectile
         if (itemSO._projectilePrefab != null) {
             Projectile projectile = itemSO._projectilePrefab;
             Thrower.instance.LoadThrower(projectile, projectile.ThrowForce, projectile.ThrowUpwardForce, projectile.RotationForce, projectile.Offset, projectile.Cooldown);
-            Debug.Log("Here");
         }
 
         // Use Item Cooldown

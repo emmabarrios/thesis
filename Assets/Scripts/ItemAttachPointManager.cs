@@ -11,9 +11,22 @@ public class ItemAttachPointManager : MonoBehaviour {
     [SerializeField] private Transform attachPointB;
 
     [Header("Timer Settings")]
-    [SerializeField] private float enterTime;
+    [SerializeField] private float attackToHandTimer;
+    [SerializeField] private float lifeTime;
+    private bool isTiming;
 
+    private void Update() {
+        if (isTiming) {
+            lifeTime -= Time.deltaTime;
+            if (lifeTime < 0.1f) {
+                lifeTime = 0;
+                isTiming = false;
+                Destroy(gameObject);
+            }
+        }
+    }
     private void Start() {
+        isTiming = true;
         attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
         attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
         AttachToPoint(attachPointA);
@@ -27,7 +40,7 @@ public class ItemAttachPointManager : MonoBehaviour {
     }
 
     private IEnumerator AttachToHand() {
-        yield return new WaitForSeconds(enterTime);
+        yield return new WaitForSeconds(attackToHandTimer);
         AttachToPoint(attachPointB);
         this.transform.localPosition = positionOffset;
         this.transform.localRotation = rotationOffset;

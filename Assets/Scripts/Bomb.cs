@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
@@ -10,6 +11,7 @@ public class Bomb : MonoBehaviour
     [Header("Explosion Settings")]
     [SerializeField] private float explosionDamage;
     [SerializeField] private GameObject explosionFX;
+    [SerializeField] private List<Collider> inRangeColliders = new List<Collider>();
 
     [Header("Timer Settings")]
     [Range(0f, 10f)] public float timer;
@@ -17,6 +19,7 @@ public class Bomb : MonoBehaviour
     private bool isTiming;
     private bool isRadiusActive;
 
+    private bool isTargetInRadius = false;
     
 
     private void Start() {
@@ -31,12 +34,6 @@ public class Bomb : MonoBehaviour
         if (isTiming) {
             timer -= Time.deltaTime;
 
-            if (timer <= activeRadiusThreshold) {
-                if (isRadiusActive==false) {
-                    isRadiusActive = true;
-                }
-            }
-
             if (timer < 0.1f) {
                 timer = 0;
                 isTiming = false;
@@ -46,24 +43,40 @@ public class Bomb : MonoBehaviour
     }
 
     private void Explode() {
+        DealDamageOnRadius();
         Instantiate(explosionFX, transform.position, Quaternion.identity);
         Destroy(parent.gameObject);
     }
 
-    private void OnTriggerStay(Collider other) {
-        if (isRadiusActive == true) {
+    private void OnTriggerEnter(Collider other) {
+        BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
+        if (bodyPart!=null) {
+            if(!inRangeColliders.Contains(other)) {
+                inRangeColliders.Add(other);
+            }
+        }
+    }
 
-            BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
+    private void OnTriggerExit(Collider other) {
+        if (inRangeColliders.Contains(other)) {
+            inRangeColliders.Remove(other);
+        }
+    }
+
+    private void DealDamageOnRadius() {
+        foreach (Collider collider in inRangeColliders) {
+            BodyPart bodyPart = collider.gameObject.GetComponent<BodyPart>();
 
             if (bodyPart != null) {
+
+                Debug.Log(collider.name);
                 IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
-                //Transform collisionTransformRoot = bodyPart.GetComponentInParent<Transform>().root;
+
                 if (damageable != null) {
-                    Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
                     damageable.TakeDamage(explosionDamage);
                 }
             }
-            Explode();
         }
     }
+   
 }

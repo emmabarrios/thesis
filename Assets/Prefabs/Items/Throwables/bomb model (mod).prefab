@@ -51,7 +51,8 @@ MonoBehaviour:
   rotationOffset: {x: 0, y: 0, z: 0, w: 0}
   attachPointA: {fileID: 0}
   attachPointB: {fileID: 0}
-  enterTime: 0.3
+  attackToHandTimer: 0.4
+  lifeTime: 0.8
 --- !u!1001 &1536311515153266931
 PrefabInstance:
   m_ObjectHideFlags: 0
