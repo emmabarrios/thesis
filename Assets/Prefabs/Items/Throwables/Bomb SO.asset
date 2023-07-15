@@ -18,8 +18,9 @@ MonoBehaviour:
   _sprite: {fileID: 21300000, guid: ccbe7b5edd321c14bbf749a14394e0dd, type: 3}
   _sprite_pouch: {fileID: 21300000, guid: f662fa9ff19f51f41aebe7484be81a5e, type: 3}
   _sprite_pouch_used: {fileID: 21300000, guid: ba093d1d45844f640a2b2b31270f3703, type: 3}
-  _coodown: 1
+  _cooldown: 0.5
   _modelPrefab: {fileID: 3238008565815877012, guid: 889327257c7ff584c90eec3c8c0c1204, type: 3}
-  _usablePrefab: {fileID: 3238008565815877012, guid: 1885dceee1dff03448968044083d6c4b, type: 3}
+  _usablePrefab: {fileID: 0}
+  _projectilePrefab: {fileID: 195482854475206124, guid: 1885dceee1dff03448968044083d6c4b, type: 3}
   _discoverability: 6
   _price: 120

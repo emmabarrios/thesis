@@ -33,6 +33,7 @@ Transform:
   - {fileID: 7606295264630154531}
   - {fileID: 2663514769906459076}
   - {fileID: 1532131771106822311}
+  - {fileID: 3291679740568429085}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48,17 +49,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef6acfa57a9f9c4cae91778206022c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwForce: 10
+  throwForce: 5
   throwUpwardForce: 5
   rotationForce: 10
+  cooldown: 1
   offset: {x: 0, y: 0, z: 0}
-  timer: 0.8
   impactDamage: 0
   destroyOnImpact: 0
   impactFX: {fileID: 0}
-  explosionDamage: 30
-  explosionRadius: {fileID: 4912525494408861135, guid: e59ee0480c0e0a941b86cf33a13b3866, type: 3}
-  explosionFX: {fileID: 8714244275622671896, guid: abf8d5b763621654486813c5c8af8234, type: 3}
 --- !u!135 &1884446213263060538
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -88,6 +86,68 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &8156846713857957060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3291679740568429085}
+  - component: {fileID: 7245339223756661856}
+  - component: {fileID: 4202467346425225112}
+  m_Layer: 3
+  m_Name: bomb radius
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3291679740568429085
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156846713857957060}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.023, y: 0.027, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3238008565815877013}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7245339223756661856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156846713857957060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493958f4a760aa9438a422d5df0c2f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 0}
+  explosionDamage: 100
+  explosionFX: {fileID: 8714244275622671896, guid: abf8d5b763621654486813c5c8af8234, type: 3}
+  timer: 5
+  activeRadiusThreshold: 1
+--- !u!135 &4202467346425225112
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8156846713857957060}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1536311515153266931
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -115,15 +115,30 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     private void DrawItem() {
         // Instantiate model prefab
-        // Feed usable prefab (projectile) to thrower
-        
+       
+
         //GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         //IUsable usable = _item.GetComponent<IUsable>();
         //usable.Use();
 
+        // Reproduce corresponding animaton in player visuals
+        Animator armsAnimator = GameObject.Find("Player Visual").GetComponent<Animator>();
+        if (itemSO.type == Item.ItemType.Usable) {
+            armsAnimator.Play("Use_Item");
+        } else {
+            armsAnimator.Play("Throw_Item");
+        }
+
+        // Load proyectile to thrower if there is a projectile
+        if (itemSO._projectilePrefab != null) {
+            Projectile projectile = itemSO._projectilePrefab;
+            Thrower.instance.LoadThrower(projectile, projectile.ThrowForce, projectile.ThrowUpwardForce, projectile.RotationForce, projectile.Offset, projectile.Cooldown);
+            Debug.Log("Here");
+        }
+
         // Use Item Cooldown
         Carousel carousel = transform.parent.transform.parent.transform.parent.GetComponent<Carousel>();
-        carousel.cooldownTimer = itemSO._coodown;
+        carousel.cooldownTimer = itemSO._cooldown;
         carousel.CallCoolDownOnUse();
 
         // Destroy pouch item

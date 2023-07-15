@@ -27,7 +27,7 @@ public class ThrowableItem : MonoBehaviour, IUsable {
             timer -= Time.deltaTime;
             if (timer < 0.1f) {
                 timer = 0; ;
-                thrower.Throw(projectile, throwForce, throwUpwardForce, rotationForce, offset);
+                //thrower.Throw(projectile, throwForce, throwUpwardForce, rotationForce, offset);
 
                 isTiming = false;
                 Destroy(gameObject);

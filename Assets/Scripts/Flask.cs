@@ -26,7 +26,7 @@ public class Flask : MonoBehaviour
 
     public void Open() {
         flaskSeal.SetActive(false);
-        thrower.Throw(SealPrefab, throwForce, throwUpwardForce,0f, offset);
+       // thrower.Throw(SealPrefab, throwForce, throwUpwardForce,0f, offset);
         playerAnimator.OnOpenedFlask -= Open;
     }
 

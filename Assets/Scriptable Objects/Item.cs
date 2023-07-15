@@ -11,9 +11,10 @@ public class Item : ScriptableObject {
     public Sprite _sprite;
     public Sprite _sprite_pouch;
     public Sprite _sprite_pouch_used;
-    public float _coodown;
+    public float _cooldown;
     public GameObject _modelPrefab;
     public GameObject _usablePrefab;
+    public Projectile _projectilePrefab;
     public float _discoverability;
     public float _price;
 }

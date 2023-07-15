@@ -2,58 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 
-public class Projectile : MonoBehaviour 
-{
+public class Projectile : MonoBehaviour {
     [Header("Throw Settings")]
     [SerializeField] private float throwForce;
     [SerializeField] private float throwUpwardForce;
     [SerializeField] private float rotationForce = 5f;
+    [SerializeField] private float cooldown = 1f;
     [SerializeField] private Vector3 offset;
 
-    [Header("Timer Settings")]
-    public float timer;
-    private bool isTiming;
+    public float ThrowForce { get { return throwForce; } }
+    public float ThrowUpwardForce { get { return throwUpwardForce; } }
+    public float RotationForce { get { return rotationForce; } }
+    public float Cooldown { get { return cooldown; } }
+    public Vector3 Offset { get { return offset; } }
 
-    [Header("Bullet Settigs")]
+    [Header("Impact Settigs")]
     [SerializeField] private float impactDamage;
     [SerializeField] private bool destroyOnImpact = false;
     [SerializeField] private GameObject impactFX;
-
-    [Header("Bomb Settings")]
-    [SerializeField] private float explosionDamage;
-    [SerializeField] private GameObject explosionRadius;
-    [SerializeField] private GameObject explosionFX;
-
-    private void Start() {
-        if (timer != 0f) isTiming = true;
-    }
-
-    private void Update() {
-
-        // Bomb timer
-        if (isTiming) {
-            timer -= Time.deltaTime;
-            if (timer < 0.1f) {
-                timer = 0; ;
-                isTiming = false;
-                if (explosionRadius!=null) {
-                    GameObject e = Instantiate(explosionRadius, transform.position, Quaternion.identity);
-                    ExplosionRadius _e = e.GetComponent<ExplosionRadius>();
-                    _e.ExplosionDamage = explosionDamage;
-                    _e.Timer = timer;
-                }
-                Instantiate(explosionFX, transform.position, Quaternion.identity);
-                Destroy(gameObject);
-            }
+    
+    private void OnCollisionEnter(Collision other) {
+        DealDamageOnImpact(other);
+        if (destroyOnImpact == true) {
+            Destroy(gameObject);
         }
     }
 
-    private void OnTriggerEnter(Collider other) {
-        DealDamageOnImpact(other);
-    }
-
-    protected void DealDamageOnImpact(Collider other) {
+    protected void DealDamageOnImpact(Collision other) {
         BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
 
         if (bodyPart != null) {
@@ -83,14 +60,10 @@ public class Projectile : MonoBehaviour
                     }
 
                     damageable.TakeDamage(finalDamage);
-                    if (destroyOnImpact==true) {
-                        Destroy(gameObject);
-                    }
+                    
                 }
             }
         }
     }
-
-
 
 }
