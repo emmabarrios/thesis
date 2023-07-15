@@ -93,7 +93,7 @@ public class Controller : MonoBehaviour {
             stateInfo.IsName("Swing_Stab") || 
             stateInfo.IsName("Swing_Down");
 
-        if (!dashPerformed && !AttackPerformed) {
+        if (!dashPerformed) {
             Orbitate(inputMovement);
         }
 

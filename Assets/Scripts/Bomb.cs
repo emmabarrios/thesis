@@ -5,31 +5,28 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class Bomb : Projectile
 {
-    [Header("Parent")]
-    [SerializeField] Transform parent;
-
     [Header("Explosion Settings")]
     [SerializeField] private float explosionDamage;
     [SerializeField] private GameObject explosionFX;
+    [Range(0f, 10f)] public float explosionTimer;
+    private bool isTiming;
+
+    [Header("Colliders In Range")]
     [SerializeField] private List<Collider> inRangeColliders = new List<Collider>();
 
-    [Header("Timer Settings")]
-    [Range(0f, 10f)] public float timer;
-    private bool isTiming;
 
 
     private void Start() {
         isTiming = true;
-        parent = this.transform.parent;
     }
 
     private void Update() {
 
         // Bomb timer
         if (isTiming) {
-            timer -= Time.deltaTime;
-            if (timer < 0.1f) {
-                timer = 0;
+            explosionTimer -= Time.deltaTime;
+            if (explosionTimer < 0.1f) {
+                explosionTimer = 0;
                 isTiming = false;
                 Explode();
             }
@@ -63,7 +60,6 @@ public class Bomb : Projectile
 
             if (bodyPart != null) {
 
-                Debug.Log(collider.name);
                 IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
 
                 if (damageable != null) {
