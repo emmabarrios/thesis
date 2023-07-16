@@ -10,6 +10,8 @@ public class ItemAttachPointManager : MonoBehaviour {
     [SerializeField] private Transform attachPointA;
     [SerializeField] private Transform attachPointB;
 
+    public GameObject child;
+
     [Header("Timer Settings")]
     [SerializeField] private float attackToHandTimer;
     [SerializeField] private float lifeTime;
@@ -30,20 +32,35 @@ public class ItemAttachPointManager : MonoBehaviour {
         attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
         attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
         AttachToPoint(attachPointA);
+        this.transform.localPosition = positionOffset;
         StartCoroutine(AttachToHand());
     }
 
+    //public void AttachToPoint(Transform point) {
+    //    this.transform.SetParent(point);
+    //    this.transform.localPosition = Vector3.zero + AOffset;
+    //    this.transform.localRotation = Quaternion.identity;
+    //}
+
+    //private IEnumerator AttachToHand() {
+    //    yield return new WaitForSeconds(attackToHandTimer);
+    //    AttachToPoint(attachPointB);
+    //    this.transform.localPosition = positionOffset;
+    //    this.transform.localRotation = rotationOffset;
+    //}
+
+
     public void AttachToPoint(Transform point) {
         this.transform.SetParent(point);
-        this.transform.localPosition = Vector3.zero + AOffset;
-        this.transform.localRotation = Quaternion.identity;
     }
 
     private IEnumerator AttachToHand() {
         yield return new WaitForSeconds(attackToHandTimer);
+        if (child!=null) {
+            child.GetComponent<Animator>().enabled = false;
+        }
         AttachToPoint(attachPointB);
-        this.transform.localPosition = positionOffset;
+        this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = rotationOffset;
     }
-
 }

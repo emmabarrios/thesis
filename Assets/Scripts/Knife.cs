@@ -10,7 +10,6 @@ public class Knife : Projectile
             Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
             Instantiate(impactFX, contactPoint, Quaternion.identity);
         }
-        Debug.Log(other.name);
 
         DealDamageOnImpact(other);
 

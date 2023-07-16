@@ -157,7 +157,7 @@ public class Controller : MonoBehaviour {
 
         if (player.currentState == Player.PlayerState.Combat) {
 
-            if (player.Stamina > 0 && !AttackPerformed && !IsUsingItem) {
+            if (player.Stamina > 0 && !AttackPerformed && !IsUsingItem && !dashPerformed) {
 
                 switch (e.swipeDirection) {
 

@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b762228d98c974a99bcc853bb6a0eb, type: 3}
   m_Name: Potion SO
   m_EditorClassIdentifier: 
+  type: 0
   _name: Small Health Potion
   _description: Potion goes glup glup
   _sprite: {fileID: 21300000, guid: cfe2cc2965495f744947752c0a64e9b4, type: 3}
   _sprite_pouch: {fileID: 21300000, guid: e58a03096baf3fc4b93d54f71689a7d7, type: 3}
   _sprite_pouch_used: {fileID: 21300000, guid: e85450dea7ee14547a45855e311f53c1, type: 3}
-  _coodown: 3
-  _modelPrefab: {fileID: 6501061458142652759, guid: 4435922733eb06f40b0c8479df1681fd, type: 3}
+  _modelPrefab: {fileID: 8566957488878146660, guid: 45bc7aedc4dc08f4ca596725a5388829, type: 3}
   _usablePrefab: {fileID: 1342077820700973742, guid: 7599b67ca705af3449de3e6a76b84294, type: 3}
+  _projectilePrefab: {fileID: 1668477645652462615, guid: 9895186ede9f488429e9b85c10f0c357, type: 3}
   _discoverability: 10
   _price: 100
