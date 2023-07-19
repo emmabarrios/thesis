@@ -5,16 +5,18 @@ using UnityEngine;
 public class Knife : Projectile
 {
     private void OnTriggerEnter(Collider other) {
+        if (other.tag == "BodyPart") {
+            Debug.Log("part");
+            if (impactFX != null) {
+                Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+                Instantiate(impactFX, contactPoint, Quaternion.identity);
+            }
 
-        if (impactFX != null) {
-            Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-            Instantiate(impactFX, contactPoint, Quaternion.identity);
-        }
+            DealDamageOnImpact(other);
 
-        DealDamageOnImpact(other);
-
-        if (destroyOnImpact == true) {
-            Destroy(gameObject);
+            if (destroyOnImpact == true) {
+                Destroy(gameObject);
+            }
         }
     }
 

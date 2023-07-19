@@ -14,6 +14,9 @@ TagManager:
   - hitArea
   - hitContactArea
   - Hittable
+  - Terrain
+  - Body Part
+  - BodyPart
   layers:
   - Default
   - TransparentFX

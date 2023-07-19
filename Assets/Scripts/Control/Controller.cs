@@ -106,7 +106,7 @@ public class Controller : MonoBehaviour {
 
         IsHitBlocked = stateInfo.IsName("Shield_Block");
 
-        if (!dashPerformed && !IsKnockBacked) {
+        if (!DashPerformed && !IsKnockBacked && !AttackPerformed) {
             Orbitate(inputMovement);
         }
 
@@ -205,15 +205,17 @@ public class Controller : MonoBehaviour {
                     default:
                         break;
                 }
-               
+
+                IsBlocking = false;
+
             }
         }
     }
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
 
-        if (!dashPerformed && player.Stamina > 0 && !IsBlocking) {
-            dashPerformed = true;
+        if (!DashPerformed && player.Stamina > 0 && !IsBlocking) {
+            DashPerformed = true;
             if (!IsUsingItem && !AttackPerformed) {
                 animator.Play("Dash");
             }
@@ -245,7 +247,7 @@ public class Controller : MonoBehaviour {
             yield return null;
         }
 
-        dashPerformed = false;
+        DashPerformed = false;
     }
 
     private void Block(object sender, EventArgs e) {

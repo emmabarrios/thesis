@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2615780029891946901}
-  - component: {fileID: 7885775452278829032}
   - component: {fileID: 3724849168954545168}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: bomb radius
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,24 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7885775452278829032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8705892945757968204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 493958f4a760aa9438a422d5df0c2f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 0}
-  explosionDamage: 100
-  explosionFX: {fileID: 8714244275622671896, guid: abf8d5b763621654486813c5c8af8234, type: 3}
-  inRangeColliders: []
-  timer: 5
-  activeRadiusThreshold: 0.1
 --- !u!135 &3724849168954545168
 SphereCollider:
   m_ObjectHideFlags: 0
