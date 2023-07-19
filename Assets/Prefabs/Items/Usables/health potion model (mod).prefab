@@ -44,11 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2677e597e6b6754a9382280b68eab86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0, z: 0.5}
-  AOffset: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
-  attachPointA: {fileID: 0}
-  attachPointB: {fileID: 0}
+  positionOffset_A: {x: 0.5, y: 0, z: 0.5}
+  positionOffset_B: {x: 0, y: 0, z: 0}
+  rotationOffset_A: {x: 0, y: 0, z: 0, w: 0}
+  rotationOffset_B: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
   child: {fileID: 6633254221006141328}
   attackToHandTimer: 0.5
   lifeTime: 2.5
@@ -59,9 +58,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6560394883507059506}
     m_Modifications:
-    - target: {fileID: 4413005756819639092, guid: 0aa832d24f9f89c4485914f62c89df7b, type: 3}
+    - target: {fileID: 4947665423365460018, guid: 0aa832d24f9f89c4485914f62c89df7b, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5869237458111247341, guid: 0aa832d24f9f89c4485914f62c89df7b, type: 3}
       propertyPath: m_RootOrder

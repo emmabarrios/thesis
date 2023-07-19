@@ -46,11 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2677e597e6b6754a9382280b68eab86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionOffset: {x: 0, y: 0, z: 0}
-  AOffset: {x: 0, y: -1, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0, w: 0}
-  attachPointA: {fileID: 0}
-  attachPointB: {fileID: 0}
+  positionOffset_A: {x: 0, y: 0, z: 0}
+  positionOffset_B: {x: 0, y: 0, z: 0}
+  rotationOffset_A: {x: 0, y: 0, z: 0, w: 0}
+  rotationOffset_B: {x: 0, y: 0, z: 0, w: 0}
+  child: {fileID: 0}
   attackToHandTimer: 0.4
   lifeTime: 0.8
 --- !u!1001 &1536311515153266931

@@ -1,8 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using static BodyPart;
 
@@ -10,16 +6,6 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField] private Collider damageCollider;
     [SerializeField] private float weaponDamage;
-    public float CriticalDamage { get; set; }
-    public float StrikeDamage { get; set; }
-    public float SlashDamage { get; set; }
-    public float ThrustDamage { get; set; }
-    public float PoisonDamage { get; set; }
-    public float FireDamage { get; set; }
-    public float LightningDamage { get; set; }
-    public float MagicDamage { get; set; }
-    public float FrostbiteDamage { get; set; }
-
 
     [SerializeField] private Transform parentTransform;
 
@@ -74,12 +60,6 @@ public class Weapon : MonoBehaviour
                     Vector3 contactPoint = collision.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
                     fx.PlayDamageEffect(contactPoint);
 
-                    //If the attack was deflected by a parry
-                    if (collisionTransformRoot.GetComponent<Character>().IsParryPerformed) {
-                        parentTransform.GetComponent<Animator>().SetTrigger("staggered");
-                        DisableDamageCollider();
-                        return;
-                    }
                     float bonusPart = partDictionary[part];
                     float totalDamage = weaponDamage + bonusPart;
                     damageable.TakeDamage(totalDamage);

@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static BodyPart;
 
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
@@ -114,21 +113,26 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     }
 
     private void DrawItem() {
-        // Instantiate model prefab
-       
-
         //GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         //IUsable usable = _item.GetComponent<IUsable>();
         //usable.Use();
 
         // Reproduce corresponding animaton in player visuals
         Animator armsAnimator = GameObject.Find("Player Visual").GetComponent<Animator>();
+
         if (itemSO.type == Item.ItemType.Usable) {
             armsAnimator.Play("Use_Item");
+           
         } else {
             armsAnimator.Play("Throw_Item");
         }
 
+        // Use usable prefab give there is one available
+        if (itemSO._usablePrefab != null) {
+            IUsable usable = itemSO._usablePrefab.GetComponent<IUsable>();
+            usable.Use();
+        }
+       
         // Instantiate item model prefab
         if (itemSO._modelPrefab != null) {
             Instantiate(itemSO._modelPrefab, Vector3.zero, Quaternion.identity);
@@ -136,7 +140,6 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         // Load proyectile to thrower if there is a projectile
         if (itemSO._projectilePrefab != null) {
-            //Projectile projectile = itemSO._projectilePrefab;
             Thrower.instance.LoadThrower(itemSO._projectilePrefab);
         }
 

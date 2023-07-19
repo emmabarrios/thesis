@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
-using System.IO.Pipes;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class Controller : MonoBehaviour {
 
     private Player player;
     private CharacterController characterController;
-    [SerializeField] private Animator animator = null;
+    [SerializeField] private Animator animator;
     [SerializeField] private PlayerAnimator playerAnimator;
 
     [Header("Orbital Settings")]
@@ -22,8 +20,16 @@ public class Controller : MonoBehaviour {
     [SerializeField] private float deaccelerationTime = 2f;
     [SerializeField] private float speedLimitMultiplier = 1f;
     [SerializeField] private float turnSpeed = 90f;
+    
     private float currentSpeed;
     private Vector3 last_movement;
+
+    [Header("Knock Back Settings")]
+    [SerializeField] private float knockBackDistance;
+    [SerializeField] private float knockBackTime;
+    [SerializeField] private float knockBackTimer;
+    [SerializeField] private bool isKnockBacked = false;
+    [SerializeField] private bool isHitBlocked = false;
 
     [Header("Dash Settings")]
     [SerializeField] private float dashDistance;
@@ -33,7 +39,7 @@ public class Controller : MonoBehaviour {
 
     [Header("Boolean parameters")]
     private bool isWalking;
-    [SerializeField] private bool parryPerformed = false;
+    [SerializeField] private bool canBlock = true;
 
     [SerializeField] private bool isBlocking = false;
     [SerializeField] private bool dashPerformed = false;
@@ -41,12 +47,14 @@ public class Controller : MonoBehaviour {
     [SerializeField] private bool isUsingItem = false;
 
     public bool IsWalking { get { return isWalking; } set { isWalking = value; } }
-    public bool ParryPerformed { get { return parryPerformed; } set { parryPerformed = value; } }
+    public bool CanBlock { get { return canBlock; } set { canBlock = value; } }
     public bool DashPerformed { get { return dashPerformed; } set { dashPerformed = value; } }
     public bool IsBlocking { get { return isBlocking; } set { isBlocking = value; } }
     public bool AttackPerformed { get { return attackPerformed; } set { attackPerformed = value; } }
+    public bool IsHitBlocked { get { return isHitBlocked; } set { isHitBlocked = value; } }
     public float CurrentSpeed { get { return currentSpeed; } }
     public bool IsUsingItem { get { return isUsingItem; } set { isUsingItem = value; } }
+    public bool IsKnockBacked { get { return isKnockBacked; } set { isKnockBacked = value; } }
 
     [Header("Input")]
     public Joystick joystick = null;
@@ -64,6 +72,8 @@ public class Controller : MonoBehaviour {
 
         player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
+        playerAnimator = GetComponentInChildren<PlayerAnimator>();
+        animator  = playerAnimator.GetComponent<Animator>();
 
         // Input
         buttonA = GameObject.Find("Button").GetComponent<Button>();
@@ -72,7 +82,9 @@ public class Controller : MonoBehaviour {
 
         // Input Event Subscribers
         buttonA.OnBlocking += Block;
-        buttonA.OnToggleValueChanged += Block;
+        //buttonA.OnToggleValueChanged += Block;
+
+        player.OnHitBlocked += HitBlocked;
         playerAnimator.OnAnimating += InheritPositionFromAnimation;
         playerAnimator.OnQuickItemAction += ToggleIsUsingItem;
 
@@ -93,18 +105,31 @@ public class Controller : MonoBehaviour {
             stateInfo.IsName("Swing_Stab") || 
             stateInfo.IsName("Swing_Down");
 
-        if (!dashPerformed) {
+        IsHitBlocked = stateInfo.IsName("Shield_Block");
+
+        if (!dashPerformed && !IsKnockBacked) {
             Orbitate(inputMovement);
         }
 
         if (player.IsBlocking != IsBlocking) {
             player.IsBlocking = IsBlocking;
         }
-        if (player.IsBusy != dashPerformed) {
-            player.IsBusy = dashPerformed;
+
+        // KnockBack timer
+        if (IsKnockBacked) {
+            Vector3 currentPosition = characterController.transform.position;
+            Vector3 targetPosition = currentPosition + (-characterController.transform.forward).normalized * knockBackDistance;
+            characterController.Move(targetPosition - currentPosition);
+            knockBackTimer -= Time.deltaTime;
+            if (knockBackTimer < 0.1f) {
+                knockBackTimer = 0;
+                IsKnockBacked = false;
+            }
         }
-        if (player.IsAttackPerformed != AttackPerformed) {
-            player.IsAttackPerformed = AttackPerformed;
+
+        CanBlock = player.Stamina > 0;
+        if (!CanBlock) {
+            IsBlocking = false;
         }
 
         animator.SetBool("isWalking", IsWalking);
@@ -157,7 +182,7 @@ public class Controller : MonoBehaviour {
 
         if (player.currentState == Player.PlayerState.Combat) {
 
-            if (player.Stamina > 0 && !AttackPerformed && !IsUsingItem && !dashPerformed) {
+            if (player.Stamina > 0 && !AttackPerformed && !IsUsingItem && !DashPerformed && !IsHitBlocked) {
 
                 switch (e.swipeDirection) {
 
@@ -188,9 +213,9 @@ public class Controller : MonoBehaviour {
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
 
-        if (!dashPerformed && player.Stamina > 0) {
+        if (!dashPerformed && player.Stamina > 0 && !IsBlocking) {
             dashPerformed = true;
-            if (!IsBlocking && !IsUsingItem && !AttackPerformed) {
+            if (!IsUsingItem && !AttackPerformed) {
                 animator.Play("Dash");
             }
             OnDash?.Invoke((int)e.point.x);
@@ -225,20 +250,17 @@ public class Controller : MonoBehaviour {
     }
 
     private void Block(object sender, EventArgs e) {
-        if (!IsBlocking) {
-            IsBlocking = true;
+
+        if (CanBlock) {
+            if (!IsBlocking) {
+                IsBlocking = true;
+            } else {
+                IsBlocking = false;
+            }
         }
-    }  
-    
-    private void Block(bool value) {
-        IsBlocking = value;
+
     }
 
-    private void ReleaseBlock(object sender, EventArgs e) {
-        if (IsBlocking) {
-            IsBlocking = false;
-        }
-    }
 
     private void InheritPositionFromAnimation() {
         Vector3 deltaPosition = animator.deltaPosition;
@@ -248,6 +270,12 @@ public class Controller : MonoBehaviour {
 
     private void ToggleIsUsingItem(bool value) {
         IsUsingItem = value;
+    }
+
+    private void HitBlocked() {
+        isKnockBacked = true;
+        knockBackTimer = knockBackTime;
+        animator.GetComponent<Animator>().Play("Shield_Block", -1, 0f);
     }
 
 }

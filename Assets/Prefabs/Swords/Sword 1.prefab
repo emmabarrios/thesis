@@ -149,16 +149,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6715545885533059547, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
   m_PrefabInstance: {fileID: 5609727877793338784}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &3847851265538407703 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
-  m_PrefabInstance: {fileID: 5609727877793338784}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &289444881023097223 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5322570165137017895, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
-  m_PrefabInstance: {fileID: 5609727877793338784}
-  m_PrefabAsset: {fileID: 0}
 --- !u!136 &139604525335933207
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -173,32 +163,6 @@ CapsuleCollider:
   m_Height: 2.43
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 1.51}
---- !u!114 &7334364878519385022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1990722990060517057}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5ceb339997c8304e9354d4ce5ddc9da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _emit: 1
-  _emitTime: 0
-  _material: {fileID: 2100000, guid: 5f402d1520e5fa74fa21e08f85b71370, type: 2}
-  _lifeTime: 1
-  _colors: []
-  _sizes: []
-  _minVertexDistance: 0.1
-  _maxVertexDistance: 10
-  _maxAngle: 3
-  _autoDestruct: 0
-  subdivisions: 4
-  _base: {fileID: 3847851265538407703}
-  _tip: {fileID: 289444881023097223}
-  _trailObject: {fileID: 0}
 --- !u!114 &8509231646763373592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageCollider: {fileID: 0}
   weaponDamage: 10
+  trail: {fileID: 0}
   parentTransform: {fileID: 0}
   Head: 50
   Arm: 10

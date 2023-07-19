@@ -4,11 +4,12 @@ using UnityEngine;
 public class ItemAttachPointManager : MonoBehaviour {
 
     [Header("Attach Points")]
-    [SerializeField] private Vector3 positionOffset;
-    [SerializeField] private Vector3 AOffset;
-    [SerializeField] private Quaternion rotationOffset;
-    [SerializeField] private Transform attachPointA;
-    [SerializeField] private Transform attachPointB;
+    [SerializeField] private Vector3 positionOffset_A;
+    [SerializeField] private Vector3 positionOffset_B;
+    [SerializeField] private Quaternion rotationOffset_A;
+    [SerializeField] private Quaternion rotationOffset_B;
+    private Transform attachPointA;
+    private Transform attachPointB;
 
     public GameObject child;
 
@@ -32,22 +33,9 @@ public class ItemAttachPointManager : MonoBehaviour {
         attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
         attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
         AttachToPoint(attachPointA);
-        this.transform.localPosition = positionOffset;
+        this.transform.localPosition = positionOffset_A;
         StartCoroutine(AttachToHand());
     }
-
-    //public void AttachToPoint(Transform point) {
-    //    this.transform.SetParent(point);
-    //    this.transform.localPosition = Vector3.zero + AOffset;
-    //    this.transform.localRotation = Quaternion.identity;
-    //}
-
-    //private IEnumerator AttachToHand() {
-    //    yield return new WaitForSeconds(attackToHandTimer);
-    //    AttachToPoint(attachPointB);
-    //    this.transform.localPosition = positionOffset;
-    //    this.transform.localRotation = rotationOffset;
-    //}
 
 
     public void AttachToPoint(Transform point) {
@@ -60,7 +48,10 @@ public class ItemAttachPointManager : MonoBehaviour {
             child.GetComponent<Animator>().enabled = false;
         }
         AttachToPoint(attachPointB);
+        this.transform.localRotation = Quaternion.identity; 
         this.transform.localPosition = Vector3.zero;
-        this.transform.localRotation = rotationOffset;
+
+        this.transform.rotation *= rotationOffset_B;
+        this.transform.position += positionOffset_B;
     }
 }

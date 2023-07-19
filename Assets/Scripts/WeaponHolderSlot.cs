@@ -32,8 +32,6 @@ public class WeaponHolderSlot : MonoBehaviour
 
         GameObject model = Instantiate(weaponItem._usablePrefab) as GameObject;
 
-        
-
         if (model != null) {
             if (parentOverride != null) {
                 model.transform.parent = parentOverride;

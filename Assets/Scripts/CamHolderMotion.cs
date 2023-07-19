@@ -82,11 +82,8 @@ public class CamHolderMotion : MonoBehaviour
         //Reset the camera's rotation to the original rotation
         cameraTransform.localRotation = originalRotation;
 
-        float _poise = player.Poise;
+        rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * poiseModifier * direction);
 
-        if (_poise > 1) {
-            rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * poiseModifier * direction);
-        }
         cameraTransform.localRotation = rotation;
 
         while (cameraTransform.localRotation != originalRotation) {

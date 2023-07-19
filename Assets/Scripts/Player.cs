@@ -14,8 +14,6 @@ public class Player : Character, IDamageable
 
     PlayerStatsManager stats;
 
-    public PlayerAnimator animator;
-
     [SerializeField] bool canDrainStamina = false;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float maxStamina = 100f;
@@ -23,9 +21,7 @@ public class Player : Character, IDamageable
     [SerializeField] private float staminaRecoverySpeed = 1f;
     [SerializeField] private float staminaRecoveryModifier = 1f;
     [SerializeField] private float staminaCost = 5f;
-    [SerializeField] private float parryWindow;
 
-    public float ParryWidow { get { return parryWindow; } set { parryWindow = value; } }
     public float StaminaRecoverySpeed { get { return staminaRecoverySpeed; } set { staminaRecoverySpeed = value; } }
     public float StaminaRecoveryModifier{ get { return staminaRecoveryModifier; } set { staminaRecoveryModifier = value; } }
     public float StaminaCost { get { return staminaCost; } set { staminaCost = value; } }
@@ -34,6 +30,7 @@ public class Player : Character, IDamageable
     public float MaxStamina { get { return maxStamina; } set { maxStamina = value; } }
 
     public Action OnDamageTaken;
+    public Action OnHitBlocked;
     public Action<float, float> OnHealthValueRestored;
     public Action<float> OnHealthValueReduced;
 
@@ -49,14 +46,8 @@ public class Player : Character, IDamageable
         public float damage;
     }
 
-
-    #region Parry Timer
-    [SerializeField] private bool isTiming = false;
-    [SerializeField] private float timer;
-    #endregion
-
     private void Start() {
-        animator = GetComponentInChildren<PlayerAnimator>();
+        //animator = GetComponentInChildren<PlayerAnimator>();
         stats = GetComponent<PlayerStatsManager>();
         currentState = PlayerState.Combat;
         stats.InitializePlayerStats(this);
@@ -65,7 +56,7 @@ public class Player : Character, IDamageable
     }
 
     private void Update() {
-        if (Stamina < MaxStamina && !IsBusy && !IsAttackPerformed && canDrainStamina) {
+        if (Stamina < MaxStamina && canDrainStamina) {
 
             if (IsBlocking) {
                 Stamina += StaminaRecoverySpeed * staminaRecoveryModifier * Time.deltaTime;
@@ -79,16 +70,6 @@ public class Player : Character, IDamageable
                 Stamina = MaxStamina;
             } else if (Stamina < -5) {
                 Stamina = -5;
-            }
-        }
-
-        // Parry window timer
-        if (isTiming) {
-            timer -= Time.deltaTime;
-            if (timer < 0.1f) {
-                timer = 0;
-                IsParryPerformed = false;
-                isTiming = false;
             }
         }
     }
@@ -139,13 +120,9 @@ public class Player : Character, IDamageable
             OnDamageTaken?.Invoke();
             OnHealthValueReduced?.Invoke(Health);
         } else {
-            animator.GetComponent<Animator>().Play("Shield_Block", -1, 0f);
+            OnHitBlocked?.Invoke();
             DrainStamina();
         }
     }
 
-    public void OpenParryWindow() {
-        timer = parryWindow;
-        isTiming = true;
-    }
 }

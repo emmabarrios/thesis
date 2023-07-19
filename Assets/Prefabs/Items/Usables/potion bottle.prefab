@@ -39,7 +39,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3502894673398976880}
-  - component: {fileID: 3793352921963784931}
   m_Layer: 3
   m_Name: Bottle_Root
   m_TagString: Untagged
@@ -65,25 +64,6 @@ Transform:
   m_Father: {fileID: 5869237458111247341}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 1, y: 0, z: 0}
---- !u!95 &3793352921963784931
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2350603923123756295}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 9a12251c883729f408032e88e88ef2ef, type: 3}
-  m_Controller: {fileID: 9100000, guid: 00fbd51d73fe91546a8f897ae07fe9f6, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3405500576359895089
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,7 +236,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5869237458111247341}
   - component: {fileID: 8108592616230859944}
-  - component: {fileID: 4413005756819639092}
+  - component: {fileID: 4947665423365460018}
   m_Layer: 3
   m_Name: potion bottle
   m_TagString: Untagged
@@ -293,7 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   potionSeal: {fileID: 3405500576359895089}
   disableSealTimer: 1.2
---- !u!95 &4413005756819639092
+--- !u!95 &4947665423365460018
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0

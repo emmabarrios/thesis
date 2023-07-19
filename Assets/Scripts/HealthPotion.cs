@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Potion : MonoBehaviour, IUsable
+public class HealthPotion : MonoBehaviour, IUsable
 {
     public float healthRecoveryPoints;
 
@@ -9,7 +9,6 @@ public class Potion : MonoBehaviour, IUsable
     public Player user;
 
     public void Use() {
-        GameObject.Find("Player Visual").GetComponent<Animator>().Play("Use_Item");
         StartCoroutine(DelayedUse());
     }
 
