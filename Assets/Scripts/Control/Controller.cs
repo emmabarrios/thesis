@@ -20,7 +20,8 @@ public class Controller : MonoBehaviour {
     [SerializeField] private float deaccelerationTime = 2f;
     [SerializeField] private float speedLimitMultiplier = 1f;
     [SerializeField] private float turnSpeed = 90f;
-    
+    private bool isWalking;
+
     private float currentSpeed;
     private Vector3 last_movement;
 
@@ -37,10 +38,8 @@ public class Controller : MonoBehaviour {
     [SerializeField] private float dirMultiplier = 1f;
     [SerializeField] private float lookRotationSpeedMultiplier = 4f;
 
-    [Header("Boolean parameters")]
-    private bool isWalking;
-    [SerializeField] private bool canBlock = true;
 
+    [SerializeField] private bool canBlock = true;
     [SerializeField] private bool isBlocking = false;
     [SerializeField] private bool dashPerformed = false;
     [SerializeField] private bool attackPerformed = false;
