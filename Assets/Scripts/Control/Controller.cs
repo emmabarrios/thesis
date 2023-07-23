@@ -81,7 +81,6 @@ public class Controller : MonoBehaviour {
 
         // Input Event Subscribers
         buttonA.OnBlocking += Block;
-        //buttonA.OnToggleValueChanged += Block;
 
         player.OnHitBlocked += HitBlocked;
         playerAnimator.OnAnimating += InheritPositionFromAnimation;
@@ -214,9 +213,9 @@ public class Controller : MonoBehaviour {
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
 
-        if (!DashPerformed && player.Stamina > 0 && !IsBlocking) {
+        if (!DashPerformed && player.Stamina > 0 && !IsBlocking &&!AttackPerformed) {
             DashPerformed = true;
-            if (!IsUsingItem && !AttackPerformed) {
+            if (!IsUsingItem) {
                 animator.Play("Dash");
             }
             OnDash?.Invoke((int)e.point.x);

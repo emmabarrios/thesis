@@ -10,7 +10,7 @@ public class CombatUIcarousel : MonoBehaviour
     // This public list is just to visualize in inspector as debug
     public List<CombatUIrow> rows = new List<CombatUIrow>();
 
-    public void InitializeUIcarousel(List<List<Item>> listOfItems) {
+    public void InitializeUIcarousel(List<List<QuickItem>> listOfItems) {
         int rowCount = listOfItems.Count;
         for (int i = 0; i < rowCount; i++) {
             GameObject tempRow = Instantiate(rowPrefab,this.transform);

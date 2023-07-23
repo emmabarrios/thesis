@@ -15,11 +15,16 @@ MonoBehaviour:
   _name: Old Round Shield
   _description: Shield goes clank clank
   _sprite: {fileID: 0}
-  _sprite_pouch: {fileID: 0}
-  _sprite_pouch_used: {fileID: 0}
   _modelPrefab: {fileID: 176636, guid: b4ea2f3e0e40943219a8997915f71646, type: 3}
-  _usablePrefab: {fileID: 5137437166238230857, guid: 55bf2065908ce2d4e87eaded792dbd99, type: 3}
   _discoverability: 40
   _price: 300
-  durability: 100
-  isUnarmed: 0
+  _equipmentPrefab: {fileID: 5137437166238230857, guid: 55bf2065908ce2d4e87eaded792dbd99, type: 3}
+  _weight: 0
+  _strikeDefense: 0
+  _slashDefense: 0
+  _thrustDefense: 0
+  _strenghtRequirement: 0
+  _dexterityRequirement: 0
+  _strikeDamage: 0
+  _slashDamage: 0
+  _thrustDamage: 0

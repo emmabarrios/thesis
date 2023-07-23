@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     [Header("New implementation")]
-    public Item itemSO;
+    public QuickItem itemSO;
     public Sprite item_holder_graphic;
     public Image fillImage = null;
 
@@ -113,14 +113,11 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     }
 
     private void DrawItem() {
-        //GameObject _item = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        //IUsable usable = _item.GetComponent<IUsable>();
-        //usable.Use();
 
         // Reproduce corresponding animaton in player visuals
         Animator armsAnimator = GameObject.Find("Player Visual").GetComponent<Animator>();
 
-        if (itemSO.type == Item.ItemType.Usable) {
+        if (itemSO.type == QuickItem.QuickItemType.Usable) {
             armsAnimator.Play("Use_Item");
            
         } else {
@@ -140,7 +137,10 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         // Load proyectile to thrower if there is a projectile
         if (itemSO._projectilePrefab != null) {
-            Thrower.instance.LoadThrower(itemSO._projectilePrefab);
+            Projectile projectile = itemSO._projectilePrefab.GetComponent<Projectile>();
+            if (projectile != null) {
+                Thrower.instance.LoadThrower(projectile);
+            }
         }
 
         // Use Item Cooldown
@@ -209,7 +209,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     public void InitializeQuickItemGraphics() {
         item_image_gameObject.GetComponent<Image>().sprite = itemSO._sprite;
-        item_holder_gameObject.GetComponent<Image>().sprite = itemSO._sprite_pouch;
+        item_holder_gameObject.GetComponent<Image>().sprite = itemSO._slot_sprite;
     }
 
 }

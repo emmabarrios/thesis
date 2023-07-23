@@ -16,8 +16,15 @@ MonoBehaviour:
   _description: Sword goes whoosh
   _sprite: {fileID: 0}
   _modelPrefab: {fileID: 6231215843636208481, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
-  _usablePrefab: {fileID: 952802527015294292, guid: 9bf516c516b2c204396ea73f88eac754, type: 3}
   _discoverability: 50
   _price: 500
-  durability: 100
-  isUnarmed: 0
+  _equipmentPrefab: {fileID: 952802527015294292, guid: 9bf516c516b2c204396ea73f88eac754, type: 3}
+  _weight: 0
+  _strikeDefense: 0
+  _slashDefense: 0
+  _thrustDefense: 0
+  _strenghtRequirement: 0
+  _dexterityRequirement: 0
+  _strikeDamage: 0
+  _slashDamage: 0
+  _thrustDamage: 0

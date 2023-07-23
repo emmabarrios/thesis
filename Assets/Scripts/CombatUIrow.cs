@@ -7,7 +7,7 @@ public class CombatUIrow : MonoBehaviour
     public List<GameObject> slots = new List<GameObject>();
     public PouchItem pouchItemPrefab;
 
-    public void LoadSlotItems(List<Item> itemList) {
+    public void LoadSlotItems(List<QuickItem> itemList) {
 
         for (int i = 0; i < slots.Count; i++) {
 
@@ -18,7 +18,7 @@ public class CombatUIrow : MonoBehaviour
                 currentPouchItem.transform.SetParent(slots[i].transform, false);
 
                 GameObject slot_child = slots[i];
-                slot_child.transform.GetChild(0).GetComponent<Image>().sprite = currentPouchItem.itemSO._sprite_pouch_used;
+                slot_child.transform.GetChild(0).GetComponent<Image>().sprite = currentPouchItem.itemSO._slot_empty_sprite;
             }
         }
     }

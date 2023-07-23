@@ -30,7 +30,7 @@ public class WeaponHolderSlot : MonoBehaviour
             return;
         }
 
-        GameObject model = Instantiate(weaponItem._usablePrefab) as GameObject;
+        GameObject model = Instantiate(weaponItem._equipmentPrefab);
 
         if (model != null) {
             if (parentOverride != null) {
@@ -49,7 +49,6 @@ public class WeaponHolderSlot : MonoBehaviour
     void SetLayerAllChildren(Transform root, int layer) {
         var children = root.GetComponentsInChildren<Transform>(includeInactive: true);
         foreach (var child in children) {
-            //            Debug.Log(child.name);
             child.gameObject.layer = layer;
         }
     }

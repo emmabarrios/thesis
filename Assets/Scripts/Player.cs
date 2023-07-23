@@ -29,6 +29,11 @@ public class Player : Character, IDamageable
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float MaxStamina { get { return maxStamina; } set { maxStamina = value; } }
 
+
+    [SerializeField] private bool isBlocking = false;
+
+    public bool IsBlocking { get { return isBlocking; } set { isBlocking = value; } }
+
     public Action OnDamageTaken;
     public Action OnHitBlocked;
     public Action<float, float> OnHealthValueRestored;

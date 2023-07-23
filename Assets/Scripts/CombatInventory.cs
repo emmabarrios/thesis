@@ -6,12 +6,10 @@ public class CombatInventory : MonoBehaviour
     // Make it "singleton"
     public static CombatInventory instance;
 
-    [Header("Usable Items")]
-    public List<Item> itemList1 = new List<Item>();
-    public List<Item> itemList2 = new List<Item>();
-    public List<Item> itemList3 = new List<Item>();
-    public List<Item> itemList4 = new List<Item>();
-    public List<List<Item>> itemLists = new List<List<Item>>();
+    [Header("Quick Items")]
+    public List<QuickItem> itemList1 = new List<QuickItem>();
+    public List<QuickItem> itemList2 = new List<QuickItem>();
+    public List<List<QuickItem>> itemLists = new List<List<QuickItem>>();
 
     [Header("Main Weapoms")]
     public WeaponItem leftWeaponItemSO;
@@ -26,8 +24,6 @@ public class CombatInventory : MonoBehaviour
     void Start() {
         itemLists.Add(itemList1);
         itemLists.Add(itemList2);
-        itemLists.Add(itemList3);
-        itemLists.Add(itemList4);
 
         weaponSlotManager.LoadWeaponOnSlot(leftWeaponItemSO, true);
         weaponSlotManager.LoadWeaponOnSlot(RightWeaponItemSO, false);

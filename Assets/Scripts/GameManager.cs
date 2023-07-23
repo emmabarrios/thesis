@@ -30,4 +30,5 @@ public class GameManager : MonoBehaviour
     public void InitializeCombatInventoryUI() {
         GameObject.Find("Carousel").GetComponent<CombatUIcarousel>().InitializeUIcarousel(CombatInventory.instance.itemLists);
     }
+
 }
