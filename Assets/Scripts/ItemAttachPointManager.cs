@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class ItemAttachPointManager : MonoBehaviour {
@@ -44,10 +45,12 @@ public class ItemAttachPointManager : MonoBehaviour {
 
     private IEnumerator AttachToHand() {
         yield return new WaitForSeconds(attackToHandTimer);
-        if (child!=null) {
-            child.GetComponent<Animator>().enabled = false;
+        if (child != null) {
+            Animator childAnmator = child.GetComponent<Animator>();
+            childAnmator.SetTrigger("isAttached");
         }
         AttachToPoint(attachPointB);
+       
         this.transform.localRotation = Quaternion.identity; 
         this.transform.localPosition = Vector3.zero;
 

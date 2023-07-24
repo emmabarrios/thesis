@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2677e597e6b6754a9382280b68eab86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionOffset_A: {x: 0.5, y: 0, z: 0.5}
+  positionOffset_A: {x: 0, y: 0, z: 0.5}
   positionOffset_B: {x: 0, y: 0, z: 0}
   rotationOffset_A: {x: 0, y: 0, z: 0, w: 0}
   rotationOffset_B: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
@@ -60,7 +60,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4947665423365460018, guid: 0aa832d24f9f89c4485914f62c89df7b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5869237458111247341, guid: 0aa832d24f9f89c4485914f62c89df7b, type: 3}
       propertyPath: m_RootOrder
