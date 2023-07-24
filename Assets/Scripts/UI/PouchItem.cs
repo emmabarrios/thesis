@@ -124,22 +124,21 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
             armsAnimator.Play("Throw_Item");
         }
 
-        // Use usable prefab give there is one available
+        // Instantiate quick item prefab
         if (itemSO._usablePrefab != null) {
-            IUsable usable = itemSO._usablePrefab.GetComponent<IUsable>();
-            usable.Use();
+            GameObject usablePrefab = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity);
+            IUsable usable = usablePrefab.GetComponent<IUsable>();
+            if (usable != null) {
+                Debug.Log("used");
+                usable.Use();
+            }
         }
        
-        // Instantiate item model prefab
-        if (itemSO._modelPrefab != null) {
-            Instantiate(itemSO._modelPrefab, Vector3.zero, Quaternion.identity);
-        }
-
         // Load proyectile to thrower if there is a projectile
         if (itemSO._projectilePrefab != null) {
             Projectile projectile = itemSO._projectilePrefab.GetComponent<Projectile>();
             if (projectile != null) {
-                Thrower.instance.LoadThrower(projectile);
+                GameObject.FindWithTag("Thrower").GetComponent<Thrower>().LoadThrower(projectile);
             }
         }
 

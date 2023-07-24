@@ -122,6 +122,9 @@ public class Player : Character, IDamageable
     public void TakeDamage(float damage) {
         if (!IsBlocking) {
             Health -= damage;
+            if (Health<0f) {
+                Health = 0f;
+            }
             OnDamageTaken?.Invoke();
             OnHealthValueReduced?.Invoke(Health);
         } else {

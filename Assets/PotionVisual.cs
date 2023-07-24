@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PotionVisual : MonoBehaviour
@@ -5,6 +6,8 @@ public class PotionVisual : MonoBehaviour
     [SerializeField] private GameObject potionSeal;
     [Range(0f, 10f)] public float disableSealTimer;
     private bool isTiming;
+
+    [Range(0f, 10f)] public float useTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -24,4 +27,5 @@ public class PotionVisual : MonoBehaviour
             }
         }
     }
+
 }

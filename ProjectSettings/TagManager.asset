@@ -17,6 +17,7 @@ TagManager:
   - Terrain
   - Body Part
   - BodyPart
+  - Thrower
   layers:
   - Default
   - TransparentFX

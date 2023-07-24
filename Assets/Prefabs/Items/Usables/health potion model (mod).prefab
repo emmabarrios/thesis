@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6560394883507059506}
   - component: {fileID: 3504752780992366353}
+  - component: {fileID: 2843014427767822840}
   m_Layer: 3
   m_Name: health potion model (mod)
   m_TagString: Untagged
@@ -51,6 +52,20 @@ MonoBehaviour:
   child: {fileID: 6633254221006141328}
   attackToHandTimer: 0.5
   lifeTime: 2.5
+--- !u!114 &2843014427767822840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8566957488878146660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dcdc3a439d0bfd4c8d5363d58ddfd7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthPoints: 25
+  delayUseTime: 0
 --- !u!1001 &447656686438391495
 PrefabInstance:
   m_ObjectHideFlags: 0
