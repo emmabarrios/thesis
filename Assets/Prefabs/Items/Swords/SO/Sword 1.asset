@@ -28,4 +28,4 @@ MonoBehaviour:
   _strikeDamage: 0
   _slashDamage: 0
   _thrustDamage: 0
-  _attackCooldown: 0.5
+  _attackCooldown: 0.6

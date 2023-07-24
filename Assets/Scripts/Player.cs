@@ -14,11 +14,12 @@ public class Player : Character, IDamageable
 
     PlayerStatsManager stats;
 
-    [SerializeField] bool canDrainStamina = false;
+    [SerializeField] bool canRecoverStamina = false;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float beginHealthRecoverDelay;
     [SerializeField] private float staminaRecoverySpeed = 1f;
+    [SerializeField] private float staminaRecoveryDelay = 1f;
     [SerializeField] private float staminaRecoveryModifier = 1f;
     [SerializeField] private float staminaCost = 5f;
 
@@ -61,7 +62,7 @@ public class Player : Character, IDamageable
     }
 
     private void Update() {
-        if (Stamina < MaxStamina && canDrainStamina) {
+        if (Stamina < MaxStamina && canRecoverStamina) {
 
             if (IsBlocking) {
                 Stamina += StaminaRecoverySpeed * staminaRecoveryModifier * Time.deltaTime;
@@ -73,15 +74,23 @@ public class Player : Character, IDamageable
 
             if (Stamina > MaxStamina) {
                 Stamina = MaxStamina;
-            } else if (Stamina < -5) {
-                Stamina = -5;
+            } else if (Stamina < -20) {
+                Stamina = -20;
             }
         }
     }
 
     public void DrainStamina() {
-        canDrainStamina = false;
-        StartCoroutine(DelayStaminaDrain(.15f));
+        this.Stamina -= StaminaCost;
+        OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
+        canRecoverStamina = false;
+        StartCoroutine(DelayStaminaRecover(staminaRecoveryDelay));
+    }
+
+    private IEnumerator DelayStaminaRecover(float time) {
+        yield return new WaitForSeconds(time);
+        canRecoverStamina = true;
+        //OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
     }
 
     public void RecoverHealth(float value) {
@@ -110,13 +119,6 @@ public class Player : Character, IDamageable
         float currentValue = Health - _tempHealth;
 
         OnHealthValueRestored?.Invoke(currentValue, targetValue);
-    }
-
-    private IEnumerator DelayStaminaDrain(float time) {
-        yield return new WaitForSeconds(time);
-        canDrainStamina = true;
-        this.Stamina -= StaminaCost;
-        OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
     }
 
     public void TakeDamage(float damage) {

@@ -26,8 +26,8 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     public RectTransform activeAnchor = null;
     public RectTransform inactiveAnchor = null;
 
-    private Vector2 activeAnchorPosition;
-    private Vector2 inactiveAnchorPosition;
+    //private Vector2 activeAnchorPosition;
+    //private Vector2 inactiveAnchorPosition;
 
     private Canvas canvas;
 
@@ -36,13 +36,12 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
     
     public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
     public event EventHandler<OnBlockingEventArgs> OnBlocking;
-    //public event EventHandler<OnParryEventArgs> OnParry;
     public event EventHandler OnParry;
     public event EventHandler<OnTensionReleasedEventArgs> OnTensionReleased;
     public event EventHandler OnHandleDroped;
 
-    Vector2 initialTouchPosition;
-    float eventSwipeThreshold = 160f;
+    //Vector2 initialTouchPosition;
+    //float eventSwipeThreshold = 160f;
 
 
     [SerializeField] private Vector2 scale;
@@ -97,32 +96,32 @@ public class Button : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointer
         handle.pivot = center;
         handle.anchoredPosition = Vector2.zero;
 
-        activeAnchorPosition = activeAnchor.anchoredPosition;
-        inactiveAnchorPosition = inactiveAnchor.anchoredPosition;
+        //activeAnchorPosition = activeAnchor.anchoredPosition;
+        //inactiveAnchorPosition = inactiveAnchor.anchoredPosition;
     }
 
     public void OnPointerDown(PointerEventData eventData) {
 
-        initialTouchPosition = eventData.position;
+        //initialTouchPosition = eventData.position;
 
         // Button swapping 
-        if (!IsActive) {
-            IsActive = true;
-            this.GetComponent<RectTransform>().localScale = deactiveButton.GetComponent<Button>().Scale;
-            deactiveButton.GetComponent<RectTransform>().localScale = Scale;
+        //if (!IsActive) {
+        //    IsActive = true;
+        //    this.GetComponent<RectTransform>().localScale = deactiveButton.GetComponent<Button>().Scale;
+        //    deactiveButton.GetComponent<RectTransform>().localScale = Scale;
 
-            Scale = this.GetComponent<RectTransform>().localScale;
-            deactiveButton.GetComponent<Button>().Scale = deactiveButton.GetComponent<RectTransform>().localScale;
+        //    Scale = this.GetComponent<RectTransform>().localScale;
+        //    deactiveButton.GetComponent<Button>().Scale = deactiveButton.GetComponent<RectTransform>().localScale;
 
-            SetAnchorPosition(activeAnchorPosition);
-            deactiveButton.GetComponent<Button>().IsActive = false;
-            deactiveButton.GetComponent<Button>().SetAnchorPosition(inactiveAnchorPosition);
-        }
+        //    SetAnchorPosition(activeAnchorPosition);
+        //    deactiveButton.GetComponent<Button>().IsActive = false;
+        //    deactiveButton.GetComponent<Button>().SetAnchorPosition(inactiveAnchorPosition);
+        //}
 
         // Axis Option Both state
-        if (axisOptions == AxisOptions.Both) {
-            OnDrag(eventData);
-        }
+        //if (axisOptions == AxisOptions.Both) {
+        //    OnDrag(eventData);
+        //}
 
         // Axis Option None state
         if (axisOptions == AxisOptions.Shield) {

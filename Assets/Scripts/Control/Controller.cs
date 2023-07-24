@@ -69,7 +69,7 @@ public class Controller : MonoBehaviour {
     public Action OnReleaseBlock;
     public Action OnParry;
     public Action<int> OnDash;
-    public Action<string> OnAttack;
+    public Action<float> OnAttack;
 
     private void Start() {
 
@@ -219,7 +219,7 @@ public class Controller : MonoBehaviour {
     private void Attack(string attackAnimation) {
         animator.Play(attackAnimation,-1,0);
         player.DrainStamina();
-        //OnAttack?.Invoke(attackAnimation);
+        OnAttack?.Invoke(attackCooldown);
         AttackPerformed = true;
         attackTimer = attackCooldown;
     }
