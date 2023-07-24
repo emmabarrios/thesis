@@ -2717,6 +2717,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1354348068}
     - target: {fileID: 870137481267956605, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 870137481267956605, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 870137481267956605, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
@@ -2830,11 +2838,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5704831906136594259, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -65
+      value: -110
       objectReference: {fileID: 0}
     - target: {fileID: 5704831906136594259, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 753
+      value: 410
       objectReference: {fileID: 0}
     - target: {fileID: 5704831906136594259, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2859,7 +2867,7 @@ PrefabInstance:
     - target: {fileID: 7508551065194755121, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+      objectReference: {fileID: 21300000, guid: 83adf99002fa21b9f8602d8d97948c61, type: 3}
     - target: {fileID: 7508551065194755121, guid: afcaf66ea91a73741be9bbd7affcdb9d, type: 3}
       propertyPath: m_Color.a
       value: 1
@@ -4000,6 +4008,22 @@ MonoBehaviour:
   inactiveAnchor: {fileID: 1354348068}
   scale: {x: 0, y: 0}
   toggleValue: 0
+--- !u!114 &822662147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822662141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4781378a23fb841886647265b8c44d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axis: 1
+  toggle: {fileID: 1218134903}
+  length: 250
+  fromPosition: {x: 0, y: 0}
 --- !u!1 &870463520
 GameObject:
   m_ObjectHideFlags: 0
@@ -5538,7 +5562,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78504eeb489d9544496056f78dae818a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonA: {fileID: 822662141}
+  buttonA: {fileID: 0}
+  buttonB: {fileID: 0}
   QuickItemPanel: {fileID: 1890579096}
 --- !u!114 &1218134903
 MonoBehaviour:
@@ -5987,6 +6012,7 @@ MonoBehaviour:
   joystick: {fileID: 1281903277}
   gestureInput: {fileID: 2083568618}
   buttonA: {fileID: 822662145}
+  quickItemToggle: {fileID: 0}
   attackCooldown: 0
   attackTimer: 0
 --- !u!4 &1324944687
@@ -12017,6 +12043,10 @@ PrefabInstance:
     - target: {fileID: 8643628448476613004, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: m_Name
       value: Player Visual
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878072157362844880, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8878072157362844883, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: camAnimator

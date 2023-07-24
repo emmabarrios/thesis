@@ -24,26 +24,6 @@ public class MoveLenghtOnAxis : MonoBehaviour
 
     void Move() {
 
-        //if (toggle.isOn) {
-        //    if (axis == Axis.Vertical) {
-        //        targetPosition = fromPosition + new Vector2(0f, lenght);
-        //        rectTransform.position = targetPosition;
-        //    } else {
-        //        targetPosition = fromPosition + new Vector2(lenght, 0f);
-        //        rectTransform.position = targetPosition;
-        //    }
-
-        //} else {
-        //    if (axis == Axis.Vertical) {
-        //        targetPosition = fromPosition + new Vector2(0f, -lenght);
-        //        rectTransform.position = targetPosition; ;
-        //    } else {
-        //        targetPosition = fromPosition + new Vector2(-lenght,0f);
-        //        rectTransform.position = targetPosition; ;
-        //    }
-
-        //}
-
         Vector2 offset = Vector2.zero;
 
         if (toggle.isOn) {

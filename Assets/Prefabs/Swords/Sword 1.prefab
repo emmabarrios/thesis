@@ -137,6 +137,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.67785674
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7351306
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.0067747845
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0068904436
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -94.772
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 13.423996
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -13.414978
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
 --- !u!1 &1990722990060517057 stripped
@@ -147,6 +187,16 @@ GameObject:
 --- !u!4 &1219253595962272891 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6715545885533059547, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+  m_PrefabInstance: {fileID: 5609727877793338784}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3847851265538407703 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8700833114312566967, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+  m_PrefabInstance: {fileID: 5609727877793338784}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &289444881023097223 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5322570165137017895, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
   m_PrefabInstance: {fileID: 5609727877793338784}
   m_PrefabAsset: {fileID: 0}
 --- !u!136 &139604525335933207
@@ -163,6 +213,34 @@ CapsuleCollider:
   m_Height: 2.43
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 1.51}
+--- !u!114 &1684426456619900258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990722990060517057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5ceb339997c8304e9354d4ce5ddc9da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _emit: 0
+  _use: 1
+  _emitTimer: 0
+  _emitTime: 0.5
+  _material: {fileID: 2100000, guid: 5f402d1520e5fa74fa21e08f85b71370, type: 2}
+  _lifeTime: 0.5
+  _colors: []
+  _sizes: []
+  _minVertexDistance: 0.2
+  _maxVertexDistance: 10
+  _maxAngle: 3
+  _autoDestruct: 0
+  subdivisions: 4
+  _base: {fileID: 3847851265538407703}
+  _tip: {fileID: 289444881023097223}
+  _trailObject: {fileID: 0}
 --- !u!114 &8509231646763373592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageCollider: {fileID: 0}
   weaponDamage: 10
-  trail: {fileID: 0}
+  weaponTrail: {fileID: 0}
   parentTransform: {fileID: 0}
   Head: 50
   Arm: 10

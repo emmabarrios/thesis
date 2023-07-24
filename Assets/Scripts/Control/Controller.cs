@@ -59,6 +59,7 @@ public class Controller : MonoBehaviour {
     public Joystick joystick = null;
     public GestureInput gestureInput;
     public Button buttonA;
+    public ItemPanelToggle quickItemToggle = null;
 
     [Header("Attack Details")]
     public float attackCooldown;
@@ -82,6 +83,7 @@ public class Controller : MonoBehaviour {
         buttonA = GameObject.Find("Button").GetComponent<Button>();
         joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
         gestureInput = GameObject.Find("Gesture Input").GetComponent<GestureInput>();
+        quickItemToggle = GameObject.Find("Pouch Toggle").GetComponent<ItemPanelToggle>();
 
         // Input Event Subscribers
         buttonA.OnBlocking += Block;
@@ -92,6 +94,7 @@ public class Controller : MonoBehaviour {
 
         gestureInput.SwipeDirectionChanged += ProcessGestureSwipes;
         joystick.OnDoubleTap += Dash;
+        quickItemToggle.OnToggleValueChanged += ToggleWeaponActivation;
 
         // Initial Values
         currentSpeed = 0f;
@@ -293,6 +296,10 @@ public class Controller : MonoBehaviour {
 
     private IEnumerator LoadWeaponSettings() {
         yield return attackCooldown = CombatInventory.instance.RightWeaponItemSO._attackCooldown;
+    }
+
+    private void ToggleWeaponActivation(bool value) {
+
     }
 
 }

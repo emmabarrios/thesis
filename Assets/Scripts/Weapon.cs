@@ -6,6 +6,7 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField] private Collider damageCollider;
     [SerializeField] private float weaponDamage;
+    [SerializeField] private MeleeWeaponTrail weaponTrail; 
 
     [SerializeField] private Transform parentTransform;
 
@@ -23,6 +24,7 @@ public class Weapon : MonoBehaviour
         damageCollider.gameObject.SetActive(true);
         damageCollider.isTrigger = true;
         damageCollider.enabled = false;
+        weaponTrail = GetComponent<MeleeWeaponTrail>();
     }
 
     private void Start() {
@@ -43,6 +45,10 @@ public class Weapon : MonoBehaviour
 
     public void DisableDamageCollider() {
         damageCollider.enabled = false;
+    }
+
+    public void EnableSwingTrail() {
+        weaponTrail.ActivateTrail();
     }
 
     private void OnTriggerEnter(Collider collision) {

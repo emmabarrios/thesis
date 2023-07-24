@@ -40,6 +40,7 @@ public class WeaponSlotManager : MonoBehaviour
 
     public void OpenRightHandWeaponCollider() {
         rightHandWeapon.EnableDamageCollider();
+        rightHandWeapon.EnableSwingTrail();
     }
 
     public void OpenLeftHandWeaponCollider() {

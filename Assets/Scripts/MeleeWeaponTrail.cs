@@ -15,15 +15,19 @@ public class MeleeWeaponTrail : MonoBehaviour
 {
 	[SerializeField]
 	bool _emit = true;
-	public bool Emit { set{_emit = value;} }
+	public bool Emit { get { return _emit; } set {_emit = value;} }
 
-	bool _use = true;
-	public bool Use { set{_use = value;} }
-
-	[SerializeField]
-	float _emitTime = 0.0f;
+    [SerializeField]
+    bool _use = true;
+	public bool Use { get { return _use; } set{_use = value;} }
 
 	[SerializeField]
+	float _emitTimer = 0.0f;
+    [SerializeField]
+    float _emitTime = 0.0f;
+    //public float EmitTime { get { return _emitTime; } set { _emitTime = value;} }
+
+    [SerializeField]
 	Material _material;
 
 	[SerializeField]
@@ -125,14 +129,14 @@ public class MeleeWeaponTrail : MonoBehaviour
 	{
 		if (!_use)
 		{
-			return;
+            return;
 		}
 
-		if (_emit && _emitTime != 0)
+		if (_emit && _emitTimer != 0)
 		{
-			_emitTime -= Time.deltaTime;
-			if (_emitTime == 0) _emitTime = -1;
-			if (_emitTime < 0) _emit = false;
+			_emitTimer -= Time.deltaTime;
+			if (_emitTimer == 0) _emitTimer = -1;
+			if (_emitTimer < 0) _emit = false;
 		}
 
 		if (!_emit && _points.Count == 0 && _autoDestruct)
@@ -373,5 +377,10 @@ public class MeleeWeaponTrail : MonoBehaviour
 		{
 			pointList.Remove(p);
 		}
+	}
+
+	public void ActivateTrail() {
+		_emit = true;
+		_emitTimer = _emitTime;
 	}
 }

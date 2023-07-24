@@ -90,7 +90,6 @@ public class Player : Character, IDamageable
     private IEnumerator DelayStaminaRecover(float time) {
         yield return new WaitForSeconds(time);
         canRecoverStamina = true;
-        //OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
     }
 
     public void RecoverHealth(float value) {
