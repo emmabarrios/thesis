@@ -603,7 +603,7 @@ Transform:
   - {fileID: 1545848059}
   - {fileID: 14110619}
   m_Father: {fileID: 1324944687}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &92373487
 MonoBehaviour:
@@ -771,7 +771,7 @@ Transform:
   - {fileID: 419755888}
   - {fileID: 712359070}
   m_Father: {fileID: 1324944687}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &175364828
 GameObject:
@@ -3665,7 +3665,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1324944687}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &887448170
 GameObject:
@@ -5624,6 +5624,8 @@ MonoBehaviour:
   joystick: {fileID: 1281903277}
   gestureInput: {fileID: 2083568618}
   buttonA: {fileID: 822662145}
+  attackCooldown: 0
+  attackTimer: 0
 --- !u!4 &1324944687
 Transform:
   m_ObjectHideFlags: 0
@@ -5636,7 +5638,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1811856}
-  - {fileID: 1393933682}
   - {fileID: 870463521}
   - {fileID: 2004464570}
   - {fileID: 92373486}
@@ -5996,56 +5997,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4685811350595243531, guid: f828b7c1152162b4e8992995efede6a0, type: 3}
   m_PrefabInstance: {fileID: 1938834246}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1393933681
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1393933682}
-  - component: {fileID: 1393933683}
-  m_Layer: 3
-  m_Name: Seal Thrower
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1393933682
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1393933681}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.101, y: 0.194, z: 0.419}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1324944687}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1393933683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1393933681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef371aad281358547b9c33c7de20e2b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _timer: 0
-  _isTiming: 0
-  _projectile: {fileID: 0}
-  _throwForce: 0
-  _throwUpwardForce: 0
-  _rotationForce: 0
-  _offset: {x: 0, y: 0, z: 0}
 --- !u!1 &1396258416
 GameObject:
   m_ObjectHideFlags: 0
@@ -8241,7 +8192,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1324944687}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2046590811
 GameObject:
@@ -11702,6 +11653,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Visual
       objectReference: {fileID: 0}
+    - target: {fileID: 8878072157362844883, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
+      propertyPath: camAnimator
+      value: 
+      objectReference: {fileID: 92373489}
     - target: {fileID: 8989051728139162422, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: m_RootOrder
       value: 6

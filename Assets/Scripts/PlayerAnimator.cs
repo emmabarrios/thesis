@@ -35,11 +35,11 @@ public class PlayerAnimator : MonoBehaviour {
     }
 
     public void RotateCameraRight() {
-        //OnSwingLeft?.Invoke();
+        OnSwingLeft?.Invoke();
     }
 
     public void RotateCameraLeft() {
-        //OnSwingRight?.Invoke();
+        OnSwingRight?.Invoke();
     }
 
     public void QuickItemAction() {

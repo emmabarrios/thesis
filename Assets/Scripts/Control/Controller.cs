@@ -60,12 +60,16 @@ public class Controller : MonoBehaviour {
     public GestureInput gestureInput;
     public Button buttonA;
 
+    [Header("Attack Details")]
+    public float attackCooldown;
+    public float attackTimer;
+
     // Events
     public Action OnBlocking;
     public Action OnReleaseBlock;
     public Action OnParry;
     public Action<int> OnDash;
-    public Action<GestureInput.SwipeDir> OnAttack;
+    public Action<string> OnAttack;
 
     private void Start() {
 
@@ -91,18 +95,23 @@ public class Controller : MonoBehaviour {
 
         // Initial Values
         currentSpeed = 0f;
-    }
+        StartCoroutine(LoadWeaponSettings());
+    } 
 
     private void Update() {
 
         Vector2 inputMovement = joystick.Direction;
 
         // Evaluate attack performed
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        AttackPerformed = stateInfo.IsName("Swing_Left") || stateInfo.IsName("Swing_Right") || 
-            stateInfo.IsName("Swing_Stab") || 
-            stateInfo.IsName("Swing_Down");
+        if (AttackPerformed) {
+            attackTimer -= Time.deltaTime;
+            if (attackTimer < 0.1f) {
+                attackTimer = 0;
+                AttackPerformed = false;
+            }
+        }
 
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         IsHitBlocked = stateInfo.IsName("Shield_Block");
 
         if (!DashPerformed && !IsKnockBacked && !AttackPerformed) {
@@ -185,20 +194,16 @@ public class Controller : MonoBehaviour {
                 switch (e.swipeDirection) {
 
                     case GestureInput.SwipeDir.Left:
-                        animator.Play("Swing_Left");
-                        player.DrainStamina();
+                        Attack("Swing_Left");
                         break;
                     case GestureInput.SwipeDir.Up:
-                        animator.Play("Swing_Stab");
-                        player.DrainStamina();
+                        Attack("Swing_Stab");
                         break;
                     case GestureInput.SwipeDir.Down:
-                        animator.Play("Swing_Down");
-                        player.DrainStamina();
+                        Attack("Swing_Down");
                         break;
                     case GestureInput.SwipeDir.Right:
-                        animator.Play("Swing_Right");
-                        player.DrainStamina();
+                        Attack("Swing_Right");
                         break;
 
                     default:
@@ -209,6 +214,14 @@ public class Controller : MonoBehaviour {
 
             }
         }
+    }
+
+    private void Attack(string attackAnimation) {
+        animator.Play(attackAnimation,-1,0);
+        player.DrainStamina();
+        //OnAttack?.Invoke(attackAnimation);
+        AttackPerformed = true;
+        attackTimer = attackCooldown;
     }
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
@@ -276,6 +289,10 @@ public class Controller : MonoBehaviour {
         isKnockBacked = true;
         knockBackTimer = knockBackTime;
         animator.GetComponent<Animator>().Play("Shield_Block", -1, 0f);
+    }
+
+    private IEnumerator LoadWeaponSettings() {
+        yield return attackCooldown = CombatInventory.instance.RightWeaponItemSO._attackCooldown;
     }
 
 }
