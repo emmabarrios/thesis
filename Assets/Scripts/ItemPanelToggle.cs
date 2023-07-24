@@ -29,9 +29,12 @@ public class ItemPanelToggle : MonoBehaviour
     }
 
     void ToggleValueChanged(Toggle change) {
-
-        //buttonA.SetActive(!change.isOn);
-        //buttonB.SetActive(!change.isOn);
+        if (buttonA!=null) {
+            buttonA.SetActive(!change.isOn);
+        }
+        if (buttonB!=null) {
+            buttonB.SetActive(!change.isOn);
+        }
         OnToggleValueChanged?.Invoke(change.isOn);
     }
 

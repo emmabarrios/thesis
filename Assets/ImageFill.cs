@@ -10,15 +10,14 @@ public class ImageFill : MonoBehaviour
     public bool coolingDown;
     public float waitTime;
 
-    Controller controller;
+    public Controller controller = null;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GameObject.FindWithTag("Player").GetComponent<Controller>();
         controller.OnAttack += ResetFill;
-        ResetFill(1f);
+        //ResetFill(1f);
     }
 
     // Update is called once per frame
@@ -37,4 +36,5 @@ public class ImageFill : MonoBehaviour
         waitTime = coolDown;
         coolingDown = true;
     }
+
 }
