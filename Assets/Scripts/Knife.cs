@@ -6,17 +6,15 @@ public class Knife : Projectile
 {
     private void OnTriggerEnter(Collider other) {
         if (other.tag == "BodyPart") {
-            Debug.Log("part");
+            DealDamageOnImpact(other);
+        }
+
+        if ((other.tag == "BodyPart" || other.tag == "Terrain") && destroyOnImpact == true) {
             if (impactFX != null) {
                 Vector3 contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
                 Instantiate(impactFX, contactPoint, Quaternion.identity);
             }
-
-            DealDamageOnImpact(other);
-
-            if (destroyOnImpact == true) {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 
