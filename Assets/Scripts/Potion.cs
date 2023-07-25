@@ -1,12 +1,12 @@
-using System.Collections;
 using UnityEngine;
 
 public class Potion : MonoBehaviour, IUsable {
 
     public float healthPoints;
+    Player player;
     
     public void Use() {
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        player = GameObject.Find("Player").GetComponent<Player>();
         player.RecoverHealth(healthPoints);
     }
 

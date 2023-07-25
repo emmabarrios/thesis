@@ -213,7 +213,7 @@ public class Controller : MonoBehaviour {
                         break;
                 }
 
-                IsBlocking = false;
+               // IsBlocking = false;
 
             }
         }

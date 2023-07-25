@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
@@ -41,6 +42,9 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public GameObject item_holder_gameObject;
     public Sprite imageSprite;
 
+    [SerializeField] private GameObject usablePrefab;
+    [SerializeField] private GameObject projectilePrefab;
+
     private Coroutine longPressCoroutine;
 
     public bool canDraw = false;
@@ -51,10 +55,16 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     public PlayerAnimator playerAnimator;
 
+    Animator armsAnimator;
+
     public void Start() {
         scale = fillImage.GetComponent<RectTransform>().localScale;
         toggle = GameObject.Find("Pouch Toggle").GetComponent<Toggle>();
         playerAnimator = GameObject.Find("Player Visual").GetComponent<PlayerAnimator>();
+        armsAnimator = GameObject.Find("Player Visual").GetComponent<Animator>();
+
+        usablePrefab = itemSO._usablePrefab;
+        projectilePrefab = itemSO._projectilePrefab;
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -115,7 +125,6 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     private void DrawItem() {
 
         // Reproduce corresponding animaton in player visuals
-        Animator armsAnimator = GameObject.Find("Player Visual").GetComponent<Animator>();
 
         if (itemSO.type == QuickItem.QuickItemType.Usable) {
             armsAnimator.Play("Use_Item");
@@ -125,18 +134,18 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         }
 
         // Instantiate quick item prefab
-        if (itemSO._usablePrefab != null) {
-            GameObject usablePrefab = Instantiate(itemSO._usablePrefab, Vector3.zero, Quaternion.identity);
-            IUsable usable = usablePrefab.GetComponent<IUsable>();
-            if (usable != null) {
-                Debug.Log("used");
-                usable.Use();
+        if (usablePrefab != null) {
+            GameObject up = Instantiate(usablePrefab, Vector3.zero, Quaternion.identity);
+
+            if (itemSO.type == QuickItem.QuickItemType.Usable) {
+                up.GetComponent<IUsable>().Use();
             }
         }
-       
+
+
         // Load proyectile to thrower if there is a projectile
-        if (itemSO._projectilePrefab != null) {
-            Projectile projectile = itemSO._projectilePrefab.GetComponent<Projectile>();
+        if (projectilePrefab != null) {
+            Projectile projectile = projectilePrefab.GetComponent<Projectile>();
             if (projectile != null) {
                 GameObject.FindWithTag("Thrower").GetComponent<Thrower>().LoadThrower(projectile);
             }
@@ -210,5 +219,4 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         item_image_gameObject.GetComponent<Image>().sprite = itemSO._sprite;
         item_holder_gameObject.GetComponent<Image>().sprite = itemSO._slot_sprite;
     }
-
 }

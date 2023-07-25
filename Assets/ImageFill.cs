@@ -37,4 +37,7 @@ public class ImageFill : MonoBehaviour
         coolingDown = true;
     }
 
+    private void OnEnable() {
+        imageToFill.fillAmount = 1f;
+    }
 }

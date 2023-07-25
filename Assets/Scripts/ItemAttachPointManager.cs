@@ -30,8 +30,7 @@ public class ItemAttachPointManager : MonoBehaviour {
     }
     private void Start() {
         isTiming = true;
-        attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
-        attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
+        StartCoroutine(InitializeProperties());
         AttachToPoint(attachPointA);
         this.transform.localPosition = positionOffset_A;
         StartCoroutine(AttachToHand());
@@ -55,5 +54,10 @@ public class ItemAttachPointManager : MonoBehaviour {
 
         this.transform.rotation *= rotationOffset_B;
         this.transform.position += positionOffset_B;
+    }
+
+    private IEnumerator InitializeProperties() {
+        yield return attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
+        yield return attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
     }
 }
