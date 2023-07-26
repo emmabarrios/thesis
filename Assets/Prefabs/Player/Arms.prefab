@@ -162,7 +162,7 @@ SkinnedMeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749687473685503229}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -2005,7 +2005,7 @@ SkinnedMeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8329892563290853831}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -2198,9 +2198,8 @@ GameObject:
   - component: {fileID: 3053346260848560460}
   - component: {fileID: 8878072157362844882}
   - component: {fileID: 8878072157362844883}
-  - component: {fileID: 8878072157362844880}
   m_Layer: 3
-  m_Name: Player Visual
+  m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2270,23 +2269,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camAnimator: {fileID: 0}
   useItemAnimLenght: 2.5
---- !u!114 &8878072157362844880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8643628448476613004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f196588e9d59edb42b53083a3d370ee9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anchorPointL: {fileID: 0}
-  anchorPointR: {fileID: 0}
-  animator: {fileID: 0}
-  timer: 0
-  isTiming: 0
 --- !u!1 &8695914971861985064
 GameObject:
   m_ObjectHideFlags: 0

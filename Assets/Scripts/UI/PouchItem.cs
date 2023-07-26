@@ -60,8 +60,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public void Start() {
         scale = fillImage.GetComponent<RectTransform>().localScale;
         toggle = GameObject.Find("Pouch Toggle").GetComponent<Toggle>();
-        playerAnimator = GameObject.Find("Player Visual").GetComponent<PlayerAnimator>();
-        armsAnimator = GameObject.Find("Player Visual").GetComponent<Animator>();
+        armsAnimator = GameObject.Find("Arms").GetComponent<Animator>();
 
         usablePrefab = itemSO._usablePrefab;
         projectilePrefab = itemSO._projectilePrefab;

@@ -11,7 +11,6 @@ public class CamHolderMotion : MonoBehaviour
     Controller controller = null;
 
     [Header("Shake Settings")]
-    [SerializeField] private float poiseModifier;
     [SerializeField] private float duration;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float magnitude;
@@ -81,7 +80,7 @@ public class CamHolderMotion : MonoBehaviour
         //Reset the camera's rotation to the original rotation
         cameraTransform.localRotation = originalRotation;
 
-        rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * poiseModifier * direction);
+        rotation = originalRotation * Quaternion.Euler(0f, 0f, magnitude * direction);
 
         cameraTransform.localRotation = rotation;
 

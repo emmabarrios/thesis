@@ -70,7 +70,7 @@ public class Controller : MonoBehaviour {
     public Action OnReleaseBlock;
     public Action OnParry;
     public Action<int> OnDash;
-    public Action<float> OnAttack;
+    public Action<float> OnAttackCooldown;
 
     private void Start() {
 
@@ -108,9 +108,14 @@ public class Controller : MonoBehaviour {
         // Evaluate attack performed
         if (AttackPerformed) {
             attackTimer -= Time.deltaTime;
+
+            float fillAmount = Mathf.Clamp01(1f - (attackTimer / attackCooldown));
+            OnAttackCooldown?.Invoke(fillAmount);
+
             if (attackTimer < 0.1f) {
                 attackTimer = 0;
                 AttackPerformed = false;
+                OnAttackCooldown?.Invoke(1f);
             }
         }
 
@@ -222,7 +227,6 @@ public class Controller : MonoBehaviour {
     private void Attack(string attackAnimation) {
         animator.Play(attackAnimation,-1,0);
         player.DrainStamina();
-        OnAttack?.Invoke(attackCooldown);
         AttackPerformed = true;
         attackTimer = attackCooldown;
     }

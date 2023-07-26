@@ -16,19 +16,25 @@ public class ImageFill : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controller.OnAttack += ResetFill;
+        controller.OnAttackCooldown += UpdateFill;
+        //controller.OnAttack += ResetFill;
         //ResetFill(1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (coolingDown == true) {
-            imageToFill.fillAmount += 1.0f / waitTime * Time.deltaTime;
-            if (imageToFill.fillAmount >= 1f) {
-                coolingDown = false;
-            }
-        }
+        
+        //if (coolingDown == true) {
+        //    imageToFill.fillAmount += 1.0f / waitTime * Time.deltaTime;
+        //    if (imageToFill.fillAmount >= 1f) {
+        //        coolingDown = false;
+        //    }
+        //}
+    }
+
+    private void UpdateFill(float cooldown) {
+        imageToFill.fillAmount = cooldown;
     }
 
     public void ResetFill(float coolDown) {

@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
+  m_FogColor: {r: 0.28627452, g: 0.35686275, b: 0.3921569, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.02
+  m_FogDensity: 0.04
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -272,7 +272,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.01
+  near clip plane: 0.1
   far clip plane: 30
   field of view: 70
   orthographic: 0
@@ -612,7 +612,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92373485}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ae0e5748ca486f4d9f782d6b0824375, type: 3}
   m_Name: 
@@ -633,7 +633,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1324944689}
   playerAnimator: {fileID: 574516995}
-  poiseModifier: 0.2
   duration: 0
   rotationSpeed: 15
   magnitude: 15
@@ -11810,11 +11809,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8643628448476613004, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: m_Name
-      value: Player Visual
-      objectReference: {fileID: 0}
-    - target: {fileID: 8878072157362844880, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      value: Arms
       objectReference: {fileID: 0}
     - target: {fileID: 8878072157362844883, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: camAnimator
@@ -11822,7 +11817,7 @@ PrefabInstance:
       objectReference: {fileID: 92373489}
     - target: {fileID: 8989051728139162422, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8989051728139162422, guid: 8b17e0a52e9170047892aff3c6d82c1d, type: 3}
       propertyPath: m_LocalPosition.x
