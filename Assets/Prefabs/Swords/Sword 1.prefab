@@ -257,8 +257,8 @@ MonoBehaviour:
   weaponDamage: 10
   weaponTrail: {fileID: 0}
   parentTransform: {fileID: 0}
-  Head: 50
-  Arm: 10
-  Leg: 10
-  Chest: 30
-  Hip: 20
+  Head: 0.5
+  Arm: 0.1
+  Leg: 0.1
+  Chest: 0.3
+  Hip: 0.2

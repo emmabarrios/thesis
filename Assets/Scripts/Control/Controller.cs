@@ -212,6 +212,18 @@ public class Controller : MonoBehaviour {
                         break;
                     case GestureInput.SwipeDir.Right:
                         Attack("Swing_Right");
+                        break; 
+                    case GestureInput.SwipeDir.UpRight:
+                        Attack("Swing_Right");
+                        break;
+                    case GestureInput.SwipeDir.UpLeft:
+                        Attack("Swing_Stab");
+                        break;
+                    case GestureInput.SwipeDir.DownRight:
+                        Attack("Swing_Down");
+                        break;
+                    case GestureInput.SwipeDir.DownLeft:
+                        Attack("Swing_Left");
                         break;
 
                     default:

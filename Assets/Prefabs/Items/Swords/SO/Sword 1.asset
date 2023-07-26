@@ -25,7 +25,5 @@ MonoBehaviour:
   _thrustDefense: 0
   _strenghtRequirement: 0
   _dexterityRequirement: 0
-  _strikeDamage: 0
-  _slashDamage: 0
-  _thrustDamage: 0
+  _damage: 10
   _attackCooldown: 0.6

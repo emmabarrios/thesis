@@ -8,9 +8,7 @@ public class WeaponItem: EquipmentItem {
     public int _dexterityRequirement;
 
     [Header("Damage")]
-    public float _strikeDamage;
-    public float _slashDamage;
-    public float _thrustDamage;
+    public float _damage;
 
     [Header("Attack Cooldown")]
     public float _attackCooldown;
