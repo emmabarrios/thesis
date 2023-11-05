@@ -18,6 +18,7 @@ public class RestartScene : MonoBehaviour
     }
 
     public void Reset() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // loads current scene
+        SceneManager.LoadSceneAsync(0);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name); // loads current scene
     }
 }

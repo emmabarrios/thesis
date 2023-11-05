@@ -1,6 +1,9 @@
 using UnityEngine;
 
 public class Projectile : MonoBehaviour {
+
+    protected AudioSource audioSource;
+
     [Header("Throw Settings")]
     [SerializeField] protected float throwForce;
     [SerializeField] protected float throwUpwardForce;
@@ -20,7 +23,32 @@ public class Projectile : MonoBehaviour {
     [SerializeField] protected float impactDamage;
     [SerializeField] protected bool destroyOnImpact = false;
     [SerializeField] protected GameObject impactFX;
-    
+
+    [Header("FX Settings")]
+    [SerializeField]
+    [Range(0f, 1f)]
+    float volumeScale;
+    [SerializeField] protected AudioClip impactSoundFX;
+    [SerializeField] protected AudioClip throwSoundFX;
+    [SerializeField] protected AudioClip loopSoundFX;
+
+
+    protected void Start() {
+        audioSource = GetComponent<AudioSource>();
+
+        if (loopSoundFX!=null) {
+        }
+        if (throwSoundFX != null) {
+            audioSource.PlayOneShot(throwSoundFX, volumeScale);
+        }
+    }
+
+
+    protected void OnCollisionEnter(Collision collision) {
+        if (impactSoundFX!=null) {
+            audioSource.PlayOneShot(impactSoundFX, volumeScale);
+        }
+    }
     //private void OnTriggerEnter(Collider other) {
 
     //    if (impactFX != null) {
@@ -61,7 +89,7 @@ public class Projectile : MonoBehaviour {
     //                }
 
     //                damageable.TakeDamage(finalDamage);
-                    
+
     //            }
     //        }
     //    }

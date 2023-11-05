@@ -58,6 +58,6 @@ public class ItemAttachPointManager : MonoBehaviour {
 
     private IEnumerator InitializeProperties() {
         yield return attachPointA = GameObject.Find("Player Attach Point").GetComponent<Transform>();
-        yield return attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
+        //yield return attachPointB = GameObject.Find("Item Anchor").GetComponent<Transform>();
     }
 }

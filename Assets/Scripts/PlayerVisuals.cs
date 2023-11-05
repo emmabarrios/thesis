@@ -9,7 +9,7 @@ public class PlayerVisuals : MonoBehaviour
     [SerializeField] private Transform anchorPointL = null;
     [SerializeField] private Transform anchorPointR = null;
 
-    [SerializeField] private PlayerAnimator animator;
+    [SerializeField] private PlayerPrecense animator;
 
     [Header("Timer Settings")]
     [SerializeField] private float timer;
@@ -18,7 +18,7 @@ public class PlayerVisuals : MonoBehaviour
     public event EventHandler OnWeaponHit;
 
     private void Start() {
-        animator = GetComponentInParent<PlayerAnimator>();
+        animator = GetComponentInParent<PlayerPrecense>();
 
         //animator.OnUsingItem += RunStatusTimer_OnUsingItem;
 

@@ -6,8 +6,7 @@ public class Controller : MonoBehaviour {
 
     private Player player;
     private CharacterController characterController;
-    [SerializeField] private Animator animator;
-    [SerializeField] private PlayerAnimator playerAnimator;
+    private Attacker attacker;
 
     [Header("Orbital Settings")]
     [SerializeField] private Transform target = null;
@@ -20,7 +19,7 @@ public class Controller : MonoBehaviour {
     [SerializeField] private float deaccelerationTime = 2f;
     [SerializeField] private float speedLimitMultiplier = 1f;
     [SerializeField] private float turnSpeed = 90f;
-    private bool isWalking;
+    [SerializeField] private bool isWalking;
 
     private float currentSpeed;
     private Vector3 last_movement;
@@ -37,73 +36,76 @@ public class Controller : MonoBehaviour {
     [SerializeField] private float dashMovementSpeed;
     [SerializeField] private float dirMultiplier = 1f;
     [SerializeField] private float lookRotationSpeedMultiplier = 4f;
-
-
-    [SerializeField] private bool canBlock = true;
-    [SerializeField] private bool isBlocking = false;
+    [SerializeField] private float dashStaminaCost = 15f;
     [SerializeField] private bool dashPerformed = false;
-    [SerializeField] private bool attackPerformed = false;
-    [SerializeField] private bool isUsingItem = false;
-
-    public bool IsWalking { get { return isWalking; } set { isWalking = value; } }
-    public bool CanBlock { get { return canBlock; } set { canBlock = value; } }
-    public bool DashPerformed { get { return dashPerformed; } set { dashPerformed = value; } }
-    public bool IsBlocking { get { return isBlocking; } set { isBlocking = value; } }
-    public bool AttackPerformed { get { return attackPerformed; } set { attackPerformed = value; } }
-    public bool IsHitBlocked { get { return isHitBlocked; } set { isHitBlocked = value; } }
-    public float CurrentSpeed { get { return currentSpeed; } }
-    public bool IsUsingItem { get { return isUsingItem; } set { isUsingItem = value; } }
-    public bool IsKnockBacked { get { return isKnockBacked; } set { isKnockBacked = value; } }
 
     [Header("Input")]
     public Joystick joystick = null;
     public GestureInput gestureInput;
-    public Button buttonA;
     public ItemPanelToggle quickItemToggle = null;
 
-    [Header("Attack Details")]
-    public float attackCooldown;
-    public float attackTimer;
+    [Header("Combat Settings")]
+    [SerializeField] private float attackCooldown;
+    [SerializeField] private float attackTimer;
+    [SerializeField] private bool attackPerformed = false;
+    [SerializeField] private bool canAttack = false;
+    [SerializeField] private bool isUsingItem = false;
 
     // Events
     public Action OnBlocking;
     public Action OnReleaseBlock;
     public Action OnParry;
     public Action<int> OnDash;
+    public Action<string> OnAttack;
     public Action<float> OnAttackCooldown;
+
+
+    public bool IsWalking { get { return isWalking; } set { isWalking = value; } }
+    public bool DashPerformed { get { return dashPerformed; } set { dashPerformed = value; } }
+    public bool AttackPerformed { get { return attackPerformed; } set { attackPerformed = value; } }
+    public bool IsHitBlocked { get { return isHitBlocked; } set { isHitBlocked = value; } }
+    public float CurrentSpeed { get { return currentSpeed; } }
+    public bool IsUsingItem { get { return isUsingItem; } set { isUsingItem = value; } }
+    public bool IsKnockBacked { get { return isKnockBacked; } set { isKnockBacked = value; } }
 
     private void Start() {
 
         player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
-        playerAnimator = GetComponentInChildren<PlayerAnimator>();
-        animator  = playerAnimator.GetComponent<Animator>();
 
-        // Input
-        buttonA = GameObject.Find("Button").GetComponent<Button>();
+        // Player Input
         joystick = GameObject.Find("Joystick").GetComponent<Joystick>();
         gestureInput = GameObject.Find("Gesture Input").GetComponent<GestureInput>();
         quickItemToggle = GameObject.Find("Pouch Toggle").GetComponent<ItemPanelToggle>();
 
         // Input Event Subscribers
-        buttonA.OnBlocking += Block;
-
-        player.OnHitBlocked += HitBlocked;
-        playerAnimator.OnAnimating += InheritPositionFromAnimation;
-        playerAnimator.OnQuickItemAction += ToggleIsUsingItem;
-
         gestureInput.SwipeDirectionChanged += ProcessGestureSwipes;
         joystick.OnDoubleTap += Dash;
-        quickItemToggle.OnToggleValueChanged += ToggleWeaponActivation;
 
         // Initial Values
         currentSpeed = 0f;
-        StartCoroutine(LoadWeaponSettings());
-    } 
+        attacker = GetComponentInChildren<Attacker>();
+
+        // Find enemy in scene
+        target = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Transform>();
+
+    }
 
     private void Update() {
 
+        if (!GameManager.instance.IsGameOnCombat()) {
+            if (IsWalking == true) {
+                IsWalking = false;
+            }
+            return;
+        }
+
+        // Movement
         Vector2 inputMovement = joystick.Direction;
+        if (!DashPerformed && !IsKnockBacked) {
+
+            Orbitate(inputMovement);
+        }
 
         // Evaluate attack performed
         if (AttackPerformed) {
@@ -115,41 +117,10 @@ public class Controller : MonoBehaviour {
             if (attackTimer < 0.1f) {
                 attackTimer = 0;
                 AttackPerformed = false;
+                //canAttack = true;
                 OnAttackCooldown?.Invoke(1f);
             }
         }
-
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        IsHitBlocked = stateInfo.IsName("Shield_Block");
-
-        if (!DashPerformed && !IsKnockBacked && !AttackPerformed) {
-            Orbitate(inputMovement);
-        }
-
-        if (player.IsBlocking != IsBlocking) {
-            player.IsBlocking = IsBlocking;
-        }
-
-        // KnockBack timer
-        if (IsKnockBacked) {
-            Vector3 currentPosition = characterController.transform.position;
-            Vector3 targetPosition = currentPosition + (-characterController.transform.forward).normalized * knockBackDistance;
-            characterController.Move(targetPosition - currentPosition);
-            knockBackTimer -= Time.deltaTime;
-            if (knockBackTimer < 0.1f) {
-                knockBackTimer = 0;
-                IsKnockBacked = false;
-            }
-        }
-
-        CanBlock = player.Stamina > 0;
-        if (!CanBlock) {
-            IsBlocking = false;
-        }
-
-        animator.SetBool("isWalking", IsWalking);
-        animator.SetFloat("WalkSpeed", Mathf.Clamp(CurrentSpeed, 0.1f, 1));
-        animator.SetBool("isBlocking", IsBlocking);
 
     }
 
@@ -162,11 +133,7 @@ public class Controller : MonoBehaviour {
 
         float targetSpeed = movementDirection.magnitude * maxMovementSpeed;
 
-        if (movementDirection.magnitude > 0) {
-            isWalking = true;
-        } else {
-            isWalking = false;
-        }
+       
 
         if (targetSpeed > 0) {
             currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * accelerationTime);
@@ -183,6 +150,22 @@ public class Controller : MonoBehaviour {
             movement = last_movement.normalized * currentSpeed * speedLimitMultiplier * Time.deltaTime;
             RotateToTarget(lookRotationSpeed, Time.deltaTime);
         }
+
+        if (!GameManager.instance.IsGameOnCombat()) {
+
+            if (IsWalking == true) {
+                IsWalking = false;
+            }
+
+            return; 
+        }
+
+        if (movementDirection.magnitude > 0) {
+            isWalking = true;
+        } else {
+            isWalking = false;
+        }
+
         characterController.Move(movement);
     }
    
@@ -194,64 +177,73 @@ public class Controller : MonoBehaviour {
     }
 
     private void ProcessGestureSwipes(object sender, GestureInput.SwipeDirectionChangedEventArgs e) {
+        //if (!GameManager.instance.IsGameOnCombat() ) {
+        //    if (IsWalking == true) {
+        //        IsWalking = false;
+        //    }
+        //    return; 
+        //}
 
-        if (player.currentState == Player.PlayerState.Combat) {
+        if (player.Stamina > 0 && !AttackPerformed && !IsUsingItem && !DashPerformed) {
 
-            if (player.Stamina > 0 && !AttackPerformed && !IsUsingItem && !DashPerformed && !IsHitBlocked) {
+            switch (e.swipeDirection) {
 
-                switch (e.swipeDirection) {
+                case GestureInput.SwipeDir.Left:
+                    attacker.Attack("Swing_Left");
+                    OnAttack?.Invoke("Swing_Left");
+                    break;
+                case GestureInput.SwipeDir.Up:
+                    attacker.Attack("Swing_Stab");
+                    OnAttack?.Invoke("Swing_Stab");
+                    break;
+                case GestureInput.SwipeDir.Down:
+                    attacker.Attack("Swing_Down");
+                    OnAttack?.Invoke("Swing_Down");
+                    break;
+                case GestureInput.SwipeDir.Right:
+                    attacker.Attack("Swing_Right");
+                    OnAttack?.Invoke("Swing_Right");
+                    break;
+                case GestureInput.SwipeDir.UpRight:
+                    attacker.Attack("Swing_Right");
+                    OnAttack?.Invoke("Swing_Right");
+                    break;
+                case GestureInput.SwipeDir.UpLeft:
+                    attacker.Attack("Swing_Stab");
+                    OnAttack?.Invoke("Swing_Stab");
+                    break;
+                case GestureInput.SwipeDir.DownRight:
+                    attacker.Attack("Swing_Down");
+                    OnAttack?.Invoke("Swing_Down");
+                    break;
+                case GestureInput.SwipeDir.DownLeft:
+                    attacker.Attack("Swing_Left");
+                    OnAttack?.Invoke("Swing_Left");
+                    break;
 
-                    case GestureInput.SwipeDir.Left:
-                        Attack("Swing_Left");
-                        break;
-                    case GestureInput.SwipeDir.Up:
-                        Attack("Swing_Stab");
-                        break;
-                    case GestureInput.SwipeDir.Down:
-                        Attack("Swing_Down");
-                        break;
-                    case GestureInput.SwipeDir.Right:
-                        Attack("Swing_Right");
-                        break; 
-                    case GestureInput.SwipeDir.UpRight:
-                        Attack("Swing_Right");
-                        break;
-                    case GestureInput.SwipeDir.UpLeft:
-                        Attack("Swing_Stab");
-                        break;
-                    case GestureInput.SwipeDir.DownRight:
-                        Attack("Swing_Down");
-                        break;
-                    case GestureInput.SwipeDir.DownLeft:
-                        Attack("Swing_Left");
-                        break;
-
-                    default:
-                        break;
-                }
-
-               // IsBlocking = false;
-
+                default:
+                    break;
             }
+            player.DrainStamina(player.AttackStaminaCost);
+            AttackPerformed = true;
+            attackTimer = attackCooldown;
         }
     }
 
-    private void Attack(string attackAnimation) {
-        animator.Play(attackAnimation,-1,0);
-        player.DrainStamina();
-        AttackPerformed = true;
-        attackTimer = attackCooldown;
-    }
 
     private void Dash(object sender, Joystick.OnDoubleTapEventArgs e) {
 
-        if (!DashPerformed && player.Stamina > 0 && !IsBlocking &&!AttackPerformed) {
+        //if (!GameManager.instance.IsGameOnCombat()) {
+        //    if (IsWalking == true) {
+        //        IsWalking = false;
+        //    }
+        //    return;
+        //}
+
+        if (!DashPerformed && player.Stamina > 0 && !AttackPerformed) {
             DashPerformed = true;
-            if (!IsUsingItem) {
-                animator.Play("Dash");
-            }
             OnDash?.Invoke((int)e.point.x);
-            player.DrainStamina();
+            player.DrainStamina(player.MovementStaminaCost);
             StartCoroutine(DashRoutine(e.point));
         }
     }
@@ -281,41 +273,39 @@ public class Controller : MonoBehaviour {
         DashPerformed = false;
     }
 
-    private void Block(object sender, EventArgs e) {
-
-        if (CanBlock) {
-            if (!IsBlocking) {
-                IsBlocking = true;
-            } else {
-                IsBlocking = false;
-            }
-        }
-
-    }
-
-
-    private void InheritPositionFromAnimation() {
-        Vector3 deltaPosition = animator.deltaPosition;
-        Vector3 worldDeltaPosition = deltaPosition;
-        characterController.Move(worldDeltaPosition);
-    }
-
     private void ToggleIsUsingItem(bool value) {
         IsUsingItem = value;
+        if (IsUsingItem) {
+            speedLimitMultiplier = .5f;
+        } else {
+            speedLimitMultiplier = 1f;
+        }
     }
 
-    private void HitBlocked() {
-        isKnockBacked = true;
-        knockBackTimer = knockBackTime;
-        animator.GetComponent<Animator>().Play("Shield_Block", -1, 0f);
+
+    private IEnumerator LoadScenInputEvents() {
+
+        GestureInput _gestureInput = null;
+        Joystick _joystick = null;
+
+        while (_gestureInput == null || _joystick == null) {
+            _gestureInput = GameObject.Find("Gesture Input").GetComponent<GestureInput>();
+            _joystick  = GameObject.Find("Joystick").GetComponent<Joystick>();
+            yield return null;
+        }
+
+        gestureInput = _gestureInput;
+        joystick = _joystick;
+
+        gestureInput.SwipeDirectionChanged += ProcessGestureSwipes;
+        joystick.OnDoubleTap += Dash;    
     }
 
-    private IEnumerator LoadWeaponSettings() {
-        yield return attackCooldown = CombatInventory.instance.RightWeaponItemSO._attackCooldown;
+    public void LoadInputReferences() {
+        StartCoroutine(LoadScenInputEvents());
     }
 
-    private void ToggleWeaponActivation(bool value) {
-
+    public void SetLockTarget(Transform tran) {
+        target = tran;
     }
-
 }

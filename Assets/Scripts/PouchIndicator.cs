@@ -14,10 +14,8 @@ public class PouchIndicator : MonoBehaviour
 
     public Carousel carousel = null;
     public RectTransform rowIndicatorPrefab;
-    private RectTransform pouchRectTransform;
 
     private void Start() {
-        pouchRectTransform = GetComponent<RectTransform>();
         carousel.OnSwipe += ActivateIndicatorByIndex;
     }
 
@@ -37,6 +35,9 @@ public class PouchIndicator : MonoBehaviour
     }
 
     public void InitializeRowIndicators(int rowCount) {
+
+        RectTransform pouchRectTransform = GetComponent<RectTransform>();
+
         for (int i = 0; i < rowCount; i++) {
             RectTransform rowIndicator = Instantiate(rowIndicatorPrefab, this.transform);
             rowIndicators.Add(rowIndicator);
@@ -44,6 +45,7 @@ public class PouchIndicator : MonoBehaviour
 
         originalSize = rowIndicators[0].transform.localScale;
         rowIndicators[0].transform.localScale = originalSize * increasedSize;
+
         Vector2 currentPos = pouchRectTransform.position;
         Vector2 targetPosition = currentPos + new Vector2(-1*((pouchRectTransform.sizeDelta.x/2) * rowCount/2),0f);
         pouchRectTransform.position = targetPosition;

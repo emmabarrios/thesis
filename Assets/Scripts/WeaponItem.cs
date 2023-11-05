@@ -1,16 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName ="Weapon Item", menuName = "Items/Weapon Item")]
 public class WeaponItem: EquipmentItem {
 
-    [Header("Wield Requirements")]
+    [Header("Weapon Stats")]
     public int _strenghtRequirement;
-    public int _dexterityRequirement;
+    public float _staminaCost;
+    public float _durability;
 
-    [Header("Damage")]
+    [Space]
     public float _damage;
 
-    [Header("Attack Cooldown")]
+    [Space]
     public float _attackCooldown;
+
 }
 

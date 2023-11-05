@@ -13,28 +13,28 @@ public class Flask : MonoBehaviour
     public float throwUpwardForce;
     [SerializeField] private Vector3 offset;
 
-    [SerializeField] private PlayerAnimator playerAnimator;
+    [SerializeField] private PlayerPrecense playerPrecense;
 
     [SerializeField] private Thrower thrower;
 
     private void Start() {
-        playerAnimator = GameObject.Find("Player").GetComponentInChildren<PlayerAnimator>();
+        //playerPrecense = GameObject.Find("Player").GetComponentInChildren<PlayerAnimator>();
         thrower = GameObject.Find("Seal Thrower").GetComponent<Thrower>();
-        playerAnimator.OnOpenedFlask += Open;
-        playerAnimator.OnDropedFlask += Drop;
+        //playerPrecense.OnOpenedFlask += Open;
+        //playerPrecense.OnDropedFlask += Drop;
     }
 
     public void Open() {
         flaskSeal.SetActive(false);
        // thrower.Throw(SealPrefab, throwForce, throwUpwardForce,0f, offset);
-        playerAnimator.OnOpenedFlask -= Open;
+        //playerPrecense.OnOpenedFlask -= Open;
     }
 
     public void Drop() {
         Transform parentTransform = GameObject.Find("Player Attach Point").GetComponent<Transform>();
         GameObject _emptyBottle = Instantiate(flaskEmptyContainer, parentTransform.position + flaskOffset, parentTransform.rotation);
         _emptyBottle.transform.rotation = parentTransform.rotation;
-        playerAnimator.OnDropedFlask -= Drop;
+        //playerPrecense.OnDropedFlask -= Drop;
 
         Destroy(GetComponentInParent<HealthPotion>().gameObject);
     }

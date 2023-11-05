@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class WeaponHolderSlot : MonoBehaviour
 {
-    public Transform parentOverride;
     public GameObject currentWeaponModel;
-    public bool isLeftHandSlot;
-    public bool isRightHandSlot;
 
     public void UnloadWeaponModel() {
         if (currentWeaponModel != null) {
@@ -33,11 +30,7 @@ public class WeaponHolderSlot : MonoBehaviour
         GameObject model = Instantiate(weaponItem._equipmentPrefab);
 
         if (model != null) {
-            if (parentOverride != null) {
-                model.transform.parent = parentOverride;
-            } else {
-                model.transform.parent = this.transform;
-            }
+            model.transform.parent = this.transform;
             model.transform.localPosition = Vector3.zero;
             model.transform.localRotation = Quaternion.identity;
             model.transform.localScale = Vector3.one;

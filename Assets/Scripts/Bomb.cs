@@ -14,9 +14,8 @@ public class Bomb : Projectile
     [Header("Colliders In Range")]
     [SerializeField] private List<Collider> inRangeColliders = new List<Collider>();
 
-
-
     private void Start() {
+        base.Start();
         isTiming = true;
     }
 
@@ -40,9 +39,11 @@ public class Bomb : Projectile
     }
 
     private void OnTriggerEnter(Collider other) {
-        BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
-        if (bodyPart!=null) {
-            if(!inRangeColliders.Contains(other)) {
+
+        IDamageable damageable = other.GetComponentInParent<IDamageable>();
+
+        if (damageable != null) {
+            if (!inRangeColliders.Contains(other)) {
                 inRangeColliders.Add(other);
             }
         }
@@ -56,17 +57,42 @@ public class Bomb : Projectile
 
     private void DealDamageOnRadius() {
         foreach (Collider collider in inRangeColliders) {
-            BodyPart bodyPart = collider.gameObject.GetComponent<BodyPart>();
+            IDamageable damageable = collider.GetComponentInParent<IDamageable>();
 
-            if (bodyPart != null) {
-
-                IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
-
-                if (damageable != null) {
-                    damageable.TakeDamage(explosionDamage);
-                }
+            if (damageable != null) {
+                damageable.TakeDamage(explosionDamage);
             }
         }
     }
-   
+
+    //private void OnTriggerEnter(Collider other) {
+    //    BodyPart bodyPart = other.gameObject.GetComponent<BodyPart>();
+    //    if (bodyPart!=null) {
+    //        if(!inRangeColliders.Contains(other)) {
+    //            inRangeColliders.Add(other);
+    //        }
+    //    }
+    //}
+
+    //private void OnTriggerExit(Collider other) {
+    //    if (inRangeColliders.Contains(other)) {
+    //        inRangeColliders.Remove(other);
+    //    }
+    //}
+
+    //private void DealDamageOnRadius() {
+    //    foreach (Collider collider in inRangeColliders) {
+    //        BodyPart bodyPart = collider.gameObject.GetComponent<BodyPart>();
+
+    //        if (bodyPart != null) {
+
+    //            IDamageable damageable = bodyPart.GetComponentInParent<IDamageable>();
+
+    //            if (damageable != null) {
+    //                damageable.TakeDamage(explosionDamage);
+    //            }
+    //        }
+    //    }
+    //}
+
 }

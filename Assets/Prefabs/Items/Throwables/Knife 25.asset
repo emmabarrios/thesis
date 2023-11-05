@@ -21,5 +21,7 @@ MonoBehaviour:
   type: 1
   _slot_sprite: {fileID: 21300000, guid: eac0110a39a131c4db5deb4428297679, type: 3}
   _slot_empty_sprite: {fileID: 21300000, guid: 6f0ce84c2089a9245933930c027b4050, type: 3}
-  _usablePrefab: {fileID: 3005735020196780283, guid: b6b6527c3afc1da4c8b7207bebd26e95, type: 3}
+  _usablePrefab: {fileID: 0}
   _projectilePrefab: {fileID: 3005735020196780283, guid: fdeb95195f683c341a8ce8a922891af9, type: 3}
+  _drawSound: {fileID: 8300000, guid: 9c0a6e5df80623d4da90adad63e8da50, type: 3}
+  _cooldown: 1

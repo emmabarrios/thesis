@@ -13,5 +13,7 @@ public class QuickItem : Item
     public Sprite _slot_empty_sprite;
     public GameObject _usablePrefab;
     public GameObject _projectilePrefab;
+    public AudioClip _drawSound;
+    public float _cooldown;
 
 }

@@ -17,9 +17,13 @@ public class Bobbing : MonoBehaviour
 
     private void Update() {
         float speed = player.CurrentSpeed;
-        float bobbingOffset = Mathf.Sin(timer) * bobbingAmount * speed;
-        transform.localPosition = new Vector3(transform.localPosition.x, originalY + bobbingOffset, transform.localPosition.z);
 
-        timer += bobbingSpeed * Time.deltaTime;
+        if (player.IsWalking) {
+            float bobbingOffset = Mathf.Sin(timer) * bobbingAmount * speed;
+            transform.localPosition = new Vector3(transform.localPosition.x, originalY + bobbingOffset, transform.localPosition.z);
+
+            timer += bobbingSpeed * Time.deltaTime;
+        }
+       
     }
 }

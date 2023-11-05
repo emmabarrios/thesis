@@ -7,8 +7,10 @@ public class CamHolderMotion : MonoBehaviour
     private Quaternion originalRotation;
     private Transform cameraTransform;
     [SerializeField] private Player player = null;
-    [SerializeField] private PlayerAnimator playerAnimator = null;
+    //[SerializeField] private PlayerAnimator playerAnimator = null;
     Controller controller = null;
+
+    [SerializeField] private GameObject enemy;
 
     [Header("Shake Settings")]
     [SerializeField] private float duration;
@@ -25,26 +27,49 @@ public class CamHolderMotion : MonoBehaviour
 
     private Vector3 originalPosition;
 
-
     void Start()
     {
-        player = GameObject.Find("Player").GetComponent<Player>();
-        controller = player.GetComponent<Controller>();
+        //player = GameObject.Find("Player").GetComponent<Player>();
+        //controller = player.GetComponent<Controller>();
         animator = GetComponent<Animator>();
         
         cameraTransform = GetComponent<Transform>();
         originalRotation = cameraTransform.localRotation;
 
         // Player Controller Event Subscribers
-        player.OnDamageTaken += StartCameraShake;
-        controller.OnDash += StartCameraBob;
-        playerAnimator.OnSwingLeft += PlayRotateLeftAnimation;
-        playerAnimator.OnSwingRight += PlayRotateRightAnimation;
+        //player.OnDamageTaken += StartCameraShake;
+        //controller.OnDash += StartCameraBob;
+        //controller.OnAttack += LookDirection;
+        //playerAnimator.OnSwingLeft += PlayRotateLeftAnimation;
+        //playerAnimator.OnSwingRight += PlayRotateRightAnimation;
         originalPosition = transform.localPosition;
 
+        StartCoroutine(LoadScenePlayerEvents());
+    }
+
+    private void LookDirection(string dir) {
+        switch (dir) {
+
+            case "Swing_Left":
+                animator.Play("look_left", -1, 0);
+                break;
+            case "Swing_Stab":
+                animator.Play("look_up", -1, 0);
+                break;
+            case "Swing_Right":
+                animator.Play("look_right", -1, 0);
+                break;
+            case "Swing_Down":
+                animator.Play("look_down", -1, 0);
+                break;
+            default:
+                break;
+        }
     }
 
     public void StartCameraBob(int direction) {
+
+        if (!GameManager.instance.IsGameOnCombat()) { return; }
 
         if (Mathf.Abs(direction) > pointXThreshold) {
             if (direction > 0) {
@@ -111,9 +136,36 @@ public class CamHolderMotion : MonoBehaviour
             yield return null;
         }
 
-        //transform.localPosition = originalPosition - new Vector3(0f, bobHeight, 0f);
         transform.localPosition = originalPosition;
         isBobbing = false;
+    }
+
+
+    private IEnumerator LoadScenePlayerEvents() {
+
+        Player _player = null;
+
+        while (_player == null) {
+            _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            yield return null;
+        }
+
+        yield return new WaitUntil(PlayerComponentIsNotNull);
+
+        bool PlayerComponentIsNotNull() {
+            return _player.GetComponent<Player>() != null;
+        }
+
+        player = _player;
+        controller = player.GetComponent<Controller>();
+
+        player.OnDamageTaken += StartCameraShake;
+        controller.OnDash += StartCameraBob;
+        controller.OnAttack += LookDirection;
+    }
+
+    public void LoadInputReferences() {
+        StartCoroutine(LoadScenePlayerEvents());
     }
 
 }

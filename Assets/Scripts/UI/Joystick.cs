@@ -32,6 +32,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     [SerializeField] private float moveThreshold = 1;
     [SerializeField] private float fadeTime = 1f;
 
+
     public event EventHandler<OnHandleDragedEventArgs> OnHandleDraged;
     public event EventHandler OnHandleDroped;
     public event EventHandler<OnDoubleTapEventArgs> OnDoubleTap;
@@ -90,14 +91,21 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
         //OnDrag(eventData);
 
-        if (OnArea(eventData)) {
-            background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
+        //if (OnArea(eventData)) {
+        //    background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
 
-            background.gameObject.SetActive(true);
-            StartCoroutine(FadeTo(0, fadeTime));
+        //    background.gameObject.SetActive(true);
+        //    StartCoroutine(FadeTo(0, fadeTime));
 
-            OnDrag(eventData);
-        }
+        //    OnDrag(eventData);
+        //}
+
+        background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
+
+        background.gameObject.SetActive(true);
+        StartCoroutine(FadeTo(0, fadeTime));
+
+        OnDrag(eventData);
 
     }
 
@@ -149,25 +157,42 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     private void DoubleTap(PointerEventData eventData) {
 
-        if (OnArea(eventData)) {
-            Vector2 center = baseRect.rect.center;
-            Vector2 localPoint;
+        //if (OnArea(eventData)) {
+        //    Vector2 center = baseRect.rect.center;
+        //    Vector2 localPoint;
 
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
+        //    if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
 
-                float currentTimeClick = eventData.clickTime;
+        //        float currentTimeClick = eventData.clickTime;
 
-                if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
-                    Vector2 distance = localPoint - center;
+        //        if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
+        //            Vector2 distance = localPoint - center;
 
-                    OnDoubleTap?.Invoke(this, new OnDoubleTapEventArgs {
-                        point = distance
-                    });
-                }
-                lastTimeTap = currentTimeClick;
+        //            OnDoubleTap?.Invoke(this, new OnDoubleTapEventArgs {
+        //                point = distance
+        //            });
+        //        }
+        //        lastTimeTap = currentTimeClick;
+        //    }
+        //}
+
+        Vector2 center = baseRect.rect.center;
+        Vector2 localPoint;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
+
+            float currentTimeClick = eventData.clickTime;
+
+            if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
+                Vector2 distance = localPoint - center;
+
+                OnDoubleTap?.Invoke(this, new OnDoubleTapEventArgs {
+                    point = distance
+                });
             }
+            lastTimeTap = currentTimeClick;
         }
-        
+
     }
 
     private Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition) {

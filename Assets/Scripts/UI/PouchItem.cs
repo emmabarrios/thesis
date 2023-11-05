@@ -44,6 +44,7 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     [SerializeField] private GameObject usablePrefab;
     [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private AudioClip drawClip;
 
     private Coroutine longPressCoroutine;
 
@@ -53,17 +54,21 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     float eventSwipeThreshold = 160f;
 
-    public PlayerAnimator playerAnimator;
+    public PlayerPrecense playerPrecense;
 
     Animator armsAnimator;
+    [SerializeField] AudioSource audioSource;
+
+    [SerializeField][Range(0f, 1f)] float volumeScale;
 
     public void Start() {
         scale = fillImage.GetComponent<RectTransform>().localScale;
         toggle = GameObject.Find("Pouch Toggle").GetComponent<Toggle>();
-        armsAnimator = GameObject.Find("Arms").GetComponent<Animator>();
+        //armsAnimator = GameObject.Find("Arms").GetComponent<Animator>();
 
         usablePrefab = itemSO._usablePrefab;
         projectilePrefab = itemSO._projectilePrefab;
+        drawClip = itemSO._drawSound;
     }
 
     public void OnPointerDown(PointerEventData eventData) {
@@ -125,12 +130,12 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         // Reproduce corresponding animaton in player visuals
 
-        if (itemSO.type == QuickItem.QuickItemType.Usable) {
-            armsAnimator.Play("Use_Item");
+        //if (itemSO.type == QuickItem.QuickItemType.Usable) {
+        //    armsAnimator.Play("Use_Item");
            
-        } else {
-            armsAnimator.Play("Throw_Item");
-        }
+        //} else {
+        //    armsAnimator.Play("Throw_Item");
+        //}
 
         // Instantiate quick item prefab
         if (usablePrefab != null) {
@@ -152,8 +157,12 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         // Use Item Cooldown
         Carousel carousel = transform.parent.transform.parent.transform.parent.GetComponent<Carousel>();
-        carousel.cooldownTimer = itemSO._projectilePrefab.GetComponent<Projectile>().UseCooldown;
+        carousel.cooldownTimer = itemSO._cooldown;
         carousel.CallCoolDownOnUse();
+        carousel.GetComponent<AudioSource>().PlayOneShot(drawClip, volumeScale);
+
+        // Deactivate quick item panel
+        ItemPanelToggle.instance.GetComponent<Toggle>().isOn = false;
 
         // Destroy pouch item
         Destroy(this.gameObject);

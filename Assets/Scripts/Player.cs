@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Player : Character, IDamageable
 {
-    public enum PlayerState { Normal, Combat, None }
+    public static Player instance;
+
+    public enum PlayerState {Enabled, Disabled}
     public PlayerState currentState { get; set; }
 
     public void SetState(PlayerState newState) {
@@ -12,33 +14,35 @@ public class Player : Character, IDamageable
         currentState = newState;
     }
 
-    PlayerStatsManager stats;
-
-    [SerializeField] bool canRecoverStamina = false;
+    [SerializeField] private bool canRecoverStamina = false;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float beginHealthRecoverDelay;
+
+    [Header("Stamina")]
     [SerializeField] private float staminaRecoverySpeed = 1f;
     [SerializeField] private float staminaRecoveryDelay = 1f;
-    [SerializeField] private float staminaRecoveryModifier = 1f;
-    [SerializeField] private float staminaCost = 5f;
+    [SerializeField] private float staminaRecoverySpeedModifier = 1f;
+    [SerializeField] private float attackStaminaCost;
+    [SerializeField] private float movementStaminaCost;
 
+    public float AttackStaminaCost { get { return attackStaminaCost; } set { attackStaminaCost = value; } }
+    public float MovementStaminaCost { get { return movementStaminaCost; } set { movementStaminaCost = value; } }
     public float StaminaRecoverySpeed { get { return staminaRecoverySpeed; } set { staminaRecoverySpeed = value; } }
-    public float StaminaRecoveryModifier{ get { return staminaRecoveryModifier; } set { staminaRecoveryModifier = value; } }
-    public float StaminaCost { get { return staminaCost; } set { staminaCost = value; } }
+    public float StaminaRecoveryModifier{ get { return staminaRecoverySpeedModifier; } set { staminaRecoverySpeedModifier = value; } }
     public float BeginHealthRecoverDelay { get { return beginHealthRecoverDelay; } set { beginHealthRecoverDelay = value; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float MaxStamina { get { return maxStamina; } set { maxStamina = value; } }
 
-
     [SerializeField] private bool isBlocking = false;
-
-    public bool IsBlocking { get { return isBlocking; } set { isBlocking = value; } }
 
     public Action OnDamageTaken;
     public Action OnHitBlocked;
     public Action<float, float> OnHealthValueRestored;
     public Action<float> OnHealthValueReduced;
+
+    [SerializeField] private CharacterSoundFXManager characterSoundFXManager;
+    [SerializeField] PlayerStatsManager characterStats = null;
 
     public event EventHandler<OnWeaponHitDetectedEventArgs> OnWeaponHitDetected;
     public event EventHandler<OnStaminaValueChanged_EventArgs> OnStaminaValueChanged;
@@ -52,23 +56,29 @@ public class Player : Character, IDamageable
         public float damage;
     }
 
+
+    private void Awake() {
+        if (instance != null) { return; }
+        instance = this;
+    }
+
     private void Start() {
-        //animator = GetComponentInChildren<PlayerAnimator>();
-        stats = GetComponent<PlayerStatsManager>();
-        currentState = PlayerState.Combat;
-        stats.InitializePlayerStats(this);
+        currentState = PlayerState.Disabled;
         MaxHealth = Health;
         MaxStamina = Stamina;
+        characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
+       
+        //StartCoroutine(EntranceCoroutine(GameManager.instance.entranceTime));
     }
 
     private void Update() {
+        RecoverStaminaContinuously();
+    }
+
+    private void RecoverStaminaContinuously() {
         if (Stamina < MaxStamina && canRecoverStamina) {
 
-            if (IsBlocking) {
-                Stamina += StaminaRecoverySpeed * staminaRecoveryModifier * Time.deltaTime;
-            } else {
-                Stamina += StaminaRecoverySpeed * Time.deltaTime;
-            }
+            Stamina += StaminaRecoverySpeed * Time.deltaTime;
 
             OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
 
@@ -80,20 +90,30 @@ public class Player : Character, IDamageable
         }
     }
 
-    public void DrainStamina() {
-        this.Stamina -= StaminaCost;
+    public void DrainStamina(float staminaCost) {
+        this.Stamina -= staminaCost;
         OnStaminaValueChanged?.Invoke(this, new OnStaminaValueChanged_EventArgs { value = Stamina });
         canRecoverStamina = false;
         StartCoroutine(DelayStaminaRecover(staminaRecoveryDelay));
     }
 
+    public void RecoverHealth(float value) {
+        StartCoroutine(RecoverHealthCoroutine(value, BeginHealthRecoverDelay));
+    }
+
+    public void TakeDamage(float damage) {
+        Health -= damage;
+        if (Health < 0f) {
+            Health = 0f;
+        }
+        OnDamageTaken?.Invoke();
+        OnHealthValueReduced?.Invoke(Health);
+        //characterSoundFXManager.PlayDamageSoundFX();
+    }
+
     private IEnumerator DelayStaminaRecover(float time) {
         yield return new WaitForSeconds(time);
         canRecoverStamina = true;
-    }
-
-    public void RecoverHealth(float value) {
-        StartCoroutine(RecoverHealthCoroutine(value, BeginHealthRecoverDelay));
     }
 
     private IEnumerator RecoverHealthCoroutine(float healthAmmount, float delay) {
@@ -120,18 +140,9 @@ public class Player : Character, IDamageable
         OnHealthValueRestored?.Invoke(currentValue, targetValue);
     }
 
-    public void TakeDamage(float damage) {
-        if (!IsBlocking) {
-            Health -= damage;
-            if (Health<0f) {
-                Health = 0f;
-            }
-            OnDamageTaken?.Invoke();
-            OnHealthValueReduced?.Invoke(Health);
-        } else {
-            OnHitBlocked?.Invoke();
-            DrainStamina();
-        }
+    private IEnumerator EntranceCoroutine(float waitTime) {
+        yield return new WaitForSeconds(waitTime);
+        SetState(PlayerState.Enabled);
     }
 
 }
