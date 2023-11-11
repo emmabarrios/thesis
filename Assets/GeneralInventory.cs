@@ -24,8 +24,10 @@ public class GeneralInventory : MonoBehaviour
             storedQuickItemList.Add(item);
         }
 
-        foreach (WeaponItem item in weapons) {
-            storedWeaponItemList.Add(item);
+        if (weapons!=null) {
+            foreach (WeaponItem item in weapons) {
+                storedWeaponItemList.Add(item);
+            }
         }
     }
 

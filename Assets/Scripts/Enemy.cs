@@ -31,7 +31,7 @@ public class Enemy : Character, IDamageable {
     //[SerializeField] private string enemyName = null;
 
     //private Transform playerTransform;
-    //[SerializeField] float rotationSpeed;
+    [SerializeField] float rotationSpeed;
     //[SerializeField] float walkSpeed;
     //[SerializeField] float attackStateTime;
 
@@ -55,9 +55,16 @@ public class Enemy : Character, IDamageable {
 
     public Action<float> OnDamageTaken;
 
+    [SerializeField] GameObject player;
+
+    private Transform playerTransform;
+
     private void Awake() {
         // Target lock the enemy on the player
-        GameObject.Find("Player").GetComponent<Controller>().SetLockTarget(this.transform);
+        player = GameObject.Find("Player");
+        player.GetComponent<Controller>().SetLockTarget(this.transform);
+
+        playerTransform = player.GetComponent<Transform>();
 
         //EnemyWeapon = GameObject.Find("Enemy Weapon Anchor Point R").GetComponentInChildren<Weapon>();
     }
@@ -66,7 +73,7 @@ public class Enemy : Character, IDamageable {
     void Start() {
         //controller = GetComponent<CharacterController>();
         //playerTransform = GameObject.Find("Player").GetComponent<Transform>();
-        //animator = GetComponent<Animator>();
+        visualAnimator = GetComponentInChildren<Animator>();
         //isTiming = true;
         //text.text = enemyName;
         currentHealth = Health;
@@ -82,6 +89,8 @@ public class Enemy : Character, IDamageable {
                 GameManager.instance.EndCombatSequence(isDefeated);
             }
         }
+
+        RotateToTarget(rotationSpeed, Time.deltaTime);
     }
 
     // Update is called once per frame
@@ -144,16 +153,16 @@ public class Enemy : Character, IDamageable {
 
         if (Health<=0) {
             //GameManager.instance.SetToOutroState();
-            visualAnimator.Play("defeat", -1, 0);
+            visualAnimator.Play("dead", -1, 0);
         }
     }
 
-    //private void RotateToTarget(float followRotationSpeed, float timeDelta) {
-    //    Vector3 directionToTarget = playerTransform.position - transform.position;
-    //    directionToTarget.y = 0f;
-    //    Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-    //    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
-    //}
+    private void RotateToTarget(float followRotationSpeed, float timeDelta) {
+        Vector3 directionToTarget = playerTransform.position - transform.position;
+        directionToTarget.y = 0f;
+        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
+    }
 
     //private IEnumerator Recover(float time) {
     //    yield return new WaitForSeconds(time);

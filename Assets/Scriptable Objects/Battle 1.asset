@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c4694a0b939e5c46a3a12b79e5bfa64, type: 3}
   m_Name: Battle 1
   m_EditorClassIdentifier: 
-  _enemy: {fileID: 8751181926538422844, guid: feef6a10c8395d041b7719ef964fde88, type: 3}
+  _enemy: {fileID: 8751181926538422844, guid: 23cd046edfd2cd244b276179919e4ea0, type: 3}
+  _markerObject: {fileID: 29011562739958062, guid: f0adbe7ec1a1100479dd4a455ca685f4, type: 3}
   _itemList:
   - {fileID: 11400000, guid: 0b027529a44418f47a33a3727fb75a3f, type: 2}
-  - {fileID: 11400000, guid: 6f645a6b3bead374da70801695482963, type: 2}
+  _weaponItemList:
+  - {fileID: 11400000, guid: afac265dd2ee96443b1502fd785deaca, type: 2}
   _exp: 2

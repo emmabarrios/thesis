@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 4693961603641024921}
   - component: {fileID: 4640733568481426429}
   m_Layer: 0
-  m_Name: SKELETON
+  m_Name: skelleton_marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
