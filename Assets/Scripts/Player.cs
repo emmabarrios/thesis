@@ -26,6 +26,10 @@ public class Player : Character, IDamageable
     [SerializeField] private float attackStaminaCost;
     [SerializeField] private float movementStaminaCost;
 
+    // Attack cooldown from weapon
+    [Header("Base cooldown, testing")]
+    [SerializeField] private float attackCooldown;
+
     public float AttackStaminaCost { get { return attackStaminaCost; } set { attackStaminaCost = value; } }
     public float MovementStaminaCost { get { return movementStaminaCost; } set { movementStaminaCost = value; } }
     public float StaminaRecoverySpeed { get { return staminaRecoverySpeed; } set { staminaRecoverySpeed = value; } }
@@ -33,6 +37,7 @@ public class Player : Character, IDamageable
     public float BeginHealthRecoverDelay { get { return beginHealthRecoverDelay; } set { beginHealthRecoverDelay = value; } }
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     public float MaxStamina { get { return maxStamina; } set { maxStamina = value; } }
+    public float AttackCooldown { get { return attackCooldown; } set { attackCooldown = value; } }
 
     [SerializeField] private bool isBlocking = false;
 

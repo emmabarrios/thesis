@@ -133,9 +133,14 @@ public class GameManager : MonoBehaviour
 
                 if (countdownToStartCombatTimer <= 0) {
                     combatLimitTimer = combatLimitTimerMax;
-                    PlayerStatsManager.instance.LoadCharacterStats(Player.instance);
+                    PlayerStatsManager.instance.LoadPlayerStats(Player.instance);
                     CombatInventory.instance.LoadPlayerWeapon();
                     GameObject.Find("Carousel").GetComponent<CombatUIcarousel>().InitializeUIcarousel(CombatInventory.instance.itemLists);
+
+                    // Initialize player controller
+                    GameObject.Find("Player").GetComponent<Controller>().LoadPlayerAttackSettings();
+
+
                     state = GameStates.Combat;
                     //ToggleCombatUI();
                     //InitializePlayer();
@@ -230,7 +235,7 @@ public class GameManager : MonoBehaviour
     public void InitializePlayer() {
         GameObject.FindGameObjectWithTag("Player").GetComponent<Controller>().LoadInputReferences();
         GameObject.FindGameObjectWithTag("Player").GetComponent<Controller>().SetLockTarget(GameObject.FindGameObjectWithTag("Enemy").GetComponent<Transform>());
-        PlayerStatsManager.instance.LoadCharacterStats(Player.instance);
+        PlayerStatsManager.instance.LoadPlayerStats(Player.instance);
         CombatInventory.instance.LoadPlayerWeapon();
         
     }

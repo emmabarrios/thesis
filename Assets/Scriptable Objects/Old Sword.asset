@@ -23,5 +23,5 @@ MonoBehaviour:
   _strenghtRequirement: 0
   _staminaCost: 0
   _durability: 0
-  _damage: 0
-  _attackCooldown: 0
+  _damage: 5
+  _attackCooldown: 0.5

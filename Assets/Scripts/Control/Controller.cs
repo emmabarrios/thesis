@@ -49,6 +49,7 @@ public class Controller : MonoBehaviour {
     [Header("Combat Settings")]
     [SerializeField] private float attackCooldown;
     [SerializeField] private float attackTimer;
+
     [SerializeField] private bool attackPerformed = false;
     [SerializeField] private bool canAttack = false;
     [SerializeField] private bool isUsingItem = false;
@@ -86,10 +87,9 @@ public class Controller : MonoBehaviour {
 
         // Initial Values
         currentSpeed = 0f;
-        attacker = GetComponentInChildren<Attacker>();
 
-        // Find enemy in scene
-        //target = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Transform>();
+        // Add reference to the attacker component
+        attacker = GetComponentInChildren<Attacker>();
 
     }
 
@@ -310,6 +310,14 @@ public class Controller : MonoBehaviour {
 
     public void LoadInputReferences() {
         StartCoroutine(LoadScenInputEvents());
+    }
+
+    public void LoadPlayerAttackSettings() {
+        attackCooldown = player.AttackCooldown;
+
+        attacker.UpdateComboTimerLimit(attackCooldown);
+
+        attacker.UpdateDamage(player.Attack);
     }
 
     public void SetLockTarget(Transform tran) {

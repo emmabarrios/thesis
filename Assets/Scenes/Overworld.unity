@@ -726,6 +726,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6464295142459288576, guid: 3bcd833f3ff930d4faae6b80440a476f, type: 3}
+      propertyPath: WeaponItemSO
+      value: 
+      objectReference: {fileID: 11400000, guid: afac265dd2ee96443b1502fd785deaca, type: 2}
+    - target: {fileID: 6464295142459288576, guid: 3bcd833f3ff930d4faae6b80440a476f, type: 3}
       propertyPath: itemList1.Array.data[0]
       value: 
       objectReference: {fileID: 0}

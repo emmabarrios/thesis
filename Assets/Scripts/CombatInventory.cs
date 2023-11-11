@@ -42,6 +42,7 @@ public class CombatInventory : MonoBehaviour
         weaponSlotManager = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponSlotManager>();
         if (weaponSlotManager != null) {
             weaponSlotManager.LoadWeaponOnSlot(WeaponItemSO);
+            // 
         } else {
             Debug.Log("Weapon slot manager not found");
         }

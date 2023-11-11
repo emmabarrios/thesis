@@ -14,16 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Old Sword
   _description: Sword goes whoosh
-  _sprite: {fileID: 0}
-  _modelPrefab: {fileID: 6231215843636208481, guid: dbb9f24d3cc91dc44996607ca830ecb8, type: 3}
+  _sprite: {fileID: 21300000, guid: 3b709adcf12278f4194d1ab6beb36548, type: 3}
+  _modelPrefab: {fileID: 6013990982369288243, guid: 446537a5e4bab814fb6203cbd4680b71, type: 3}
   _discoverability: 50
   _price: 500
-  _equipmentPrefab: {fileID: 952802527015294292, guid: 9bf516c516b2c204396ea73f88eac754, type: 3}
+  _equipmentPrefab: {fileID: 92146745497795738, guid: 376da983a1e1b064398823df91a0a537, type: 3}
   _weight: 0
-  _strikeDefense: 0
-  _slashDefense: 0
-  _thrustDefense: 0
   _strenghtRequirement: 0
-  _dexterityRequirement: 0
-  _damage: 10
-  _attackCooldown: 0.6
+  _staminaCost: 0
+  _durability: 0
+  _damage: 30
+  _attackCooldown: 1

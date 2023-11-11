@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Attacker : MonoBehaviour
 {
-    private Player player;
-
     CharacterSoundFXManager characterSoundFXManager;
 
     [Header("Combo settings")]
@@ -15,14 +13,26 @@ public class Attacker : MonoBehaviour
     [SerializeField] private float attackBonus_2;
     [SerializeField] private float attackBonus_3;
     [SerializeField] private float current_bonus;
-
-    // Time limit to input the combos (in seconds)
     [SerializeField] private float comboTimeLimit = 3f;
     [SerializeField] private float currentComboTime = 0f;
 
     [Header("Attack settings")]
     [SerializeField] private float hit_distance = 1f;
     [SerializeField] private float ray_delay = .2f;
+    [SerializeField] private float damage;
+
+
+
+    // Update values from weapon
+    // Update controller from Attacker values
+
+    public void UpdateComboTimerLimit(float weaponCooldown) {
+        comboTimeLimit += weaponCooldown;
+    }
+
+    public void UpdateDamage(float damage) {
+        this.damage = damage;
+    }
 
     // Events
     public Action<string> OnAttackLanded;
@@ -42,8 +52,6 @@ public class Attacker : MonoBehaviour
     private string lastCombo;
 
     private void Start() {
-        player = GetComponentInParent<Player>();
-
         characterSoundFXManager = transform.root.GetComponentInChildren<CharacterSoundFXManager>();
     }
 
@@ -131,11 +139,11 @@ public class Attacker : MonoBehaviour
             if (hitInfo.collider.CompareTag("Enemy")) {
                 IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
                 if (damageable != null) {
-                    damageable.TakeDamage(player.Attack * current_bonus); // Call the TakeDamage method on the enemy
+                    damageable.TakeDamage(damage * current_bonus); // Call the TakeDamage method on the enemy
                 }
 
                 // Fire event
-                OnAttackLanded?.Invoke($"{lastCombo} {player.Attack * current_bonus}");
+                OnAttackLanded?.Invoke($"{lastCombo} {damage * current_bonus}");
                 //Debug.Log($"{lastCombo} {player.Attack * current_bonus}");
                 hitInfo.collider.GetComponent<CharacterVisualFXManager>().PlayDamageEffect(hitInfo.point);
                 hitInfo.collider.GetComponent<CharacterSoundFXManager>().PlayDamageSoundFX();

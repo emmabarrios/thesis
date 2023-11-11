@@ -115,6 +115,7 @@ MonoBehaviour:
   staminaRecoverySpeedModifier: 1
   attackStaminaCost: 30
   movementStaminaCost: 30
+  attackCooldown: 0
   isBlocking: 0
   characterSoundFXManager: {fileID: 0}
   characterStats: {fileID: 0}
@@ -965,3 +966,4 @@ MonoBehaviour:
   currentComboTime: 0
   hit_distance: 2.7
   ray_delay: 0.2
+  damage: 0
