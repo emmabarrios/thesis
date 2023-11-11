@@ -16,7 +16,15 @@ public class RandomPrefabSpawner : MonoBehaviour
 
     private EventMarkerSpawnTimer spawnTimer;
 
-    private bool isRespawnTime;
+    [SerializeField] private Transform playerPin;
+
+    [SerializeField] private Vector3 lastSpawnCenterPosition;
+
+    void OnDrawGizmosSelected() {
+        // Draw a wire sphere to represent the spawn radius
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, spawnRadius);
+    }
 
     void Start() {
 
@@ -28,13 +36,34 @@ public class RandomPrefabSpawner : MonoBehaviour
         }
 
         spawnTimer = GameObject.Find("EventMarkerSpawnTimer").GetComponent<EventMarkerSpawnTimer>();
+        playerPin = GameObject.Find("PlayerPin").GetComponent<Transform>();
+
+        lastSpawnCenterPosition = this.transform.position;
+
     }
 
     private void Update() {
         string sceneName = SceneManager.GetActiveScene().name;
 
         if (sceneName == "Overworld") {
+
             if (spawnTimer.IsTimerOut()) {
+                RemoveRemainingInstances();
+                SpawnRandomPrefabs();
+                ParentLastPrefabInstances();
+                spawnTimer.ResetTimer();
+            }
+        }
+
+        if (sceneName == "Overworld" && playerPin == null) {
+            playerPin = GameObject.Find("PlayerPin").GetComponent<Transform>();
+        }
+
+        if (playerPin != null) {
+            float distance = Mathf.Abs(Vector3.Distance(lastSpawnCenterPosition, playerPin.transform.position));
+            if (distance > spawnRadius) {
+                this.transform.position = playerPin.transform.position;
+                lastSpawnCenterPosition = this.transform.position;
                 RemoveRemainingInstances();
                 SpawnRandomPrefabs();
                 ParentLastPrefabInstances();
@@ -54,7 +83,9 @@ public class RandomPrefabSpawner : MonoBehaviour
     public void SpawnRandomPrefabs() {
 
         // Get the player's position
-        Vector3 playerPosition = transform.position;
+        //Vector3 playerPosition = transform.position;
+
+        Vector3 playerPosition = playerPin.position;
 
         for (int i = 0; i < numberOfPrefabs; i++) {
             bool positionIsValid = false;

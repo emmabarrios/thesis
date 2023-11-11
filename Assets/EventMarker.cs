@@ -61,7 +61,6 @@ public class EventMarker : MonoBehaviour
 
         if (GameObject.Find("Canvas").transform.GetChild(0).gameObject.activeSelf == false){
             GameManager.instance.LoadEventProperties(this.eventScriptableObject, this.gameObject);
-            Debug.Log("Touched.. gyahh");
         }
         GameObject.Find("Canvas").GetComponent<OverworldUIManager>().DisplayStartEventPanel();
 

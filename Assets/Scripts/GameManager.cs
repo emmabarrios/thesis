@@ -191,7 +191,9 @@ public class GameManager : MonoBehaviour
 
             case GameStates.LoadingWorldAssets:
 
-                RandomPrefabSpawner.instance.ToggleInstances(lastClickedEventMarkerLocationId);
+                if (lastClickedEventMarkerLocationId != Vector3.zero) {
+                    RandomPrefabSpawner.instance.ToggleInstances(lastClickedEventMarkerLocationId);
+                }
 
                 state = GameStates.Overworld;
                 break;
@@ -202,6 +204,13 @@ public class GameManager : MonoBehaviour
     public void EndCombatSequence(bool wasEnemyDefeated) {
         ToggleCombatUI();
         ToggleBattleResultsUI(wasEnemyDefeated);
+
+        // if wasEnemyDefeated, send exp to StatsManager and items to GeneralInventory
+        if (wasEnemyDefeated) {
+            GeneralInventory.instance.StoreItems(GetItemList());
+            PlayerStatsManager.instance.UpdateExperience(GetCombatExperience());
+        }
+
         state = GameStates.CombatOutro;
     }
 

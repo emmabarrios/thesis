@@ -712,7 +712,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692976953}
   m_LocalRotation: {x: 0.3223756, y: -0.39880115, z: 0.15216267, w: 0.8449131}
-  m_LocalPosition: {x: 10.78918, y: 12.126269, z: -7.0671215}
+  m_LocalPosition: {x: 15.47, y: 18.99, z: -10.78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -969,6 +969,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2341414379414311824, guid: a67e237d3f7536f4fa7f52dba8eb0aff, type: 3}
+      propertyPath: maxExp
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2341414379414311825, guid: a67e237d3f7536f4fa7f52dba8eb0aff, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1761,6 +1765,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 581338348839543858, guid: cfcc42c8268b9e14b839435ae38af6d7, type: 3}
+      propertyPath: spawnRadius
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 581338348839543858, guid: cfcc42c8268b9e14b839435ae38af6d7, type: 3}
+      propertyPath: numberOfPrefabs
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 581338348839543858, guid: cfcc42c8268b9e14b839435ae38af6d7, type: 3}
+      propertyPath: minDistanceBetweenObjects
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 581338348839543859, guid: cfcc42c8268b9e14b839435ae38af6d7, type: 3}
       propertyPath: m_RootOrder
       value: 11

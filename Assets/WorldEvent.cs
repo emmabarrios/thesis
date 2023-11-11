@@ -7,5 +7,6 @@ public class WorldEvent : ScriptableObject {
     public GameObject _enemy;
     public GameObject _markerObject;
     public List<QuickItem> _itemList = new List<QuickItem>();
+    public List<WeaponItem> _weaponItemList = new List<WeaponItem>();
     public float _exp;
 }

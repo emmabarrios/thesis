@@ -10,7 +10,17 @@ public class PlayerStatsManager: MonoBehaviour
     [SerializeField] private int strenght;
 
     [Header("Weapon stats")]
-    private float weaponAttack;
+    [SerializeField] private float weaponAttack;
+
+    [Header("Travel stats")]
+    [SerializeField] private float traveledDistance;
+    [SerializeField] private float maxDistance;
+    [SerializeField] private float travelExp;
+
+    [Header("Experience")]
+    [SerializeField] private float earnedExp;
+    [SerializeField] private float maxExp;
+    [SerializeField] private int skillPoints;
 
     private void Awake() {
         //DontDestroyOnLoad(transform.gameObject);
@@ -38,5 +48,14 @@ public class PlayerStatsManager: MonoBehaviour
         character.Attack = 10f + (strenght * 0.50f) + weaponAttack;
         character.Defense = 10f + (strenght * 0.50f) + (vitality * 0.1f) + (endurance * 0.1f);
         
+    }
+
+    public void UpdateExperience(float exp) {
+        earnedExp += exp;
+        if (earnedExp >= maxExp) {
+            skillPoints++;
+            float remainder = Mathf.Abs(maxExp - earnedExp);
+            earnedExp = remainder;
+        }
     }
 }
