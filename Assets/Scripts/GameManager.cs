@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,7 +11,17 @@ public class GameManager : MonoBehaviour
     [Header("Combat Scene Characters")]
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject enemy;
-    
+
+    [SerializeField] private WorldEvent clickedEvent;
+    [SerializeField] private Vector3 lastClickedEventMarkerLocationId;
+
+    // Event to destroy object based on battle results
+    public Action<string> OnCombatEventFinished;
+
+
+    private bool isOnCombatScene = false;
+    private bool isOnOverworldScene = false;
+    private bool combatSceneLoaded = false;
 
     public enum GameStates {
         WaitingToStart,
@@ -18,7 +30,8 @@ public class GameManager : MonoBehaviour
         CombatIntro,
         CombatOutro,
         Wait,
-        Overworld
+        Overworld,
+        LoadingWorldAssets
     }
 
 
@@ -54,29 +67,59 @@ public class GameManager : MonoBehaviour
     [Header("Battle Settings")]
     public float entranceTime = 2f;
 
-    private bool combatSceneLoaded = false;
 
     private void Awake() {
-        //DontDestroyOnLoad(transform.gameObject);
 
         if (instance == null) {
-            // If no instance exists, set the instance to this object
             instance = this;
-
-            // Mark this object to not be destroyed when loading a new scene
             DontDestroyOnLoad(gameObject);
         } else {
-            // If an instance already exists, destroy this object
             Destroy(gameObject);
         }
 
-        //if (instance != null) { return; }
-        //instance = this;
-
-        state = GameStates.CombatIntro;
+        state = GameStates.Wait;
     }
 
     private void Update() {
+
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        switch (sceneName) {
+
+            case "MainScene":
+                if (isOnCombatScene == false) {
+                    isOnCombatScene = true;
+                    isOnOverworldScene = false;
+
+                    RandomPrefabSpawner.instance.ToggleInstances();
+                    state = GameStates.CombatIntro;
+
+                    // Instantiate enemy on place
+                    Instantiate(enemy, GameObject.Find("EnemySpawnPoint").transform);
+                }
+                break;
+            
+            case "Overworld":
+                if (isOnOverworldScene == false) {
+                    isOnOverworldScene = true;
+                    isOnCombatScene = false;
+                    state = GameStates.LoadingWorldAssets;
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        //if (combatSceneLoaded == false) {
+        //    if (SceneManager.GetActiveScene().name.ToString() == "MainScene") {
+        //        combatSceneLoaded = true;
+        //        state = GameStates.CombatIntro;
+        //    }
+        //}
+       
+
+        // State management
         switch (state) {
             //case GameStates.WaitingToStart:
             //    waitingToStartTimer -= Time.deltaTime;
@@ -92,6 +135,7 @@ public class GameManager : MonoBehaviour
                     combatLimitTimer = combatLimitTimerMax;
                     PlayerStatsManager.instance.LoadCharacterStats(Player.instance);
                     CombatInventory.instance.LoadPlayerWeapon();
+                    GameObject.Find("Carousel").GetComponent<CombatUIcarousel>().InitializeUIcarousel(CombatInventory.instance.itemLists);
                     state = GameStates.Combat;
                     //ToggleCombatUI();
                     //InitializePlayer();
@@ -103,7 +147,7 @@ public class GameManager : MonoBehaviour
                 combatLimitTimer -= Time.deltaTime;
 
                 if (combatLimitTimer < 0) {
-                    EndCombatSequence();
+                    EndCombatSequence(false);
                 }
                 break;
 
@@ -138,14 +182,26 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameStates.Overworld:
+                //if (playerWonLastEvent) {
+                //    Debug.Log(clickedEvent.name);
+                //} else {
+                //    Debug.Log("Player lost");
+                //}
+                break;
+
+            case GameStates.LoadingWorldAssets:
+
+                RandomPrefabSpawner.instance.ToggleInstances(lastClickedEventMarkerLocationId);
+
+                state = GameStates.Overworld;
                 break;
         }
-        Debug.Log(state);
+        //Debug.Log(state);
     }
 
-    public void EndCombatSequence() {
+    public void EndCombatSequence(bool wasEnemyDefeated) {
         ToggleCombatUI();
-        ToggleBattleResultsUI();
+        ToggleBattleResultsUI(wasEnemyDefeated);
         state = GameStates.CombatOutro;
     }
 
@@ -181,9 +237,16 @@ public class GameManager : MonoBehaviour
         playerCombatUI.gameObject.SetActive(!playerCombatUI.gameObject.activeSelf);
         enemyCombatUI.gameObject.SetActive(!enemyCombatUI.gameObject.activeSelf);
     } 
-    private void ToggleBattleResultsUI() {
-        Transform battleResultsUI = GameObject.Find("Canvas").transform.GetChild(1);
-        battleResultsUI.gameObject.SetActive(!battleResultsUI.gameObject.activeSelf);
+    private void ToggleBattleResultsUI(bool combatResult) {
+        Transform battleResultsVictoryUI = GameObject.Find("Canvas").transform.GetChild(1);
+        Transform battleResultsDefeatUI = GameObject.Find("Canvas").transform.GetChild(2);
+
+        if (combatResult) {
+            battleResultsVictoryUI.gameObject.SetActive(!battleResultsVictoryUI.gameObject.activeSelf);
+        } else {
+            battleResultsDefeatUI.gameObject.SetActive(!battleResultsDefeatUI.gameObject.activeSelf);
+        }
+        
     }
 
     public float GetCombatTimerNormalized() {
@@ -237,4 +300,19 @@ public class GameManager : MonoBehaviour
     public void SetGameManagerState(GameStates state) {
         this.state = state;
     }
+
+    public void LoadEventProperties(WorldEvent clickedEvent, GameObject eventMarker) {
+        this.clickedEvent = clickedEvent;
+        enemy = clickedEvent._enemy;
+        lastClickedEventMarkerLocationId = eventMarker.GetComponent<EventMarker>().markerLocationId;
+    }
+
+    public List<QuickItem> GetItemList() {
+        return this.clickedEvent._itemList;
+    }
+
+    public float GetCombatExperience() {
+        return clickedEvent._exp;
+    }
+    
 }

@@ -136,7 +136,7 @@ public class Attacker : MonoBehaviour
 
                 // Fire event
                 OnAttackLanded?.Invoke($"{lastCombo} {player.Attack * current_bonus}");
-                Debug.Log($"{lastCombo} {player.Attack * current_bonus}");
+                //Debug.Log($"{lastCombo} {player.Attack * current_bonus}");
                 hitInfo.collider.GetComponent<CharacterVisualFXManager>().PlayDamageEffect(hitInfo.point);
                 hitInfo.collider.GetComponent<CharacterSoundFXManager>().PlayDamageSoundFX();
             }

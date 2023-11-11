@@ -28,7 +28,18 @@ public class CombatUI : MonoBehaviour
         //healthImage.fillAmount = healthPoints / healthPoints;
         //staminaImage.fillAmount = staminaPoints / staminaPoints;
 
-        StartCoroutine(LoadScenePlayerEvents());
+        //StartCoroutine(LoadScenePlayerEvents());
+
+
+        player.OnHealthValueReduced += ReduceHealthBar;
+        player.OnHealthValueRestored += FillHealthBar;
+        player.OnStaminaValueChanged += Update_StaminaBar;
+
+        healthPoints = player.Health;
+        staminaPoints = player.Stamina;
+
+        healthImage.fillAmount = healthPoints / healthPoints;
+        staminaImage.fillAmount = staminaPoints / staminaPoints;
     }
 
     private void ReduceHealthBar(float value) {
@@ -58,28 +69,28 @@ public class CombatUI : MonoBehaviour
         }
     }
 
-    private void OnEnable() {
-        carousel.InitializeUIcarousel(CombatInventory.instance.itemLists);
-    }
+    //private void OnEnable() {
+    //    carousel.InitializeUIcarousel(CombatInventory.instance.itemLists);
+    //}
 
-    private IEnumerator LoadScenePlayerEvents() {
+    //private IEnumerator LoadScenePlayerEvents() {
 
-        Player _player = null;
+    //    Player _player = null;
 
-        while (_player == null) {
-            _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            yield return null;
-        }
-        player = _player;
+    //    while (_player == null) {
+    //        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+    //        yield return null;
+    //    }
+    //    player = _player;
 
-        player.OnHealthValueReduced += ReduceHealthBar;
-        player.OnHealthValueRestored += FillHealthBar;
-        player.OnStaminaValueChanged += Update_StaminaBar;
+    //    player.OnHealthValueReduced += ReduceHealthBar;
+    //    player.OnHealthValueRestored += FillHealthBar;
+    //    player.OnStaminaValueChanged += Update_StaminaBar;
 
-        healthPoints = player.Health;
-        staminaPoints = player.Stamina;
+    //    healthPoints = player.Health;
+    //    staminaPoints = player.Stamina;
 
-        healthImage.fillAmount = healthPoints / healthPoints;
-        staminaImage.fillAmount = staminaPoints / staminaPoints;
-    }
+    //    healthImage.fillAmount = healthPoints / healthPoints;
+    //    staminaImage.fillAmount = staminaPoints / staminaPoints;
+    //}
 }

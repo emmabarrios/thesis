@@ -18,6 +18,7 @@ TagManager:
   - Body Part
   - BodyPart
   - Thrower
+  - Marker
   layers:
   - Default
   - TransparentFX

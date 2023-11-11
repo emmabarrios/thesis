@@ -10,7 +10,6 @@ public class Enemy : Character, IDamageable {
     //public Transform camTarget;
     //public float yOffset;
 
-
     [SerializeField] private float currentHealth;
     [SerializeField] float maxHealth;
     //private Animator animator;
@@ -57,6 +56,9 @@ public class Enemy : Character, IDamageable {
     public Action<float> OnDamageTaken;
 
     private void Awake() {
+        // Target lock the enemy on the player
+        GameObject.Find("Player").GetComponent<Controller>().SetLockTarget(this.transform);
+
         //EnemyWeapon = GameObject.Find("Enemy Weapon Anchor Point R").GetComponentInChildren<Weapon>();
     }
 
@@ -77,7 +79,7 @@ public class Enemy : Character, IDamageable {
         if (Health <= 0) {
             if (!isDefeated) {
                 isDefeated = true;
-                GameManager.instance.EndCombatSequence();
+                GameManager.instance.EndCombatSequence(isDefeated);
             }
         }
     }

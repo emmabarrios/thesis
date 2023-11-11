@@ -249,6 +249,7 @@ MonoBehaviour:
   maxHealth: 100
   visualAnimator: {fileID: 8751181925801082341}
   lifebarImage: {fileID: 8751181925816240810}
+  isDefeated: 0
   dropList:
   - {fileID: 11400000, guid: fb5ab62e3862581459600ed8a83f1597, type: 2}
   - {fileID: 11400000, guid: 0b027529a44418f47a33a3727fb75a3f, type: 2}
@@ -491,7 +492,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8751181926843264021
 RectTransform:
   m_ObjectHideFlags: 0

@@ -12,13 +12,21 @@ public class CombatUIcarousel : MonoBehaviour
 
     public void InitializeUIcarousel(List<List<QuickItem>> listOfItems) {
         int rowCount = listOfItems.Count;
-        for (int i = 0; i < rowCount; i++) {
-            GameObject tempRow = Instantiate(rowPrefab,this.transform);
-            CombatUIrow row = tempRow.GetComponent<CombatUIrow>();
-            row.LoadSlotItems(listOfItems[i]);
-            // Add row to visualize in inspector
-            rows.Add(row);
+        GameObject tempRow = null;
+        CombatUIrow row = null;
+
+        // If quick item list are not empty
+        if (rowCount > 0) {
+            for (int i = 0; i < rowCount; i++) {
+                tempRow = Instantiate(rowPrefab, this.transform);
+                row = tempRow.GetComponent<CombatUIrow>();
+                row.LoadSlotItems(listOfItems[i], i);
+
+                // Add row to visualize in inspector
+                rows.Add(row);
+            }
+            indicatorContainer.InitializeRowIndicators(rows.Count);
+            GetComponent<Carousel>().SetPouchCountTotal(rows.Count);
         }
-        indicatorContainer.InitializeRowIndicators(rows.Count);
     }
 }

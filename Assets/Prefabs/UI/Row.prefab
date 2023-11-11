@@ -125,6 +125,8 @@ MonoBehaviour:
   - {fileID: 6664403992056573356}
   - {fileID: 9201924556172589534}
   pouchItemPrefab: {fileID: 4335348937789660008, guid: d4cc401a7809e0e4594ef9a666c68bda, type: 3}
+  currentRow: 0
+  nullSprite: {fileID: 21300000, guid: b9aea3dcc56d6814287ddcfc5c4e5945, type: 3}
 --- !u!1 &775136657486017030
 GameObject:
   m_ObjectHideFlags: 0

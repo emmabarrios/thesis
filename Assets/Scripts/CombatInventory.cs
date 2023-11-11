@@ -46,4 +46,10 @@ public class CombatInventory : MonoBehaviour
             Debug.Log("Weapon slot manager not found");
         }
     }
+
+    public void RemoveItem(int row, int col){
+
+        //itemLists[row].RemoveAt(col);
+        itemLists[row][col] = null;
+    }
 }

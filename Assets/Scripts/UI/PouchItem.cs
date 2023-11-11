@@ -6,6 +6,10 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
+    [Header("Item index")]
+    [SerializeField] public int _row = 0;
+    [SerializeField] public int _column = 0;
+
     [Header("New implementation")]
     public QuickItem itemSO;
     public Sprite item_holder_graphic;
@@ -166,6 +170,9 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         // Destroy pouch item
         Destroy(this.gameObject);
+
+        // Destroy item from combat inventory
+        CombatInventory.instance.RemoveItem(_row, _column);
     }
 
     private IEnumerator LongPressDetectionDelayed(PointerEventData eventData) {
@@ -226,5 +233,10 @@ public class PouchItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
     public void InitializeQuickItemGraphics() {
         item_image_gameObject.GetComponent<Image>().sprite = itemSO._sprite;
         item_holder_gameObject.GetComponent<Image>().sprite = itemSO._slot_sprite;
+    }
+
+    public void SetItemIndex(int r, int c) {
+        this._row = r;
+        this._column = c;
     }
 }

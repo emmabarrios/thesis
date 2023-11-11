@@ -17,7 +17,7 @@ public class ImageSpawner : MonoBehaviour
 
     private void SpawnImage(string text) {
         GameObject spawnedImage = Instantiate(damageUI, transform.position, Quaternion.identity);
-        spawnedImage.transform.parent = this.transform;
+        spawnedImage.transform.SetParent(this.transform);
         TextMeshProUGUI textMeshPro = spawnedImage.GetComponentInChildren<TextMeshProUGUI>();
         textMeshPro.text = text;
     }

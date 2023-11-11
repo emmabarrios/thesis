@@ -8,6 +8,8 @@ public class Controller : MonoBehaviour {
     private CharacterController characterController;
     private Attacker attacker;
 
+    private bool hasCombatStarted = false;
+
     [Header("Orbital Settings")]
     [SerializeField] private Transform target = null;
     private float lookRotationSpeed = 4f;
@@ -87,7 +89,7 @@ public class Controller : MonoBehaviour {
         attacker = GetComponentInChildren<Attacker>();
 
         // Find enemy in scene
-        target = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Transform>();
+        //target = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Transform>();
 
     }
 
@@ -100,10 +102,13 @@ public class Controller : MonoBehaviour {
             return;
         }
 
+        if (hasCombatStarted == false) {
+            hasCombatStarted = true;
+        }
+
         // Movement
         Vector2 inputMovement = joystick.Direction;
         if (!DashPerformed && !IsKnockBacked) {
-
             Orbitate(inputMovement);
         }
 
@@ -170,10 +175,12 @@ public class Controller : MonoBehaviour {
     }
    
     private void RotateToTarget(float followRotationSpeed, float timeDelta) {
-        Vector3 directionToTarget = target.position - transform.position;
-        directionToTarget.y = 0f;
-        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
+        if (hasCombatStarted == true) {
+            Vector3 directionToTarget = target.position - transform.position;
+            directionToTarget.y = 0f;
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
+        }
     }
 
     private void ProcessGestureSwipes(object sender, GestureInput.SwipeDirectionChangedEventArgs e) {

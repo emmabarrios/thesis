@@ -50,8 +50,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb5ab62e3862581459600ed8a83f1597, type: 2}
   itemList2:
   - {fileID: 11400000, guid: fb5ab62e3862581459600ed8a83f1597, type: 2}
-  - {fileID: 11400000, guid: 6f645a6b3bead374da70801695482963, type: 2}
-  - {fileID: 11400000, guid: 6f645a6b3bead374da70801695482963, type: 2}
   - {fileID: 11400000, guid: fb5ab62e3862581459600ed8a83f1597, type: 2}
+  - {fileID: 11400000, guid: 6f645a6b3bead374da70801695482963, type: 2}
+  - {fileID: 11400000, guid: 6f645a6b3bead374da70801695482963, type: 2}
   WeaponItemSO: {fileID: 11400000, guid: ffbf82e9ced467646a1f138655ba97ea, type: 2}
   weaponSlotManager: {fileID: 0}

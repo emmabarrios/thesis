@@ -28,7 +28,7 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     private void Start() {
         rectTransform = this.GetComponent<RectTransform>();
-        pouchCount = this.transform.childCount - 1;
+        //pouchCount = this.transform.childCount - 1;
     }
 
     private void ModifyImageAlpha(Image image, float alpha) {
@@ -47,6 +47,8 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         if (isSwipeInProgress) {
 
             if (!isMoving) {
+
+
                 float swipeDistance = eventData.position.x - initialTouchPosition.x;
 
                 if (Mathf.Abs(swipeDistance) > swipeThreshold) {
@@ -129,6 +131,8 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     private IEnumerator Slide(float interpolationTime, float swipeDirection) {
 
+
+
         Vector2 offset = new Vector2(Mathf.Floor(pouchSize * swipeDirection), 0f);
         Vector2 currentPos = rectTransform.position;
 
@@ -187,5 +191,9 @@ public class Carousel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
                 }
             }
         }
+    }
+
+    public void SetPouchCountTotal(int total) {
+        this.pouchCount = total - 1;
     }
 }
