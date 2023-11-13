@@ -803,7 +803,7 @@ PrefabInstance:
     - target: {fileID: 6464295142459288576, guid: 3bcd833f3ff930d4faae6b80440a476f, type: 3}
       propertyPath: WeaponItemSO
       value: 
-      objectReference: {fileID: 11400000, guid: afac265dd2ee96443b1502fd785deaca, type: 2}
+      objectReference: {fileID: 11400000, guid: 3868fb54a1d981c459caa800295d558b, type: 2}
     - target: {fileID: 6464295142459288576, guid: 3bcd833f3ff930d4faae6b80440a476f, type: 3}
       propertyPath: itemList1.Array.data[0]
       value: 

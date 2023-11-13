@@ -157,25 +157,6 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     private void DoubleTap(PointerEventData eventData) {
 
-        //if (OnArea(eventData)) {
-        //    Vector2 center = baseRect.rect.center;
-        //    Vector2 localPoint;
-
-        //    if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, handle.position, eventData.pressEventCamera, out localPoint)) {
-
-        //        float currentTimeClick = eventData.clickTime;
-
-        //        if (Mathf.Abs(currentTimeClick - lastTimeTap) < tapThreshold) {
-        //            Vector2 distance = localPoint - center;
-
-        //            OnDoubleTap?.Invoke(this, new OnDoubleTapEventArgs {
-        //                point = distance
-        //            });
-        //        }
-        //        lastTimeTap = currentTimeClick;
-        //    }
-        //}
-
         Vector2 center = baseRect.rect.center;
         Vector2 localPoint;
 

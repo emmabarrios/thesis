@@ -488,6 +488,7 @@ MonoBehaviour:
   isWindowAttackOpen: 0
   attackTimer: 0
   attackTime: 1.12
+  characterSoundFXManager: {fileID: 0}
   player: {fileID: 0}
   hasCombatFinished: 0
   rotationSpeed: 10
@@ -500,6 +501,7 @@ MonoBehaviour:
   hasAttackStarted: 0
   attackCooldown: 1
   attackDelay: 0.6
+  attackSoundDelayTime: 0.4
   attackRange: 1
   targetLayer:
     serializedVersion: 2
@@ -536,9 +538,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 0}
-  volumeScale: 0
-  footstepsSounds: []
-  swordSwingsSounds: []
+  volumeScale: 1
+  footstepsSounds:
+  - {fileID: 0}
+  swordSwingsSounds:
+  - {fileID: 8300000, guid: 1d4b5ddbb1c0d164dafb46c47bd11e3d, type: 3}
+  - {fileID: 8300000, guid: 5bfd30efd3536f04783623bdf5b80beb, type: 3}
+  - {fileID: 8300000, guid: 67cd429d3c230e841bba97e9738bdd20, type: 3}
   takeDamageSound: {fileID: 8300000, guid: e928e35a9fa9c02438a7cdfda3c8ada7, type: 3}
   blockHitSound: {fileID: 8300000, guid: 4e8f407b477f00e4893b8236c60da84f, type: 3}
 --- !u!82 &1399647104748148447
@@ -649,7 +655,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 6.79
-  m_Radius: 1.37
+  m_Radius: 2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08

@@ -53,7 +53,7 @@ public class Enemy : Character, IDamageable {
 
     //public float actionDelay = 1f;
 
-    //[SerializeField] private CharacterSoundFXManager characterSoundFXManager;
+    [SerializeField] private CharacterSoundFXManager characterSoundFXManager;
 
 
     public Action<float> OnDamageTaken;
@@ -81,7 +81,8 @@ public class Enemy : Character, IDamageable {
     [SerializeField] private bool hasAttackStarted = false;
     [SerializeField] private float attackCooldown;
     [SerializeField] float attackDelay;
-    
+    [SerializeField] float attackSoundDelayTime;
+
 
     [Header("Raycast settings")] 
     [SerializeField] private float attackRange = 1f;
@@ -226,6 +227,7 @@ public class Enemy : Character, IDamageable {
     private void Start() {
         controller = GetComponent<CharacterController>();
         visualAnimator = GetComponent<Animator>();
+        characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
         currentHealth = Health;
         maxHealth = Health;
         //characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
@@ -299,9 +301,12 @@ public class Enemy : Character, IDamageable {
 
     void NeutralState() {
         Debug.Log("Neutral state");
+        isWalking = false;
     }
 
     void IdleState() {
+
+        isWalking = false;
 
         RotateTowardsTarget(rotationSpeed, Time.deltaTime);
 
@@ -325,6 +330,10 @@ public class Enemy : Character, IDamageable {
                 StartCoroutine(TransitionToChaseCoroutine(delayTransitionLowerLimit, delayTransitionUpperLimit));
             } 
         }
+
+        if (player.Health <= 0) {
+            currentState = EnemyState.Neutral;
+        }
     }
 
     void ChaseState() {
@@ -332,35 +341,48 @@ public class Enemy : Character, IDamageable {
         Debug.Log("Chase State");
 
         RotateTowardsTarget(rotationSpeed, Time.deltaTime);
-        TranslateTowardsTarget();
+        //TranslateTowardsTarget();
 
         if (!IsPlayerInFront()) {
-            isWalking = true;
+            TranslateTowardsTarget();
         }
+        
+        // ?? I think this is why of the moonwalking
+        //if (!IsPlayerInFront()) {
+        //    isWalking = true;
+        //}
 
         if(IsPlayerInFront() && hasAttackStarted == false) {
             currentState = EnemyState.Attack;
+        }
+
+        if (player.Health <= 0) {
+            currentState = EnemyState.Neutral;
         }
     }
 
     void AttackState() {
         Debug.Log("Attack State");
+        isWalking = false;
 
         if (hasAttackStarted == false) {
-            isWalking = false;
             hasAttackStarted = true;
+            StartCoroutine(PlaySwingSoundDelayed(attackSoundDelayTime));
             StartCoroutine(AttackCoroutine());
         }
        
     }
 
     public void TakeDamage(float damage) {
+        isWalking = false;
+
         //animator.Play("Skeleton@Damage01");
-        //characterSoundFXManager.PlayeDamageSoundFX();
+        //characterSoundFXManager.PlayDamageSoundFX();
         Health -= damage;
         lifebarImage.fillAmount = Health / maxHealth;
         OnDamageTaken?.Invoke(Health);
 
+       
 
         if (Health <= 0) {
             visualAnimator.Play("dead", -1, 0);
@@ -399,38 +421,114 @@ public class Enemy : Character, IDamageable {
     private void TranslateTowardsTarget() {
         Vector3 moveDirection = transform.forward;
         controller.Move(moveDirection * walkSpeed * Time.deltaTime);
+        isWalking = true;
     }
+
+    //IEnumerator AttackCoroutine() {
+    //    visualAnimator.Play("attack", -1, 0);
+
+    //    if (attackInterrupted) {
+    //        hasAttackStarted = false;
+    //        hasAttacked = false;
+    //        attackInterrupted = false;
+    //        yield break;
+    //    }
+
+    //    yield return new WaitForSeconds(attackDelay);
+
+    //    if (attackInterrupted) {
+    //        hasAttackStarted = false;
+    //        hasAttacked = false;
+    //        attackInterrupted = false;
+    //        yield break;
+    //    }
+
+    //    // Print "Attack" only once
+    //    if (hasAttacked == false) {
+    //        //Debug.Log("Attack");
+    //        AttackPlayer();
+    //        hasAttacked = true;
+    //    }
+
+    //    if (attackInterrupted) {
+    //        hasAttackStarted = false;
+    //        hasAttacked = false;
+    //        attackInterrupted = false;
+    //        yield break;
+    //    }
+
+    //    //if (player.Health <= 0) {
+    //    //    hasAttackStarted = false;
+    //    //    hasAttacked = false;
+    //    //    attackInterrupted = false;
+    //    //    yield break;
+    //    //}
+
+    //    // Wait for attack cooldown
+    //    yield return new WaitForSeconds(attackCooldown);
+
+    //    if (attackInterrupted) {
+    //        hasAttackStarted = false;
+    //        hasAttacked = false;
+    //        attackInterrupted = false;
+    //        yield break;
+    //    }
+
+    //    // Reset the flag and transition back to Chase state
+    //    hasAttacked = false;
+
+    //    if (!IsPlayerInFront()) {
+    //        currentState = (UnityEngine.Random.Range(0, 2) == 0) ? EnemyState.Idle : EnemyState.Chase;
+    //    }
+
+    //    hasAttackStarted = false;
+    //}
+
 
     IEnumerator AttackCoroutine() {
         visualAnimator.Play("attack", -1, 0);
 
+        if (CheckAttackInterrupted())
+            yield break;
+
         yield return new WaitForSeconds(attackDelay);
 
-        if (attackInterrupted) {
-            hasAttackStarted = false;
-            hasAttacked = false;
-            attackInterrupted = false;
+        if (CheckAttackInterrupted())
             yield break;
-        }
 
         // Print "Attack" only once
-        if (hasAttacked == false) {
-            //Debug.Log("Attack");
-            AttackPlayer();
-            hasAttacked = true;
-        }
+        AttackIfNotAttacked();
 
-        if (player.Health <= 0) {
-            hasAttackStarted = false;
-            hasAttacked = false;
-            attackInterrupted = false;
+        if (CheckAttackInterrupted())
             yield break;
-        }
 
         // Wait for attack cooldown
         yield return new WaitForSeconds(attackCooldown);
 
+        if (CheckAttackInterrupted())
+            yield break;
+
         // Reset the flag and transition back to Chase state
+        ResetAttackFlagsAndTransition();
+    }
+
+    bool CheckAttackInterrupted() {
+        if (attackInterrupted) {
+            ResetAttackFlags();
+            return true;
+        }
+        return false;
+    }
+
+    void AttackIfNotAttacked() {
+        if (!hasAttacked) {
+            //Debug.Log("Attack");
+            AttackPlayer();
+            hasAttacked = true;
+        }
+    }
+
+    void ResetAttackFlagsAndTransition() {
         hasAttacked = false;
 
         if (!IsPlayerInFront()) {
@@ -438,8 +536,15 @@ public class Enemy : Character, IDamageable {
         }
 
         hasAttackStarted = false;
-
     }
+
+    void ResetAttackFlags() {
+        hasAttackStarted = false;
+        hasAttacked = false;
+        attackInterrupted = false;
+    }
+
+
 
     IEnumerator TransitionToChaseCoroutine(float a, float b) {
         float randomDelay = UnityEngine.Random.Range(a, b);
@@ -458,8 +563,14 @@ public class Enemy : Character, IDamageable {
             Player player = hit.collider.GetComponent<Player>();
             if (player != null) {
                 player.TakeDamage(Attack);
+                player.GetComponentInChildren<CharacterSoundFXManager>().PlayDamageSoundFX();
             }
         }
         Debug.DrawRay(rayStart, transform.forward * attackRange, rayColor);
+    }
+
+    private IEnumerator PlaySwingSoundDelayed(float time) {
+        yield return new WaitForSeconds(time);
+        characterSoundFXManager.PlayRandomSwingSoundFX();
     }
 }
