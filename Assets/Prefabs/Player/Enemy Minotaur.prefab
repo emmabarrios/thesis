@@ -946,18 +946,20 @@ MonoBehaviour:
   isWindowAttackOpen: 0
   attackTimer: 0
   attackTime: 1.12
+  characterSoundFXManager: {fileID: 0}
   player: {fileID: 0}
   hasCombatFinished: 0
   rotationSpeed: 10
   translationSpeed: 5
-  a: 1
-  b: 2
+  delayTransitionLowerLimit: 0
+  delayTransitionUpperLimit: 0
   isWalking: 0
   hasTransitionToChaseStarted: 0
   hasAttacked: 0
   hasAttackStarted: 0
   attackCooldown: 1
   attackDelay: 0.4
+  attackSoundDelayTime: 0.5
   attackRange: 1
   targetLayer:
     serializedVersion: 2
@@ -996,7 +998,10 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   volumeScale: 0
   footstepsSounds: []
-  swordSwingsSounds: []
+  swordSwingsSounds:
+  - {fileID: 8300000, guid: 1d4b5ddbb1c0d164dafb46c47bd11e3d, type: 3}
+  - {fileID: 8300000, guid: 5bfd30efd3536f04783623bdf5b80beb, type: 3}
+  - {fileID: 8300000, guid: 67cd429d3c230e841bba97e9738bdd20, type: 3}
   takeDamageSound: {fileID: 8300000, guid: e928e35a9fa9c02438a7cdfda3c8ada7, type: 3}
   blockHitSound: {fileID: 8300000, guid: 4e8f407b477f00e4893b8236c60da84f, type: 3}
 --- !u!82 &4806928099416184402

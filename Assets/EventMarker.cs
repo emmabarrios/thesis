@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 //using Mapbox.Examples;
 //using Mapbox.Utils;
 
-public class EventMarker : MonoBehaviour {
+public class EventMarker : MonoBehaviour, IPointerClickHandler {
     [SerializeField] private float rotationSpeed = 50f;
     [SerializeField] private float amplitude = 2.0f;
     [SerializeField] private float frequencey = 0.50f;
@@ -47,7 +45,16 @@ public class EventMarker : MonoBehaviour {
         transform.position = new Vector3(transform.position.x, (Mathf.Sin(Time.fixedTime * Mathf.PI * frequencey) * amplitude) + moveRange, transform.position.z);
     }
 
-    private void OnMouseUp() {
+    //private void OnMouseUp() {
+    //    if (!EventSystem.current.IsPointerOverGameObject()){
+    //        if (GameObject.Find("Canvas").transform.GetChild(0).gameObject.activeSelf == false) {
+    //            GameManager.instance.LoadEventProperties(this.eventScriptableObject, this.gameObject);
+    //        }
+    //        GameObject.Find("Canvas").GetComponent<OverworldUIManager>().DisplayStartEventPanel();
+    //    }
+    //}
+
+    public void OnPointerClick(PointerEventData eventData) {
         if (GameObject.Find("Canvas").transform.GetChild(0).gameObject.activeSelf == false) {
             GameManager.instance.LoadEventProperties(this.eventScriptableObject, this.gameObject);
         }

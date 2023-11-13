@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
 
                     // Instantiate enemy on place
                     Instantiate(enemy, GameObject.Find("EnemySpawnPoint").transform.position, Quaternion.identity);
+                    PlayBattleBackgroundAudio();
                 }
                 break;
             
@@ -203,6 +204,7 @@ public class GameManager : MonoBehaviour
                     } else {
                         RandomPrefabSpawner.instance.ToggleInstances();
                     }
+                    StopBattleAudioLoop();
                 }
 
                 state = GameStates.Overworld;
@@ -340,4 +342,15 @@ public class GameManager : MonoBehaviour
         return clickedEvent._exp;
     }
     
+    public void PlayBattleBackgroundAudio() {
+        // Check if the audio source is not playing to avoid overlapping
+        if (!audioSource.isPlaying) {
+            audioSource.clip = battleAudio;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
+    }
+    public void StopBattleAudioLoop() {
+        audioSource.Stop();
+    }
 }

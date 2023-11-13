@@ -8,7 +8,7 @@ public class CharacterSoundFXManager : MonoBehaviour
 
     [Header("Swing Sounds FX")]
     [SerializeField][Range(0f, 1f)] float volumeScale;
-    public AudioClip[] footstepsSounds;
+    
     public AudioClip[] swordSwingsSounds;
 
     private List<AudioClip> potentialfootstepsSounds;
@@ -18,6 +18,10 @@ public class CharacterSoundFXManager : MonoBehaviour
     [Header("Hit Sounds FX")]
     public AudioClip takeDamageSound;
     public AudioClip blockHitSound;
+
+    [Header("Movement Sounds FX")]
+    public AudioClip[] footstepsSounds;
+    public AudioClip sideStepSound;
 
 
     private List<AudioClip> potentialDamageSounds;
@@ -70,5 +74,9 @@ public class CharacterSoundFXManager : MonoBehaviour
         int randomValue = UnityEngine.Random.Range(0, potentialSwordSwingsSounds.Count);
         lastSoundPlayed = swordSwingsSounds[randomValue];
         audioSource.PlayOneShot(swordSwingsSounds[randomValue], volumeScale);
+    }
+
+    public void PlayQuickStepSound(){
+        audioSource.PlayOneShot(sideStepSound, volumeScale);
     }
 }

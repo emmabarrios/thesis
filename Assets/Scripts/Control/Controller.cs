@@ -252,6 +252,7 @@ public class Controller : MonoBehaviour {
             OnDash?.Invoke((int)e.point.x);
             player.DrainStamina(player.MovementStaminaCost);
             StartCoroutine(DashRoutine(e.point));
+            GetComponentInChildren<CharacterSoundFXManager>().PlayQuickStepSound();
         }
     }
 
