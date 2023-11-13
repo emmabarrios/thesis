@@ -31,111 +31,328 @@ public class Enemy : Character, IDamageable {
     //[SerializeField] private string enemyName = null;
 
     //private Transform playerTransform;
-    [SerializeField] float rotationSpeed;
-    //[SerializeField] float walkSpeed;
+    //[SerializeField] float rotationSpeed;
+    [SerializeField] float walkSpeed;
     //[SerializeField] float attackStateTime;
 
-    //CharacterController controller;
+    CharacterController controller;
 
-    //[SerializeField] private bool isWalking = true;
+    
     [SerializeField] private bool isDefeated = false;
     //[SerializeField] private bool isHit = false;
-    //[SerializeField] private bool isAttacking = false;
+    [SerializeField] private bool attackPerformed = false;
+    [SerializeField] private bool isOnWalkingAnimation;
 
-    //public float raycastDistance = 1f;
-    //public LayerMask targetLayer;
-    //public float raycastOffset = 0.5f;
-    //public Color rayColor = Color.red;
+    public float attemptHitTime;
+    public bool isWindowAttackOpen;
+
+   
+
+    public float attackTimer;
+    public float attackTime = 1;
 
     //public float actionDelay = 1f;
 
     //[SerializeField] private CharacterSoundFXManager characterSoundFXManager;
 
-    public List<QuickItem> dropList = new List<QuickItem>();
 
     public Action<float> OnDamageTaken;
 
-    [SerializeField] GameObject player;
+    [SerializeField] Player player;
 
     private Transform playerTransform;
 
-    private void Awake() {
-        // Target lock the enemy on the player
-        player = GameObject.Find("Player");
-        player.GetComponent<Controller>().SetLockTarget(this.transform);
 
-        playerTransform = player.GetComponent<Transform>();
+    [Header("Combat state")]
+    [SerializeField] private bool hasCombatFinished = false;
 
-        //EnemyWeapon = GameObject.Find("Enemy Weapon Anchor Point R").GetComponentInChildren<Weapon>();
+    [Header("Movement Settings")]
+    [SerializeField] private float rotationSpeed = 5f;
+    [SerializeField] public float translationSpeed = 5f;
+
+    [Header("Chace settings")]
+    [SerializeField] private float a;
+    [SerializeField] private float b;
+    [SerializeField] private bool isWalking = true;
+    [SerializeField] private bool hasTransitionToChaseStarted = false;
+
+    [Header("Attack settings")]
+    [SerializeField] private bool hasAttacked = false;
+    [SerializeField] private bool hasAttackStarted = false;
+    [SerializeField] private float attackCooldown;
+    [SerializeField] float attackDelay;
+    
+
+    [Header("Raycast settings")] 
+    [SerializeField] private float attackRange = 1f;
+    [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private float raycastOffset = 0.5f;
+    [SerializeField] private float yOffset;
+
+    [Header("Hit settings")]
+    [SerializeField] private float recoveryTime;
+    [SerializeField] private float recoveryTimer;
+    [SerializeField] private bool attackInterrupted = false;
+
+
+    public enum EnemyState {
+        Idle,
+        Chase,
+        Attack,
+        Dead,
+        Neutral,
+        Hit,
     }
 
-    // Start is called before the first frame update
-    void Start() {
-        //controller = GetComponent<CharacterController>();
-        //playerTransform = GameObject.Find("Player").GetComponent<Transform>();
-        visualAnimator = GetComponentInChildren<Animator>();
-        //isTiming = true;
-        //text.text = enemyName;
+    [Header("State settings")]
+    public EnemyState currentState = EnemyState.Idle;
+
+    //private void Awake() {
+    //    // Target lock the enemy on the player
+    //    player = GameObject.Find("Player");
+    //    player.GetComponent<Controller>().SetLockTarget(this.transform);
+
+    //    playerTransform = player.GetComponent<Transform>();
+    //}
+
+    //// Start is called before the first frame update
+    //void Start() {
+    //    controller = GetComponent<CharacterController>();
+    //    //playerTransform = GameObject.Find("Player").GetComponent<Transform>();
+    //    visualAnimator = GetComponent<Animator>();
+    //    //isTiming = true;
+    //    //text.text = enemyName;
+    //    currentHealth = Health;
+    //    maxHealth = Health;
+    //    //characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
+    //    attackTimer = attackTime;
+    //}
+
+    //private void Update() {
+
+    //    if (Health <= 0) {
+    //        if (!isDefeated) {
+    //            isDefeated = true;
+    //            GameManager.instance.EndCombatSequence(isDefeated);
+    //        }
+    //    }
+
+    //    RotateToTarget(rotationSpeed, Time.deltaTime);
+    //}
+
+    //// Update is called once per frame
+    //void FixedUpdate() {
+    //    if (attackPerformed == false) {
+    //        Color rayColor = Color.blue;
+    //        Vector3 rayStart = transform.position + transform.forward * raycastOffset + new Vector3(0f, yOffset, 0f);
+
+    //        // Perform the raycast
+    //        RaycastHit hit;
+
+    //        if (Physics.Raycast(rayStart, transform.forward, out hit, raycastDistance, targetLayer)) {
+    //            Debug.Log(hit.collider);
+    //            Player player = hit.collider.GetComponent<Player>();
+    //            if (player != null && player.Health > 0) {
+    //                //AttackPlayer();
+    //                //StartCoroutine(ShootAttackRayDelayed(attackDelay));
+    //                //visualAnimator.Play("attack", -1, 0);
+    //                attackPerformed = true;
+    //            }
+    //        }
+    //        Debug.DrawRay(rayStart, transform.forward * raycastDistance, rayColor);
+    //    }
+    //}
+
+    //public void TakeDamage(float damage) {
+    //    //animator.Play("Skeleton@Damage01");
+    //    //characterSoundFXManager.PlayeDamageSoundFX();
+    //    Health -= damage;
+    //    lifebarImage.fillAmount = Health / maxHealth;
+    //    OnDamageTaken?.Invoke(Health);
+
+    //    if (Health<=0) {
+    //        visualAnimator.Play("dead", -1, 0);
+    //    } else {
+    //        visualAnimator.Play("hit", -1, 0);
+    //    }
+    //}
+
+    //private void RotateToTarget(float followRotationSpeed, float timeDelta) {
+    //    if (attackPerformed==false) {
+    //        Vector3 directionToTarget = playerTransform.position - transform.position;
+    //        directionToTarget.y = 0f;
+    //        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+    //        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
+    //    }
+
+    //    if (isAnimationWalking) {
+    //        Vector3 moveDirection = transform.forward;
+    //        controller.Move(moveDirection * walkSpeed * Time.deltaTime);
+    //    }
+    //}
+
+    ////private IEnumerator Recover(float time) {
+    ////    yield return new WaitForSeconds(time);
+    ////    isWalking = true;
+    ////    isTiming = true;
+    ////}
+
+    //private IEnumerator ShootAttackRayDelayed(float time) {
+    //    //isWalking = false;
+    //    yield return new WaitForSeconds(time);
+
+    //}
+
+    //private void AttackPlayer() {
+    //    Color rayColor = Color.red;
+    //    Vector3 rayStart = transform.position + transform.forward * raycastOffset + new Vector3(0f, yOffset, 0f);
+    //    RaycastHit hit;
+    //    if (Physics.Raycast(rayStart, transform.forward, out hit, raycastDistance, targetLayer)) {
+    //        Player player = hit.collider.GetComponent<Player>();
+    //        if (player != null) {
+    //            player.TakeDamage(Attack);
+    //        }
+    //    }
+    //    Debug.DrawRay(rayStart, transform.forward * raycastDistance, rayColor);
+    //}
+
+    private void Awake() {
+        // Target lock the enemy on the player
+        player = GameObject.Find("Player").GetComponent<Player>();
+        player.GetComponent<Controller>().SetLockTarget(this.transform);
+        playerTransform = player.GetComponent<Transform>();
+    }
+
+    private void Start() {
+        controller = GetComponent<CharacterController>();
+        visualAnimator = GetComponent<Animator>();
         currentHealth = Health;
         maxHealth = Health;
         //characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
     }
 
-    private void Update() {
+
+   
+
+
+    void Update() {
+
+        visualAnimator.SetBool("isWalking", isWalking);
 
         if (Health <= 0) {
             if (!isDefeated) {
                 isDefeated = true;
+                currentState = EnemyState.Dead;
                 GameManager.instance.EndCombatSequence(isDefeated);
             }
         }
 
-        RotateToTarget(rotationSpeed, Time.deltaTime);
+        // Enemy is not defeated but prevent creation of another variable
+        if (player.Health <= 0) {
+            if (hasCombatFinished == false) {
+                hasCombatFinished = true;
+                currentState = EnemyState.Neutral;
+                GameManager.instance.EndCombatSequence(false);
+            } 
+        }
+
+
+        switch (currentState) {
+            case EnemyState.Idle:
+                IdleState();
+                break;
+
+            case EnemyState.Chase:
+                ChaseState();
+                break;
+
+            case EnemyState.Attack:
+                AttackState();
+                break;
+            
+            case EnemyState.Dead:
+                DeadState();
+                break;
+            
+            case EnemyState.Neutral:
+                NeutralState();
+                break;
+            
+            case EnemyState.Hit:
+                HitState();
+                break;
+        }
     }
 
-    // Update is called once per frame
-    //void FixedUpdate() {
+    void HitState() {
 
-    //    if (Health <= 0) {
-    //        isWalking = false;
-    //        isDefeated = true;
-    //    }
+        recoveryTimer -= Time.deltaTime;
+        if (recoveryTimer <= 0f) {
+            recoveryTimer = recoveryTime;
+            currentState = (UnityEngine.Random.Range(0, 2) == 0) ? EnemyState.Idle : EnemyState.Chase;
+        }
+    }
+    void DeadState() {
+        Debug.Log("Dead state");
+        isWalking = false;
+    }
 
-    //    Vector3 rayStart = transform.position + transform.forward * raycastOffset;
+    void NeutralState() {
+        Debug.Log("Neutral state");
+    }
 
-    //    // Perform the raycast
-    //    RaycastHit hit;
+    void IdleState() {
 
-    //    if (Physics.Raycast(rayStart, transform.forward, out hit, raycastDistance, targetLayer)) {
-    //        // Check if the ray hits a CharacterController
-    //        CharacterController characterController = hit.collider.GetComponent<CharacterController>();
+        RotateTowardsTarget(rotationSpeed, Time.deltaTime);
 
-    //        if (characterController != null && characterController != controller) {
-    //            // Perform the desired action when the ray hits a CharacterController
-    //            isAttacking = true;
-    //            Attack();
-    //            animator.SetTrigger("attack");
-    //        }
-    //    }
-    //    Debug.DrawRay(rayStart, transform.forward * raycastDistance, rayColor);
+        //Get the current state information
+        AnimatorStateInfo stateInfo = visualAnimator.GetCurrentAnimatorStateInfo(0);
 
-    //    animator.SetFloat("walkSpeed", walkSpeed);
+        // Check the name of the current animation
+        bool isOnIntroAnimation = stateInfo.IsName("Intro");
 
+        if (!isOnIntroAnimation) {
+            Debug.Log("Idle State");
+            // Rotate towards the player while deciding the time to start chasing
+            RotateTowardsTarget(rotationSpeed, Time.deltaTime);
 
-    //    if (isWalking == true && isDefeated == false && isAttacking == false) {
-    //        RotateToTarget(rotationSpeed, Time.fixedDeltaTime);
-    //    }
+            // If player is on front, change to attack state
+            if (IsPlayerInFront() && hasAttackStarted == false) {
+                currentState = EnemyState.Attack;
+            } else if (hasTransitionToChaseStarted == false) {
+                hasTransitionToChaseStarted = true;
+                //Debug.Log("Transition to chase coroutine");
+                StartCoroutine(TransitionToChaseCoroutine(a, b));
+            } 
+        }
+    }
 
-    //    animator.SetBool("isDefeated", isDefeated);
-    //    animator.SetBool("isWalking", isWalking);
-    //    animator.SetFloat("health", Health);
+    void ChaseState() {
+        // Implement behavior for the Chase state
+        Debug.Log("Chase State");
 
-    //    if (Health <= 0) {
-    //        text.text = "";
-    //        camTarget.position = camPole.transform.position + Vector3.up * yOffset;
-    //    }
+        RotateTowardsTarget(rotationSpeed, Time.deltaTime);
+        TranslateTowardsTarget();
 
-    //}
+        if (!IsPlayerInFront()) {
+            isWalking = true;
+        }
+
+        if(IsPlayerInFront() && hasAttackStarted == false) {
+            currentState = EnemyState.Attack;
+        }
+    }
+
+    void AttackState() {
+        Debug.Log("Attack State");
+
+        if (hasAttackStarted == false) {
+            isWalking = false;
+            hasAttackStarted = true;
+            StartCoroutine(AttackCoroutine());
+        }
+       
+    }
 
     public void TakeDamage(float damage) {
         //animator.Play("Skeleton@Damage01");
@@ -143,44 +360,106 @@ public class Enemy : Character, IDamageable {
         Health -= damage;
         lifebarImage.fillAmount = Health / maxHealth;
         OnDamageTaken?.Invoke(Health);
-        //isHit = true;
-        //isWalking = false;
-        //isTiming = false;
 
-        //StartCoroutine(Recover(1f));
 
-        //Debug.Log("Enemy: ouch!");
-
-        if (Health<=0) {
-            //GameManager.instance.SetToOutroState();
+        if (Health <= 0) {
             visualAnimator.Play("dead", -1, 0);
+        } else{
+            visualAnimator.Play("hit", -1, 0);
+            currentState = EnemyState.Hit;
+            recoveryTimer = recoveryTime;
+            attackInterrupted = true;
         }
     }
 
-    private void RotateToTarget(float followRotationSpeed, float timeDelta) {
+    private bool IsPlayerInFront() {
+        Color rayColor = Color.blue;
+        Vector3 rayStart = transform.position + transform.forward * raycastOffset + new Vector3(0f, yOffset, 0f);
+
+        // Perform the raycast
+        RaycastHit hit;
+
+        if (Physics.Raycast(rayStart, transform.forward, out hit, attackRange, targetLayer)) {
+            Player player = hit.collider.GetComponent<Player>();
+            if (player != null && player.Health > 0) {
+                return true;
+            }
+        }
+        Debug.DrawRay(rayStart, transform.forward * attackRange, rayColor);
+        return false;
+    }
+
+    private void RotateTowardsTarget(float followRotationSpeed, float timeDelta) {
         Vector3 directionToTarget = playerTransform.position - transform.position;
         directionToTarget.y = 0f;
         Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, timeDelta * followRotationSpeed);
     }
 
-    //private IEnumerator Recover(float time) {
-    //    yield return new WaitForSeconds(time);
-    //    isWalking = true;
-    //    isTiming = true;
-    //}
+    private void TranslateTowardsTarget() {
+        Vector3 moveDirection = transform.forward;
+        controller.Move(moveDirection * walkSpeed * Time.deltaTime);
+    }
 
-    //private IEnumerator AttackState(float time) {
-    //    yield return new WaitForSeconds(time);
-    //    isWalking = true;
-    //    isTiming = true;
-    //    isAttacking = false;
-    //}
+    IEnumerator AttackCoroutine() {
+        visualAnimator.Play("attack", -1, 0);
 
-    //private void OnAnimatorMove() {
-    //    Vector3 deltaPosition = animator.deltaPosition;
-    //    Vector3 worldDeltaPosition = deltaPosition;
-    //    controller.Move(worldDeltaPosition);
-    //}
+        yield return new WaitForSeconds(attackDelay);
 
+        if (attackInterrupted) {
+            hasAttackStarted = false;
+            hasAttacked = false;
+            attackInterrupted = false;
+            yield break;
+        }
+
+        // Print "Attack" only once
+        if (hasAttacked == false) {
+            //Debug.Log("Attack");
+            AttackPlayer();
+            hasAttacked = true;
+        }
+
+        if (player.Health <= 0) {
+            hasAttackStarted = false;
+            hasAttacked = false;
+            attackInterrupted = false;
+            yield break;
+        }
+
+        // Wait for attack cooldown
+        yield return new WaitForSeconds(attackCooldown);
+
+        // Reset the flag and transition back to Chase state
+        hasAttacked = false;
+
+        if (!IsPlayerInFront()) {
+            currentState = (UnityEngine.Random.Range(0, 2) == 0) ? EnemyState.Idle : EnemyState.Chase;
+        }
+
+        hasAttackStarted = false;
+
+    }
+
+    IEnumerator TransitionToChaseCoroutine(float a, float b) {
+        float randomDelay = UnityEngine.Random.Range(a, b);
+        yield return new WaitForSeconds(randomDelay);
+
+        // Transition to Chase state
+        currentState = EnemyState.Chase;
+        hasTransitionToChaseStarted = false;
+    }
+
+    private void AttackPlayer() {
+        Color rayColor = Color.red;
+        Vector3 rayStart = transform.position + transform.forward * raycastOffset + new Vector3(0f, yOffset, 0f);
+        RaycastHit hit;
+        if (Physics.Raycast(rayStart, transform.forward, out hit, attackRange, targetLayer)) {
+            Player player = hit.collider.GetComponent<Player>();
+            if (player != null) {
+                player.TakeDamage(Attack);
+            }
+        }
+        Debug.DrawRay(rayStart, transform.forward * attackRange, rayColor);
+    }
 }

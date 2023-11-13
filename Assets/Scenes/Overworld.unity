@@ -1846,11 +1846,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 581338348839543858, guid: cfcc42c8268b9e14b839435ae38af6d7, type: 3}
       propertyPath: spawnRadius
-      value: 21.92
+      value: 11.16
       objectReference: {fileID: 0}
     - target: {fileID: 581338348839543858, guid: cfcc42c8268b9e14b839435ae38af6d7, type: 3}
       propertyPath: numberOfPrefabs
-      value: 50
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 581338348839543858, guid: cfcc42c8268b9e14b839435ae38af6d7, type: 3}
       propertyPath: prefabList.Array.size

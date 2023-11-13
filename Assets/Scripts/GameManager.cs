@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
                     state = GameStates.CombatIntro;
 
                     // Instantiate enemy on place
-                    Instantiate(enemy, GameObject.Find("EnemySpawnPoint").transform);
+                    Instantiate(enemy, GameObject.Find("EnemySpawnPoint").transform.position, Quaternion.identity);
                 }
                 break;
             
@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour
 
         // if wasEnemyDefeated, send exp to StatsManager and items to GeneralInventory
         if (wasEnemyDefeated) {
-            GeneralInventory.instance.StoreItems(GetItemList());
+            GeneralInventory.instance.StoreItems(GetQuickItemList(), GeWeaponItemList());
             PlayerStatsManager.instance.UpdateExperience(GetCombatExperience());
         }
 
@@ -321,8 +321,11 @@ public class GameManager : MonoBehaviour
         lastClickedEventMarkerLocationId = eventMarker.GetComponent<EventMarker>().markerLocationId;
     }
 
-    public List<QuickItem> GetItemList() {
+    public List<QuickItem> GetQuickItemList() {
         return this.clickedEvent._itemList;
+    }
+    public List<WeaponItem> GeWeaponItemList() {
+        return this.clickedEvent._weaponItemList;
     }
 
     public float GetCombatExperience() {
