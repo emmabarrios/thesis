@@ -71,8 +71,8 @@ public class Enemy : Character, IDamageable {
     [SerializeField] public float translationSpeed = 5f;
 
     [Header("Chace settings")]
-    [SerializeField] private float a;
-    [SerializeField] private float b;
+    [SerializeField] private float delayTransitionLowerLimit;
+    [SerializeField] private float delayTransitionUpperLimit;
     [SerializeField] private bool isWalking = true;
     [SerializeField] private bool hasTransitionToChaseStarted = false;
 
@@ -322,7 +322,7 @@ public class Enemy : Character, IDamageable {
             } else if (hasTransitionToChaseStarted == false) {
                 hasTransitionToChaseStarted = true;
                 //Debug.Log("Transition to chase coroutine");
-                StartCoroutine(TransitionToChaseCoroutine(a, b));
+                StartCoroutine(TransitionToChaseCoroutine(delayTransitionLowerLimit, delayTransitionUpperLimit));
             } 
         }
     }

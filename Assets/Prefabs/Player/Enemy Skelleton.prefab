@@ -492,8 +492,8 @@ MonoBehaviour:
   hasCombatFinished: 0
   rotationSpeed: 10
   translationSpeed: 5
-  a: 1
-  b: 2
+  delayTransitionLowerLimit: 0
+  delayTransitionUpperLimit: 1
   isWalking: 0
   hasTransitionToChaseStarted: 0
   hasAttacked: 0

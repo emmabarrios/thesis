@@ -67,6 +67,8 @@ public class GameManager : MonoBehaviour
     [Header("Battle Settings")]
     public float entranceTime = 2f;
 
+    [Header("Last Combat results")]
+    public bool wasEnemyDefeated = false;
 
     private void Awake() {
 
@@ -195,9 +197,12 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameStates.LoadingWorldAssets:
-
                 if (lastClickedEventMarkerLocationId != Vector3.zero) {
-                    RandomPrefabSpawner.instance.ToggleInstances(lastClickedEventMarkerLocationId);
+                    if (wasEnemyDefeated) {
+                        RandomPrefabSpawner.instance.ToggleInstances(lastClickedEventMarkerLocationId);
+                    } else {
+                        RandomPrefabSpawner.instance.ToggleInstances();
+                    }
                 }
 
                 state = GameStates.Overworld;
@@ -207,6 +212,9 @@ public class GameManager : MonoBehaviour
     }
 
     public void EndCombatSequence(bool wasEnemyDefeated) {
+        
+        this.wasEnemyDefeated = wasEnemyDefeated;
+        Debug.Log(this.wasEnemyDefeated);
         ToggleCombatUI();
         ToggleBattleResultsUI(wasEnemyDefeated);
 
