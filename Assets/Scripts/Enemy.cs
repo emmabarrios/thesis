@@ -295,12 +295,10 @@ public class Enemy : Character, IDamageable {
         }
     }
     void DeadState() {
-        Debug.Log("Dead state");
         isWalking = false;
     }
 
     void NeutralState() {
-        Debug.Log("Neutral state");
         isWalking = false;
     }
 
@@ -317,7 +315,6 @@ public class Enemy : Character, IDamageable {
         bool isOnIntroAnimation = stateInfo.IsName("Intro");
 
         if (!isOnIntroAnimation) {
-            Debug.Log("Idle State");
             // Rotate towards the player while deciding the time to start chasing
             RotateTowardsTarget(rotationSpeed, Time.deltaTime);
 
@@ -326,7 +323,6 @@ public class Enemy : Character, IDamageable {
                 currentState = EnemyState.Attack;
             } else if (hasTransitionToChaseStarted == false) {
                 hasTransitionToChaseStarted = true;
-                //Debug.Log("Transition to chase coroutine");
                 StartCoroutine(TransitionToChaseCoroutine(delayTransitionLowerLimit, delayTransitionUpperLimit));
             } 
         }
@@ -338,7 +334,6 @@ public class Enemy : Character, IDamageable {
 
     void ChaseState() {
         // Implement behavior for the Chase state
-        Debug.Log("Chase State");
 
         RotateTowardsTarget(rotationSpeed, Time.deltaTime);
         //TranslateTowardsTarget();
@@ -362,7 +357,6 @@ public class Enemy : Character, IDamageable {
     }
 
     void AttackState() {
-        Debug.Log("Attack State");
         isWalking = false;
 
         if (hasAttackStarted == false) {

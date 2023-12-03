@@ -47,7 +47,7 @@ public class RandomPrefabSpawner : MonoBehaviour
 
         if (sceneName == "Overworld") {
 
-            if (spawnTimer.IsTimerOut()) {
+            if (spawnTimer.IsTimerOut() && playerPin != null) {
                 RemoveRemainingInstances();
                 SpawnRandomPrefabs();
                 ParentLastPrefabInstances();

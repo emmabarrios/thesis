@@ -79,7 +79,6 @@ public class Attacker : MonoBehaviour
         // Check if the current input matches any combo
         foreach (var combo in comboDict) {
             if (MatchCombo(currentInput, combo.Value)) {
-                //Debug.Log($"Player: Combo matched {combo.Key}");
                 currentInput.Clear();
                 lastCombo = combo.Key + "!!";
                 return combo.Key; // Return the name of the triggered combo
@@ -144,7 +143,6 @@ public class Attacker : MonoBehaviour
 
                 // Fire event
                 OnAttackLanded?.Invoke($"{lastCombo} {damage * current_bonus}");
-                //Debug.Log($"{lastCombo} {player.Attack * current_bonus}");
                 hitInfo.collider.GetComponent<CharacterVisualFXManager>().PlayDamageEffect(hitInfo.point);
                 hitInfo.collider.GetComponent<CharacterSoundFXManager>().PlayDamageSoundFX();
             }

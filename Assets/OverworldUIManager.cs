@@ -8,6 +8,7 @@ public class OverworldUIManager : MonoBehaviour
     //[SerializeField] private GameObject eventPanelUserNotInRange;
     public bool isEventUiPanelActive;
 
+
     // Start is called before the first frame update
     public void DisplayStartEventPanel() {
         if (isEventUiPanelActive == false) {
@@ -29,4 +30,7 @@ public class OverworldUIManager : MonoBehaviour
         isEventUiPanelActive = false;
 
     }
+
+
+
 }

@@ -16,21 +16,12 @@ public class CombatInventory : MonoBehaviour
     public WeaponSlotManager weaponSlotManager = null;
 
     void Awake() {
-        //DontDestroyOnLoad(transform.gameObject);
         if (instance == null) {
-            // If no instance exists, set the instance to this object
             instance = this;
-
-            // Mark this object to not be destroyed when loading a new scene
             DontDestroyOnLoad(gameObject);
         } else {
-            // If an instance already exists, destroy this object
             Destroy(gameObject);
         }
-        //DontDestroyOnLoad(transform.gameObject);
-
-        //if (instance != null) { return; }
-        //instance = this;
     }
 
     void Start() {
@@ -42,15 +33,27 @@ public class CombatInventory : MonoBehaviour
         weaponSlotManager = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponSlotManager>();
         if (weaponSlotManager != null) {
             weaponSlotManager.LoadWeaponOnSlot(WeaponItemSO);
-            // 
-        } else {
-            Debug.Log("Weapon slot manager not found");
-        }
+        } 
     }
 
     public void RemoveItem(int row, int col){
-
-        //itemLists[row].RemoveAt(col);
         itemLists[row][col] = null;
+    }   
+    
+    public void AddItem(int row, int col, Item item){
+
+        if (item is QuickItem) {
+            if (itemLists[row][col] == (QuickItem)item) {
+                RemoveItem(row, col);
+            } else {
+                itemLists[row][col] = (QuickItem)item;
+            }
+        } else if(item is WeaponItem) {
+            WeaponItemSO = (WeaponItem)item;
+        }
+    }
+
+    public List<List<QuickItem>> GetItemLists() {
+        return itemLists;
     }
 }

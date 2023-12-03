@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
                     // Instantiate enemy on place
                     Instantiate(enemy, GameObject.Find("EnemySpawnPoint").transform.position, Quaternion.identity);
                     PlayBattleBackgroundAudio();
+
                 }
                 break;
             
@@ -107,6 +108,7 @@ public class GameManager : MonoBehaviour
                     isOnOverworldScene = true;
                     isOnCombatScene = false;
                     state = GameStates.LoadingWorldAssets;
+                    //UpdateOverworldUI();
                 }
                 break;
 
@@ -205,6 +207,7 @@ public class GameManager : MonoBehaviour
                         RandomPrefabSpawner.instance.ToggleInstances();
                     }
                     StopBattleAudioLoop();
+                    
                 }
 
                 state = GameStates.Overworld;
@@ -224,6 +227,9 @@ public class GameManager : MonoBehaviour
         if (wasEnemyDefeated) {
             GeneralInventory.instance.StoreItems(GetQuickItemList(), GeWeaponItemList());
             PlayerStatsManager.instance.UpdateExperience(GetCombatExperience());
+
+            // Update general inventory to reflect what was taken to battle
+            //GeneralInventory.instance.AddItems(CombatInventory.instance.itemLists);
         }
 
         state = GameStates.CombatOutro;
@@ -353,4 +359,8 @@ public class GameManager : MonoBehaviour
     public void StopBattleAudioLoop() {
         audioSource.Stop();
     }
+
+    //private void UpdateOverworldUI() {
+    //    GameObject.Find("Quick Item Card Container").GetComponent<QuickItemsCardGroup>().UpdateCardGroupContent(GeneralInventory.instance);
+    //}
 }
