@@ -318,7 +318,7 @@ public class Controller : MonoBehaviour {
 
         attacker.UpdateComboTimerLimit(attackCooldown);
 
-        attacker.UpdateDamage(player.Attack);
+        attacker.UpdateDamage(player.Damage);
     }
 
     public void SetLockTarget(Transform tran) {

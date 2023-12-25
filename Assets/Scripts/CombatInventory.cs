@@ -56,4 +56,8 @@ public class CombatInventory : MonoBehaviour
     public List<List<QuickItem>> GetItemLists() {
         return itemLists;
     }
+
+    public WeaponItem GetEquipedWeaponIten() {
+        return WeaponItemSO;
+    }
 }

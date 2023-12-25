@@ -15,6 +15,7 @@ public class QuickItemSlotsContainer : MonoBehaviour
     private void OnEnable() {
         if (wasEnabled == false) {
             UpdateSlotGroupContent(CombatInventory.instance.GetItemLists());
+            UpdateMainWeaponSlotContent(CombatInventory.instance.GetEquipedWeaponIten());
         }
         wasEnabled = true;
     }
@@ -39,4 +40,9 @@ public class QuickItemSlotsContainer : MonoBehaviour
         }
     }
 
+    private void UpdateMainWeaponSlotContent(WeaponItem currentWeapon) {
+        ItemCardUI[] itemCardUIslots = this.transform.GetComponentsInChildren<ItemCardUI>();
+        itemCardUIslots[8].UpdateItemOnSlot(currentWeapon);
+        GameObject.Find("UICharacter").GetComponent<UICharacter>().SpawnWeaponOnPivot(currentWeapon);
+    }
 }

@@ -54,8 +54,6 @@ public class QuickItemEquipmentCard : MonoBehaviour
                     itemCardUi.UpdateItemOnSlot(item);
                     itemCardUi.ResetSlotCardState();
 
-
-                    
                     // Remove equipment card item from general inventory
                     GeneralInventory.instance.RemoveItem(item);
                 } else {
@@ -77,23 +75,6 @@ public class QuickItemEquipmentCard : MonoBehaviour
                     }
                 }
 
-                //if (itemCardUi.HasItem()) {
-                //    if (item._name == itemCardUi.GetItem()._name) {
-                //        Debug.Log("Same Item");
-                //        itemCardUi.ResetCard();
-                //    } else {
-                //        skipLoadOut = true;
-                //        Debug.Log(skipLoadOut);
-                //    }
-                //} else {
-                //    if (total > 0) {
-                //        itemCardUi.UpdateItemOnSlot(item);
-                //        itemCardUi.ResetSlotCardState();
-                //    } else {
-                //        itemCardUi.ResetSlotCardState();
-                //    }
-                //}
-
                 // Spawn selected weapon on UI character
                 if (item is WeaponItem weaponItem) {
                     GameObject.Find("UICharacter").GetComponent<UICharacter>().SpawnWeaponOnPivot(weaponItem);
@@ -102,7 +83,6 @@ public class QuickItemEquipmentCard : MonoBehaviour
                 // Equip selected quick item on corresponding combat inventory slot 
                 if (!skipLoadOut) {
                     CombatInventory.instance.AddItem(itemCardUi.RowNumber, itemCardUi.ColNumber, item);
-                    //GeneralInventory.instance.RemoveItem((QuickItem)item);
                 }
 
 

@@ -226,10 +226,10 @@ public class GameManager : MonoBehaviour
         // if wasEnemyDefeated, send exp to StatsManager and items to GeneralInventory
         if (wasEnemyDefeated) {
             GeneralInventory.instance.StoreItems(GetQuickItemList(), GeWeaponItemList());
-            PlayerStatsManager.instance.UpdateExperience(GetCombatExperience());
+            GeneralInventory.instance.SortItems();
 
-            // Update general inventory to reflect what was taken to battle
-            //GeneralInventory.instance.AddItems(CombatInventory.instance.itemLists);
+            //PlayerStatsManager.instance.UpdateExperience(GetCombatExperience());
+            PlayerStatsManager.instance.EarnedExperience += GetCombatExperience();
         }
 
         state = GameStates.CombatOutro;
@@ -344,7 +344,7 @@ public class GameManager : MonoBehaviour
         return this.clickedEvent._weaponItemList;
     }
 
-    public float GetCombatExperience() {
+    public int GetCombatExperience() {
         return clickedEvent._exp;
     }
     

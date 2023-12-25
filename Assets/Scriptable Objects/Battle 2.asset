@@ -18,4 +18,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0b027529a44418f47a33a3727fb75a3f, type: 2}
   _weaponItemList:
   - {fileID: 11400000, guid: afac265dd2ee96443b1502fd785deaca, type: 2}
-  _exp: 1
+  _exp: 3

@@ -156,4 +156,9 @@ public class GeneralInventory : MonoBehaviour
             n--;
         } while (swapped);
     }
+
+    public void SortItems() {
+        SortItemList(storedQuickItemList);
+        SortItemList(storedWeaponItemList);
+    }
 }

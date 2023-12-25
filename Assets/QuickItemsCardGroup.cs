@@ -6,7 +6,7 @@ public class QuickItemsCardGroup : MonoBehaviour
 {
     [SerializeField] private QuickItemEquipmentCard cardTemplate;
     private string currentItemSOname = "";
-    private bool wasEnabled = false;
+    //private bool wasEnabled = false;
 
     public enum CardContainerType {
         QuickItem,

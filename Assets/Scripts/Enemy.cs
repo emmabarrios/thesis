@@ -556,7 +556,7 @@ public class Enemy : Character, IDamageable {
         if (Physics.Raycast(rayStart, transform.forward, out hit, attackRange, targetLayer)) {
             Player player = hit.collider.GetComponent<Player>();
             if (player != null) {
-                player.TakeDamage(Attack);
+                player.TakeDamage(Damage);
                 player.GetComponentInChildren<CharacterSoundFXManager>().PlayDamageSoundFX();
             }
         }
